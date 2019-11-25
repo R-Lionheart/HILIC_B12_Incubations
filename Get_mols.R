@@ -1,4 +1,3 @@
-
 # Information
 # This code retrieves mol/L from peak areas of targeted compounds.
 source("B12_Inc_Functions.R")
@@ -6,88 +5,74 @@ source("B12_Inc_Functions.R")
 
 # Get information from standards that can be quantified.
 
-#Import standards, and filter NAs.
-
-Ingalls.Standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv") %>%
+# Import standards, filter NAs --------------------------------------------
+Ingalls.Standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors = FALSE) %>%
   filter(Column == "HILIC") %>%
-  select(Compound.Name, z, QE.RF.ratio, HILICMix, Conc..uM, Emperical.Formula) %>%
-  filter(!is.na(Conc..uM))
-
-## Duplicate rows testing for hilicpos and hilicneg IDs.
-test <- which(duplicated(Ingalls.Standards$Compound.Name))
-duplicate_compounds <- as.data.frame(Ingalls.Standards$Compound.Name[test]) %>%
-  rename(Compound.Name = 1)
+  select(Compound.Name, QE.RF.ratio, HILICMix, Conc..uM, Emperical.Formula) %>%
+  filter(!is.na(Conc..uM)) 
 
 
+# Import QC'd files and clean parameter data.
+filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = 'QC'))
+filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
 
-# Import transect files, munge, and join with standards file.
-
-HILICS.transect <- read.csv("data_processed/QC_Output.csv", header = TRUE) %>%
+HILICS <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   slice(-1:-6) %>%
   select(-c(Description, Value)) %>%
-  mutate(ReplicateName = as.character(ReplicateName)) %>%
-  select(ReplicateName, Metabolite.name, Column, Area.with.QC, AreaValue, Run.Type)
-HILICS.transect$ReplicateName <- gsub("^.{0,1}", "", HILICS.transect$ReplicateName)
-
-HILICS.raw.transect <- HILICS.transect %>%
-  filter(Metabolite.name %in% Ingalls.Standards$Compound.Name) %>%
-  rename(Compound.Name = Metabolite.name)
-
-# Apply appropriate filters and isolate standards.
-HILICS.transect <- HILICS.transect %>%
-  filter(Metabolite.name %in% Ingalls.Standards$Compound.Name) %>%
-  filter(str_detect(ReplicateName, "Std")) %>%
-  mutate(AreaValue = as.numeric(as.character(AreaValue))) %>%
-  mutate(Area.with.QC = as.numeric(as.character(Area.with.QC))) %>%
-  mutate(Compound.Name = Metabolite.name) %>%
-  select(-Metabolite.name) %>%
-  left_join(Ingalls.Standards, by = "Compound.Name") %>%
-  select(ReplicateName, Compound.Name, everything())
+  select(Replicate.Name, Metabolite.name, Column, Area.with.QC, Area.Value, Run.Type) 
 
 
 #********************************************
 #  *Manual removal of duplicate compounds*
+#  * THIS NEEDS TO BE FIXED!!!*
+#  Currently, they are just being removed. 
+HILICS.duplicates <- IdentifyDuplicates(HILICS)
 
-HILICS.transect <- HILICS.transect %>%
-  group_by(Compound.Name) %>%
-  mutate(pos.and.neg = ifelse(Compound.Name %in% duplicate_compounds$Compound.Name, TRUE, FALSE)) %>%
-  filter(!(pos.and.neg == TRUE & z == -1)) %>%
-  filter(!(Compound.Name == "Inosine" & Column == "HILICNeg")) %>%
-  filter(!(Compound.Name == "Guanine" & Column == "HILICNeg")) %>%
-  mutate(z = ifelse(Column == "HILICNeg", -1, 1)) %>%
-  select(-pos.and.neg)
+HILICS <- HILICS %>%
+  filter(!Metabolite.name %in% HILICS.duplicates$Metabolite.name)
 #********************************************
-  
-# Get response factors and response factor RATIOS for transect HILIC compounds.
-RFs.transect <- HILICS.transect %>%
-  mutate(RF = as.numeric(as.character(Area.with.QC))/as.numeric(Conc..uM))
 
-RFs2.transect <- RFs.transect %>%
-  mutate(Type = paste(Env = ifelse(str_detect(ReplicateName, "StdsMix|InH2O"), "Standards", "Water"),
-                      Matrix = ifelse(str_detect(ReplicateName, "InMatrix"), "Matrix", "Water"), sep = "_")) %>%
-  filter(str_detect(ReplicateName, as.character(HILICMix)) | str_detect(ReplicateName, "H2OInMatrix")) %>%
+
+# Filter for compounds detected in Ingalls Standards.
+HILICS.raw <- HILICS %>%
+  filter(Metabolite.name %in% Ingalls.Standards$Compound.Name) %>%
+  rename(Compound.Name = Metabolite.name)
+
+# Isolate standards.
+HILICS <- HILICS %>%
+  filter(Metabolite.name %in% Ingalls.Standards$Compound.Name) %>%
+  filter(str_detect(Replicate.Name, "Std")) %>%
+  rename(Compound.Name = Metabolite.name) %>%
+  left_join(Ingalls.Standards, by = "Compound.Name") %>%
+  select(Replicate.Name, Compound.Name, everything()) %>%
+  unique()
+
+# Get response factors for compounds using standards in water.
+response.factors <- HILICS %>%
+  mutate(RF = as.numeric(as.character(Area.with.QC))/as.numeric(Conc..uM)) %>%
+  mutate(Type = ifelse(str_detect(Replicate.Name, "H20"), "Standards_Water", "Standards_Matrix")) %>%
   filter(!str_detect(Compound.Name, ",")) %>%
-  mutate(ReplicateName = substr(ReplicateName, 1, nchar(ReplicateName)-2))
+  mutate(Replicate.Name = gsub("(.*)_.*", "\\1", Replicate.Name))
 
 # Calculate RF max and min using only standards in water.
-transect.RFs.dimensions <- RFs2.transect %>%
+RFs.dimensions <- response.factors %>%
   filter(Type == "Standards_Water") %>%
   group_by(Compound.Name) %>%
   mutate(RF.max = max(RF, na.rm = TRUE),
          RF.min = min(RF, na.rm = TRUE))
 
-transect.RFs.dimensions$RF.max[is.infinite(transect.RFs.dimensions$RF.max) | is.nan(transect.RFs.dimensions$RF.max) ] <- NA
-transect.RFs.dimensions$RF.min[is.infinite(transect.RFs.dimensions$RF.min) | is.nan(transect.RFs.dimensions$RF.min) ] <- NA
+RFs.dimensions$RF.max[is.infinite(RFs.dimensions$RF.max) | is.nan(RFs.dimensions$RF.max) ] <- NA
+RFs.dimensions$RF.min[is.infinite(RFs.dimensions$RF.min) | is.nan(RFs.dimensions$RF.min) ] <- NA
 
-transect.RFs.dimensions <- transect.RFs.dimensions %>%
+RFs.dimensions <- RFs.dimensions %>%
   mutate(RF.diff = RF.max/RF.min) %>%
   unique()
 
 # Calculate the response factor ratios using (Standards in Matrix - Water in Matrix) / (Standards in Water) for each replicate.
-transect.RFratios <- RFs2.transect %>%
+RF.ratios <- response.factors %>%
   group_by(Compound.Name, Type) %>%
   mutate(RF.mean.per_sampleID = mean(RF, na.rm = TRUE)) %>%
-  select(ReplicateName, Compound.Name, Type, RF.mean.per_sampleID) %>%
+  select(Replicate.Name, Compound.Name, Type, RF.mean.per_sampleID) %>%
   unique() %>%
   group_by(Compound.Name) %>% filter(n() >= 3) %>%
   mutate(RF.ratio = 
@@ -96,9 +81,9 @@ transect.RFratios <- RFs2.transect %>%
   select(Compound.Name, RF.ratio) %>%
   unique()
 
-transect.RFratios$RF.ratio[transect.RFratios$Compound.Name == "Choline"] <- 1
-transect.RFratios$RF.ratio[transect.RFratios$Compound.Name == "Trimethyl-L-lysine"] <- NA ## DROPPED DUE TO SUPER WEIRD NUMBERS
-transect.RFratios$RF.ratio[is.nan(transect.RFratios$RF.ratio)] <- NA
+RF.ratios$RF.ratio[RF.ratios$Compound.Name == "Choline"] <- 1
+RF.ratios$RF.ratio[RF.ratios$Compound.Name == "Trimethyl-L-lysine"] <- NA ## DROPPED DUE TO SUPER WEIRD NUMBERS
+RF.ratios$RF.ratio[is.nan(RF.ratios$RF.ratio)] <- NA
 
 rm(list = c("RFs.transect", "RFs2.transect"))
 
@@ -194,9 +179,9 @@ IS.smp.data.transect <- HILICS.raw.transect %>%
 IS.mid_frame <- lapply(IS.smp.data.transect, function(x) group_by(x, ReplicateName))
 
 IS.mid_frame2 <- lapply(IS.mid_frame,
-                  function(x)
-                  mutate(x,
-                         umol.in.vial_IS = (Area.with.QC[Std.Type == "Standard"] / Area.with.QC[Std.Type == "Internal_std"]) * (Concentration_nM[Std.Type == "Internal_std"]/1000)))
+                        function(x)
+                          mutate(x,
+                                 umol.in.vial_IS = (Area.with.QC[Std.Type == "Standard"] / Area.with.QC[Std.Type == "Internal_std"]) * (Concentration_nM[Std.Type == "Internal_std"]/1000)))
 
 IS.smp.data.transect <- do.call(rbind, IS.mid_frame2) %>%
   filter(!str_detect(Compound.Name, ",")) %>%
@@ -210,7 +195,7 @@ rm(list = c("IS.names", "HILICS.raw.eddycenter", "IS.mid_frame", "IS.mid_frame2"
 # *Add a test to make sure the sample names are what they should be*
 all.info <- Quan.Dat.transect %>%
   left_join(IS.smp.data.transect %>% select(Sample.Name, Compound.Name, umol.in.vial_IS)) %>%
-    mutate(umol.in.vial.ave = ifelse(is.na(umol.in.vial_IS), umol.in.vial.ave, umol.in.vial_IS),
+  mutate(umol.in.vial.ave = ifelse(is.na(umol.in.vial_IS), umol.in.vial.ave, umol.in.vial_IS),
          umol.in.vial.max = ifelse(is.na(umol.in.vial_IS), umol.in.vial.max, NA),
          umol.in.vial.min = ifelse(is.na(umol.in.vial_IS), umol.in.vial.min, NA)) %>%
   rename(ReplicateName = Sample.Name) %>%
@@ -234,12 +219,12 @@ quanDat2 <- all.info %>%
 
 quanDat3 <- quanDat2  %>%
   mutate(C = ifelse(is.na(str_extract(Emperical.Formula, "^C\\d\\d")),
-                       str_extract(Emperical.Formula, "^C\\d"),
-                      str_extract(Emperical.Formula, "^C\\d\\d"))) %>%
+                    str_extract(Emperical.Formula, "^C\\d"),
+                    str_extract(Emperical.Formula, "^C\\d\\d"))) %>%
   mutate(C = as.numeric(str_replace_all(C, "C", ""))) %>%
   mutate(N = ifelse(str_detect(Emperical.Formula, "N\\D"),
-                      1,
-                      str_extract(Emperical.Formula, "N\\d"))) %>%
+                    1,
+                    str_extract(Emperical.Formula, "N\\d"))) %>%
   mutate(N = as.numeric(str_replace_all(N, "N", ""))) %>%
   mutate(nmol.C.ave = nmol.in.Enviro.ave*C,
          nmol.N.ave = nmol.in.Enviro.ave*N ) %>%
@@ -270,7 +255,7 @@ quanDat4 <- quanDat3 %>%
   left_join(TotalMoles) %>%
   mutate(ratioCN = totalCmeasured_nM_perID / totalNmeasured_nM_perID) %>%
   mutate(molFractionC = nmol.C.ave/totalCmeasured_nM_perID,
-        molFractionN = nmol.N.ave/totalNmeasured_nM_perID) %>%
+         molFractionN = nmol.N.ave/totalNmeasured_nM_perID) %>%
   select(Compound.Name, ReplicateName, Adjusted_Area, Area.with.QC, RF.ratio:molFractionN) %>%
   unique()
 
@@ -291,4 +276,3 @@ quanDatSum <- quanDat4 %>%
 write.csv(quanDatSum, "data_processed/Quantified_Summary.csv")
 write.csv(quanDat4, "data_processed/Quantified_Full.csv")
 write.csv(TotalMoles, "data_processed/Quantified_per_SampID.csv")
-

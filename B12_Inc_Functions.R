@@ -6,7 +6,7 @@
 # Order function descriptions neatly at beginning of script.
 # Cleanly name items in the upload, rather than manually changing it to SN, RZ, etc.
 # Figure out a better way to choose columns out of MSDIAL
-# Add documentation and comments to clarify the process.
+# Add function documentation and comments to clarify the process.
 # Make function for always downloading the most up to date Ingalls lab standards.
 # Figure out a way to preserve the QC parameter values.
 # Fix the StandardizeVariables function
@@ -77,6 +77,20 @@ StandardizeVariables <- function(df) {
   return(df)
 }
 
+
+IdentifyDuplicates <- function(df) {
+  duplicates <- df %>%
+    group_by(Metabolite.name, Replicate.Name) %>%
+    mutate(number = 1) %>%
+    mutate(ticker = cumsum(number)) %>%
+    filter(ticker == 2) %>%
+    ungroup() %>%
+    select(Metabolite.name) %>%
+    unique()
+  return(duplicates)
+}
+
+
 # Do we need this function?
 CheckBlankMatcher <- function(blank.matcher) {
   # Takes a blank matcher file and separates any multi-value variable
@@ -98,3 +112,14 @@ CheckBlankMatcher <- function(blank.matcher) {
   
   return(blank.matcher)
 }
+
+
+### OLD FUNCTIONS
+# IdentifyDuplicates <- function(df) {
+#   test <- which(duplicated(df$Compound.Name))
+#   duplicates <- as.data.frame(df$Compound.Name[test]) %>%
+#     rename(Compound.Name = 1) %>%
+#     arrange(Compound.Name)
+#   
+#   return(duplicates)
+# }
