@@ -65,7 +65,7 @@ HILIC.IS.data <- rbind(HILIC.IS.data, SampKey) %>%
   filter(!str_detect(Replicate.Name, "dda"))
 # HILIC.IS.data[] <- lapply(HILIC.IS.data, gsub, pattern = 'Neg|Pos', replacement = '')
 
-# here is where we would hypothetically remove troublesome compounds.
+# Here is where we would hypothetically remove troublesome compounds.
 
 
 # Identify internal standards without an Area, i.e. any NA values.
@@ -80,14 +80,14 @@ IS.Raw.Area.Plot <- ggplot(HILIC.IS.data, aes(x = Replicate.Name, y = Area.with.
         legend.position = "top",
         strip.text = element_text(size = 10)) +
   ggtitle("Internal Standard Raw Areas")
-print(IS.Raw.Area.Plot)
+#print(IS.Raw.Area.Plot)
 
 
 # Edit data so names match-----------------------------------------------------------------
-
 HILIC.long  <- HILIC.NoIS %>%
   rename(Mass.Feature = Metabolite.name) %>%
   select(Replicate.Name, Mass.Feature, Area.with.QC) %>%
+  filter(!str_detect(Replicate.Name, "dda")) %>%
   arrange(Replicate.Name)
 
 # Test that names are equal across sample sets-----------------------------------------------------------------
@@ -204,7 +204,7 @@ ISTest_plot <- ggplot() +
   scale_fill_manual(values=c("white","dark gray")) +
   geom_point(dat = injectONlY_toPlot, aes(x = RSD_ofPoo, y = RSD_ofSmp), size = 3) +
   facet_wrap(~ Mass.Feature)
-#print(ISTest_plot)
+print(ISTest_plot)
 
 
 # Return data that is normalized via BMIS----------------------------------------------------------------
@@ -215,7 +215,16 @@ HILIC.BMIS_normalizedData <- HILIC.newpoodat %>% select(Mass.Feature, FinalBMIS,
   filter(MIS == FinalBMIS) %>%
   unique()
 
-write.csv(HILIC.BMIS_normalizedData, file = "data_processed/BMIS_Output.csv")
+currentDate <- Sys.Date()
+csvFileName <- paste("data_processed/BMIS_Output_", currentDate, ".csv", sep = "")
+
+
+write.csv(HILIC.BMIS_normalizedData, csvFileName, row.names = FALSE)
 
 rm(list = ls())
+
+
+
+
+
 
