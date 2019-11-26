@@ -56,6 +56,7 @@ add.blk.Flag <- add.RT.Flag %>%
 final.table <- add.blk.Flag %>%
   mutate(all.Flags      = paste(SN.Flag, Area.Min.Flag, RT.Flag, Blank.Flag, sep = ", ")) %>%
   mutate(all.Flags      = as.character(all.Flags %>% str_remove_all("NA, ") %>% str_remove_all("NA"))) %>%
+  mutate(all.Flags      = ifelse(all.Flags == "", NA, all.Flags)) %>%
   mutate(Area.with.QC   = ifelse(is.na(Area.Min.Flag), Area.Value, NA)) %>%
   select(Replicate.Name:Area.Value, Area.with.QC, everything()) %>%
   ungroup(Metabolite.name) %>%

@@ -61,7 +61,9 @@ SampKey <- SampKey.all %>%
   select(Replicate.Name, Area.with.QC, Mass.Feature)
 
 # Create Internal standard data to identify problematic compounds/replicates-----------------------------------------------------------------
-HILIC.IS.data <- rbind(HILIC.IS.data, SampKey)
+HILIC.IS.data <- rbind(HILIC.IS.data, SampKey) %>%
+  filter(!str_detect(Replicate.Name, "dda"))
+# HILIC.IS.data[] <- lapply(HILIC.IS.data, gsub, pattern = 'Neg|Pos', replacement = '')
 
 # here is where we would hypothetically remove troublesome compounds.
 
@@ -76,9 +78,9 @@ IS.Raw.Area.Plot <- ggplot(HILIC.IS.data, aes(x = Replicate.Name, y = Area.with.
   theme(axis.text.x = element_blank(),
         axis.text.y = element_text(size = 10),
         legend.position = "top",
-        strip.text = element_text(size = 10))+
+        strip.text = element_text(size = 10)) +
   ggtitle("Internal Standard Raw Areas")
-#print(IS.Raw.Area.Plot)
+print(IS.Raw.Area.Plot)
 
 
 # Edit data so names match-----------------------------------------------------------------
