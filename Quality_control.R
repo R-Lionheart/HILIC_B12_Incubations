@@ -1,14 +1,21 @@
+
 # Quality control script
+source("B12_Inc_Functions.R")
 
 area.min   <- 1000
 RT.flex    <- 0.4
 blk.thresh <- 0.3
 SN.min     <- 4
 
-msdial.runtypes <- IdentifyRunTypes(combined)
-combined <- combined %>%
+pattern = "combined"
+
+# Import QC'd files and clean parameter data.
+filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
+filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
+
+combined <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   select(Replicate.Name:Alignment.ID, Metabolite.name) %>%
-  mutate(Run.Type = (tolower(str_extract(combined$Replicate.Name, "(?<=_)[^_]+(?=_)")))) 
+  mutate(Run.Type = (tolower(str_extract(Replicate.Name, "(?<=_)[^_]+(?=_)")))) 
 
 RT.table <- combined %>%
   filter(Run.Type == "std") %>%

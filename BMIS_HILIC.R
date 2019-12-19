@@ -10,6 +10,8 @@ source("B12_Inc_Functions.R")
 # Set parameters -----------------------------------------------------------------
 cut.off <- 0.3 # 30% decrease in RSD of pooled injections, aka improvement cutoff
 cut.off2 <- 0.1 # RSD minimum
+Column.Type = "HILIC"
+pattern = "QC"
 
 # Imports -----------------------------------------------------------------
 # Sample Key
@@ -20,13 +22,13 @@ SampKey.all <- read.csv("data_extras/Sample.Key.HILIC.csv") %>%
 
 # Internal Standards
 Internal.Standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv") %>%
-  filter(Column == "HILIC") %>%
+  filter(Column == Column.Type) %>%
   filter(Compound.Type == "Internal Standard")
 
 Internal.Standards$Compound.Name <- TrimWhitespace(Internal.Standards$Compound.Name)
 
 # QC'd HILIC output
-filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = '*.csv'))
+filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
 filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
 
 HILIC.QC <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
@@ -35,6 +37,16 @@ HILIC.QC <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
   filter(!str_detect(Replicate.Name, "Blk|Std")) %>%
   mutate(Replicate.Name = Replicate.Name %>%
            str_replace("-",".")) 
+
+
+
+
+## 10/9/2019 edit of duplicate removal here: specifically for making figures. Maybe keep?
+HILICS.duplicates <- IdentifyDuplicates(HILIC.QC)
+
+HILIC.QC <- HILIC.QC %>%
+  filter(!(Metabolite.name %in% HILICS.duplicates$Metabolite.name & Column == "HILICNeg"))
+
 
 
 # Match QC'd HILIC data with Internal Standards list -----------------------------------------------------------------

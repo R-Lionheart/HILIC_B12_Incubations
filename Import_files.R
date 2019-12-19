@@ -131,4 +131,10 @@ combined <- rbind(combined.pos, combined.neg) %>%
 
 combined$Replicate.Name <- gsub("^.{0,1}", "", combined$Replicate.Name)
 
-rm(list = ls()[!ls() %in% c("combined", lsf.str())])
+
+currentDate <- Sys.Date()
+csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
+
+write.csv(combined, csvFileName, row.names = FALSE)
+
+rm(list = ls())
