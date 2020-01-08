@@ -1,23 +1,8 @@
-## NMDS with B12 Data
-source("src/biostats.R")
-library(vegan)
-library(pastecs) # masks dplyr + tidyr
-library(tidyverse) 
-library(stringr)
 
-# DSW700 needs to be removed- not relevant
-# Split the dataset into separate eddies
 
-# Uploads and sampID filtering --------------------------------------------
-HILIC_data <- read.csv("data_processed/BMIS_Output_2019-12-09_duplicatesremoved.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature, SampID, Adjusted.Area) %>%
-  filter(!SampID %in% c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4")) %>%
-  filter(!Mass.Feature == "Inj_vol") %>%
-  filter(!str_detect(Mass.Feature, ",")) %>%
-  group_by(Mass.Feature, SampID) %>%
-  mutate(Area.Ave = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  select(Mass.Feature, SampID, Area.Ave) %>%
-  unique()
+
+
+
 
 HILIC_wide_mid <- HILIC_data %>%
   ungroup() %>%

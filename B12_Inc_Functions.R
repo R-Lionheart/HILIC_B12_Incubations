@@ -99,3 +99,41 @@ IdentifyDuplicates <- function(df) {
     unique()
   return(duplicates)
 }
+
+
+# Functions --------------------------------------------
+
+FindStdDev <- function(df) {
+  df.first <- df %>%
+    group_by(Mass.Feature) %>%
+    group_split()
+  df.midframe <- lapply(df.first, function(x) mutate(x, Std.dev = sd(Area.Ave, na.rm = TRUE)))
+  df.final <- bind_rows(df.midframe)
+  
+  return(df.final)
+}
+MakeBarPlot <- function(df, title) {
+  df.plot <- ggplot(df, aes(x = Mass.Feature, y = Area.Ave, fill = SampID)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+          axis.text.y = element_text(size = 10),
+          legend.position = "top",
+          axis.ticks.length=unit(.25, "cm"),
+          strip.text = element_text(size = 10)) +
+    geom_errorbar(aes(ymin=Area.Ave - Std.dev, ymax=Area.Ave + Std.dev), width=.2,
+                  position=position_dodge(.9)) +
+    ggtitle(title)
+  print(df.plot)
+}
+MakeFacetGraphs <- function (df, title, scale) {
+  df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +
+    geom_bar(stat = "identity") +
+    facet_wrap( ~Mass.Feature, scales = scale) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+          axis.text.y = element_text(size = 5),
+          legend.position = "top",
+          axis.ticks.length=unit(.25, "cm"),
+          strip.text = element_text(size = 10)) +
+    ggtitle(title)
+  print(df.plot)
+}

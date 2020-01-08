@@ -1,83 +1,63 @@
 source("B12_Inc_Functions.R")
+source("src/biostats.R")
 
-library(tidyverse) 
+
+library(pastecs) # masks dplyr + tidyr
 library(stringr)
+library(tidyverse) 
+library(vegan)
 
-FindStdDev <- function(df) {
-  df.first <- df %>%
-    group_by(Mass.Feature) %>%
-    group_split()
-  df.midframe <- lapply(df.first, function(x) mutate(x, Std.dev = sd(Area.Ave, na.rm = TRUE)))
-  df.final <- bind_rows(df.midframe)
-  
-  return(df.final)
-}
-MakeBarPlot <- function(df, title) {
-  df.plot <- ggplot(df, aes(x = Mass.Feature, y = Area.Ave, fill = SampID)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-          axis.text.y = element_text(size = 10),
-          legend.position = "top",
-          axis.ticks.length=unit(.25, "cm"),
-          strip.text = element_text(size = 10)) +
-    geom_errorbar(aes(ymin=Area.Ave - Std.dev, ymax=Area.Ave + Std.dev), width=.2,
-                  position=position_dodge(.9)) +
-    ggtitle(title)
-  print(df.plot)
-}
-MakeFacetGraphs <- function (df, title, scale) {
-  df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +
-    geom_bar(stat = "identity") +
-    facet_wrap( ~Mass.Feature, scales = scale) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-          axis.text.y = element_text(size = 5),
-          legend.position = "top",
-          axis.ticks.length=unit(.25, "cm"),
-          strip.text = element_text(size = 10)) +
-    ggtitle(title)
-  print(df.plot)
-}
+# User data
+pattern = "duplicates"
+badSamps <- c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4", "DSW700m")
+currentDate <- Sys.Date()
 
-# Uploads and sampID filtering --------------------------------------------
-HILIC_data <- read.csv("data_processed/BMIS_Output_2019-12-09_duplicatesremoved.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature, Run.Cmpd, SampID, Area.with.QC, Adjusted.Area) %>%
-  filter(!SampID %in% c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4")) %>%
+# Split the dataset into separate eddies
+# Get group size for filtering. How to choose?
+
+# Data import and first filtering of unnecessary SampIDs --------------------------------------------
+filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
+filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
+
+HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE)) %>%
+  select(Mass.Feature, SampID, Adjusted.Area) %>%
+  filter(!SampID %in% badSamps) %>%
   filter(!Mass.Feature == "Inj_vol") %>%
-  filter(!str_detect(Mass.Feature, ",")) 
-HILIC_data$Run.Cmpd <- sapply(strsplit(HILIC_data$Run.Cmpd, " "), `[`, 1)
-
-# Ordered.Samps <- c("DSW700m", "IT0", "IT05um", "IL1Control", "IL1Control5um", "IL1DSW", "IL1DSW5um", 
-#              "IL1WBT", "IL1WBT5um", "IL1noBT", "IL1noBT5um", "IL1DMB", "IL1DMB5um", "IL1DMBnoBT", "IL1DMBnoBT5um",
-#              "IL2Control", "IL2Control5um", "IL2DSW", "IL2DSW5um", "IL2WBT", "IL2WBT5um", "IL2noBT", "IL2noBT5um",
-#              "IL2DMB", "IL2DMB5um", "IL2DMBnoBT", "IL2DMBnoBT5um")
+  filter(!str_detect(Mass.Feature, ",")) %>% # Drop internal standards
+  group_by(Mass.Feature, SampID) %>%
+  mutate(Area.Ave = mean(Adjusted.Area, na.rm = TRUE)) %>%
+  select(Mass.Feature, SampID, Area.Ave) %>%
+  unique()
 
 standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors = FALSE) %>%
   rename(Mass.Feature = Compound.Name) %>%
-  filter(Mass.Feature %in% HILIC_data$Mass.Feature)
+  filter(Mass.Feature %in% HILIC_all$Mass.Feature)
 
-
-HILIC_data <- HILIC_data %>%
+HILIC_all <- HILIC_all %>%
   left_join(standards %>% select(Mass.Feature, Compound.Type) %>% unique()) %>%
-  select(Mass.Feature, SampID, Adjusted.Area, Compound.Type) %>%
+  select(Mass.Feature, SampID, Area.Ave, Compound.Type) %>%
   group_by(Mass.Feature) %>%
-  mutate(Missing = sum(is.na(Adjusted.Area))) 
-
+  mutate(Missing = sum(is.nan(Area.Ave))) 
 
 # All HILICS plotted, no filtering
-all.hilics <- ggplot(HILIC_data, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
+plotName <- paste("figures/All_HILICS_", currentDate, ".pdf")
+pdf(plotName)
+all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Area.Ave)) +
   geom_bar(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, size = 10),
+  theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
         axis.text.y = element_text(size = 10),
         legend.position = "top",
         strip.text = element_text(size = 10))
 print(all.hilics)
+dev.off()
 
-# Filter out compounds that are missing over 25% of their peaks -----------
-HILIC_filtered <- HILIC_data %>%
-  filter(!Missing > 22) # 25%
+# Filter out compounds that are missing over 25% of their peaks ------------------------------------
+HILIC_filtered <- HILIC_all %>%
+  filter(!Missing > 15) 
 
+# Data import and first filtering of unnecessary SampIDs -------------------------------------------
 
-# Average area of peak per SampID, per compound ---------------------------
+# Average area of peak per SampID, per compound ----------------------------------------------------
 HILIC_grouped <- HILIC_filtered %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(Area.Ave = mean(Adjusted.Area, na.rm = TRUE)) %>%
