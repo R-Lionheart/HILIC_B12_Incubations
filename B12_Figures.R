@@ -56,12 +56,24 @@ standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors 
   filter(Mass.Feature %in% HILIC_data$Mass.Feature)
 
 
-# Filter out compounds that are missing over 25% of their peaks -----------
-HILIC_filtered <- HILIC_data %>%
+HILIC_data <- HILIC_data %>%
   left_join(standards %>% select(Mass.Feature, Compound.Type) %>% unique()) %>%
   select(Mass.Feature, SampID, Adjusted.Area, Compound.Type) %>%
   group_by(Mass.Feature) %>%
-  mutate(Missing = sum(is.na(Adjusted.Area))) %>%
+  mutate(Missing = sum(is.na(Adjusted.Area))) 
+
+
+# All HILICS plotted, no filtering
+all.hilics <- ggplot(HILIC_data, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, size = 10),
+        axis.text.y = element_text(size = 10),
+        legend.position = "top",
+        strip.text = element_text(size = 10))
+print(all.hilics)
+
+# Filter out compounds that are missing over 25% of their peaks -----------
+HILIC_filtered <- HILIC_data %>%
   filter(!Missing > 22) # 25%
 
 
@@ -74,7 +86,7 @@ HILIC_grouped <- HILIC_filtered %>%
   filter(!Area.Ave < 10000) %>%
   unique()
 
-hilic.wide <- HILIC_grouped %>%
+HILIC_wide <- HILIC_grouped %>%
   ungroup() %>%
   select(-Compound.Type) %>%
   tidyr::spread(SampID, Area.Ave)
