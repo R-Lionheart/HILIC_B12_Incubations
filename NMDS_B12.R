@@ -4,21 +4,7 @@
 
 
 
-HILIC_wide_mid <- HILIC_data %>%
-  ungroup() %>%
-  tidyr::spread(SampID, Area.Ave) %>%
-  as.data.frame()
 
-HILIC_wide <- HILIC_wide_mid[,-1]
-rownames(HILIC_wide) <- HILIC_wide_mid[,1]
-
-HILIC_wide <- data.frame(HILIC_wide)
-HILIC_wide[is.na(HILIC_wide)] <- NA
-
-HILIC_noNA <- na.omit(HILIC_wide)
-
-rm("HILIC_data")
-rm("HILIC_wide_mid")
 
 
 # Structure exploration + data screening --------------------------------------------

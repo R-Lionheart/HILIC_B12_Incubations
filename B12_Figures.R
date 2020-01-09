@@ -9,11 +9,11 @@ library(vegan)
 
 # User data
 pattern = "duplicates"
+percentMissing = 0.5
 badSamps <- c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4", "DSW700m")
 currentDate <- Sys.Date()
 
 # Split the dataset into separate eddies
-# Get group size for filtering. How to choose?
 
 # Data import and first filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
@@ -40,7 +40,7 @@ HILIC_all <- HILIC_all %>%
   mutate(Missing = sum(is.nan(Area.Ave))) 
 
 # All HILICS plotted, no filtering
-plotName <- paste("figures/All_HILICS_", currentDate, ".pdf")
+plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
 pdf(plotName)
 all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Area.Ave)) +
   geom_bar(stat = "identity") +
@@ -51,20 +51,45 @@ all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Ar
 print(all.hilics)
 dev.off()
 
-# Filter out compounds that are missing over 25% of their peaks ------------------------------------
+# Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_all %>%
-  filter(!Missing > 15) 
+  group_by(Mass.Feature) %>%
+  mutate(MF.Count = n()) %>%
+  filter(!Missing > (percentMissing*MF.Count)) %>%
+  select(-c("Missing", "MF.Count"))
 
-# Data import and first filtering of unnecessary SampIDs -------------------------------------------
 
-# Average area of peak per SampID, per compound ----------------------------------------------------
-HILIC_grouped <- HILIC_filtered %>%
-  group_by(Mass.Feature, SampID) %>%
-  mutate(Area.Ave = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  select(Mass.Feature, SampID, Compound.Type, Area.Ave) %>%
-  filter(!Mass.Feature %in% c("Betaine", "DMSP")) %>%
-  filter(!Area.Ave < 10000) %>%
-  unique()
+# Separate dataset into groups for analysis -------------------------------------------------------
+IsoLagran1 <- HILIC_filtered %>%
+  filter(str_detect(SampID, "IL1|IT0"))
+IsoLagran2 <- HILIC_filtered %>%
+  filter(str_detect(SampID, "IL2|IT0"))
+
+IsoLagran1_0.2 <- IsoLagran1 %>%
+  filter(!str_detect(SampID, "5um"))
+IsoLagran1_5 <- IsoLagran1 %>%
+  filter(str_detect(SampID, "5um"))
+
+IsoLagran2_0.2 <- IsoLagran2 %>%
+  filter(!str_detect(SampID, "5um"))
+IsoLagran2_5 <- IsoLagran2 %>%
+  filter(str_detect(SampID, "5um"))
+
+HILIC_wide_mid <- HILIC_data %>%
+  ungroup() %>%
+  tidyr::spread(SampID, Area.Ave) %>%
+  as.data.frame()
+
+HILIC_wide <- HILIC_wide_mid[,-1]
+rownames(HILIC_wide) <- HILIC_wide_mid[,1]
+
+HILIC_wide <- data.frame(HILIC_wide)
+HILIC_wide[is.na(HILIC_wide)] <- NA
+
+HILIC_noNA <- na.omit(HILIC_wide)
+
+rm("HILIC_data")
+rm("HILIC_wide_mid")
 
 HILIC_wide <- HILIC_grouped %>%
   ungroup() %>%
