@@ -13,7 +13,40 @@ percentMissing = 0.5
 badSamps <- c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4", "DSW700m")
 currentDate <- Sys.Date()
 
-# Split the dataset into separate eddies
+# Functions
+# TODO (rlionheart): Fix the removal of NA in makeWide. Can df.rownames work for future operations?
+makeWide <- function(df) {
+  df.wide <- df %>%
+    ungroup() %>%
+    tidyr::spread(SampID, Area.Ave) %>%
+    as.data.frame()
+  
+    df.rownames <- df.wide[,-1]
+    rownames(df.rownames) <- df.wide[,1]
+    
+    df.rownames[is.na(df.rownames)] <- NA
+    
+    df.noNA <- na.omit(df.rownames)
+  
+  return(df.noNA)
+}
+
+makeWideMassFeature <- function(df) {
+  df.wide <- df %>%
+    ungroup() %>%
+    tidyr::spread(Mass.Feature, Area.Ave) %>%
+    as.data.frame()
+  
+  # df.rows <- df.wide[,-1]
+  # rownames(df.rows) <- df.wide[,1]
+  
+  #df.rownames[is.na(df.rownames)] <- NA
+  
+  #df.noNA <- na.omit(df.rownames)
+  
+  return(df.wide)
+}
+
 
 # Data import and first filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
@@ -40,8 +73,8 @@ HILIC_all <- HILIC_all %>%
   mutate(Missing = sum(is.nan(Area.Ave))) 
 
 # All HILICS plotted, no filtering
-plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
-pdf(plotName)
+#plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
+#pdf(plotName)
 all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Area.Ave)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
@@ -49,7 +82,7 @@ all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Ar
         legend.position = "top",
         strip.text = element_text(size = 10))
 print(all.hilics)
-dev.off()
+#dev.off()
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_all %>%
@@ -75,26 +108,48 @@ IsoLagran2_0.2 <- IsoLagran2 %>%
 IsoLagran2_5 <- IsoLagran2 %>%
   filter(str_detect(SampID, "5um"))
 
-HILIC_wide_mid <- HILIC_data %>%
-  ungroup() %>%
-  tidyr::spread(SampID, Area.Ave) %>%
-  as.data.frame()
+rm(list = c("IsoLagran1", "IsoLagran2"))
 
-HILIC_wide <- HILIC_wide_mid[,-1]
-rownames(HILIC_wide) <- HILIC_wide_mid[,1]
+# Transform to wide for analysis ------------------------------------------------------------------
+test <- makeWide(IsoLagran1_5)
+test <- test[, -1]
 
-HILIC_wide <- data.frame(HILIC_wide)
-HILIC_wide[is.na(HILIC_wide)] <- NA
+test2 <- makeWideMassFeature(IsoLagran1_5)
+test2 <- test2[, -(1:2)]
+test2[is.na(test2)] <- 0
 
-HILIC_noNA <- na.omit(HILIC_wide)
+# Structure exploration + data screening --------------------------------------------
+class(test2)
+stat.desc(test2)
 
-rm("HILIC_data")
-rm("HILIC_wide_mid")
+# Plots
+ecdf.plots(test2)
+hist.plots(test)
+box.plots(test)
+qqnorm.plots(test)
+uv.plots(test)
 
-HILIC_wide <- HILIC_grouped %>%
-  ungroup() %>%
-  select(-Compound.Type) %>%
-  tidyr::spread(SampID, Area.Ave)
+# Transformation
+data.trans(test2, method='log') # method = "power", "asin", exp
+
+test.normalized <- decostand(test, method = 'normalize', na.rm = TRUE)
+hist.plots(test.normalized)
+
+data.stand(test, method='standardize', na.rm = TRUE) # method = 'log'
+
+# Outliers
+# uv.outliers(test, id = 'IL1Control:IL1DMB', var='IT0', sd.limit=3) # sd.limit=1
+mv.outliers(test, method='euclidean', sd.limit=3) # sd.limit=1
+
+
+# NMDS Visualization --------------------------------------------
+test_log <- log(test2 +1)
+test.nmds <- metaMDS(test_log, distance='bray', k=2, autotransform=FALSE, trymax=100)
+test.nmds
+names(test.nmds)
+
+
+
 ############################################################################################
 
 # B12 FOLD CHANGE --------------------------------------------
