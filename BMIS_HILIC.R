@@ -38,9 +38,6 @@ HILIC.QC <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
   mutate(Replicate.Name = Replicate.Name %>%
            str_replace("-",".")) 
 
-
-
-
 ## 10/9/2019 edit of duplicate removal here: specifically for making figures. Maybe keep?
 HILICS.duplicates <- IdentifyDuplicates(HILIC.QC)
 

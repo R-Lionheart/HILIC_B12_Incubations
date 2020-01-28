@@ -1,0 +1,292 @@
+---
+title: "Fold Change with Abundance plot"
+author: "Katherine Heal"
+date: "November 6, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library("vegan")
+library("pastecs")
+library("simba")
+library("ecodist")
+library("MASS")
+library("caret")
+library("e1071")
+library("cowplot")
+library(plotly)
+library(tidyverse)
+library(dplyr)
+library(plyr) 
+library(ggplot2) 
+library(gridExtra) 
+library(dplyr) 
+library(seqinr) 
+library(lubridate)
+library(reshape2)
+library(tidyr)
+library(Hmisc)
+library(gtools)
+library(cowplot)
+require(RColorBrewer)
+library(readr)
+library(plotly)
+library(stringr)
+library(devtools)
+library(RCurl)
+
+
+source('~/Google_Drive/6_Classes/1_FISH560/R_SourceCode/coldiss.R', encoding = 'UTF-8' )
+source('~/Google_Drive/6_Classes/1_FISH560/R_SourceCode/biostats.R', encoding = 'UTF-8' )
+setwd("~/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/F5_NMDSplots")
+
+Experiment1 <- "Reanalysis_1335_B12Light_Exp_Rerun"
+Experiment2 <- "Reanalysis_NP_B12Light_Exp"
+Location <- "~/Google_Drive/00_XCMS_Working/"
+ExpDIR1 <-paste(Location, Experiment1, sep = "", collapse = NULL)
+ExpDIR2 <-paste(Location, Experiment2, sep = "", collapse = NULL)
+```
+
+
+#Get wide data with stats
+```{r, warning=FALSE, message=FALSE}
+setwd("~/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/1_Targeted_DataAnalysis/TP")
+TPTQSdatAll <- read_csv("Combined/Filtered_Wide_Combined_wStats.csv",comment = "#")
+TPTQSdat <- TPTQSdatAll %>% select(LB12HL_AB:RB12LL_EF) %>% as.data.frame()
+row.names(TPTQSdat) <- TPTQSdatAll$Compound.Name
+TPTQSdat <- t(TPTQSdat)
+TPTreatDat <- read.csv('Treatment_data.csv',header=TRUE, row.names=1)
+
+
+TPQEdatAll <- read_csv(paste(ExpDIR1, "/Combined/Filtered_wide_Combined_BioNormedFilteredBMISd_wStats_wMS2_wIDs.csv", sep = "")) %>%
+  arrange(desc(LB12_ave)) %>%
+  head(500)
+TPQEdat <- TPQEdatAll %>%  select(LB12HL_AB:RB12LL_EF) %>% as.data.frame()
+row.names(TPQEdat) <- TPQEdatAll$MF_Frac
+#Try <- TPQEdat %>% mutate(Sums = rowMeans(TPQEdat)) %>% filter(is.na(Sums))
+TPQEdat <- t(TPQEdat)
+
+setwd("~/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/1_Targeted_DataAnalysis/NP")
+NPTQSdatAll <- read_csv("Combined/Filtered_Wide_Combined_wStats.csv",comment = "#")
+NPTQSdat <- NPTQSdatAll %>% select(LB12HL_AB:RB12LL_EF) %>% as.data.frame()
+row.names(NPTQSdat) <- NPTQSdatAll$Compound.Name
+NPTQSdat <- t(NPTQSdat)
+
+NPQEdatAll <- read_csv(paste(ExpDIR2, "/Combined/Filtered_wide_Combined_BioNormedFilteredBMISd_wStats_wMS2_wIDs.csv", sep = ""))%>%
+  arrange(desc(LB12_ave)) %>%
+  head(500)
+NPQEdat <- NPQEdatAll %>%  select(LB12HL_AB:RB12HL_EF) %>% as.data.frame()
+row.names(NPQEdat) <- NPQEdatAll$MF_Frac
+NPQEdat <- t(NPQEdat)
+
+```
+
+#Standarize the data
+```{r Standaradize, warning=FALSE, message=FALSE}
+TPExpDat.std <- data.stand(TPTQSdat,method='standardize',margin='column',plot=F)
+NPExpDat.std <- data.stand(NPTQSdat,method='standardize',margin='column',plot=F)
+TPExpDatQE.std <- data.stand(TPQEdat,method='standardize',margin='column',plot=F)
+NPExpDatQE.std <- data.stand(NPQEdat,method='standardize',margin='column',plot=F)
+```
+
+#Make TQS plots, do TQS stats
+##NMDS with all compounds for TP with TQS data, 
+perform the NMDS, make plot, write out csv of vectors with p < 0.01, perfom anosim
+```{r NMDS, warning=FALSE, message=FALSE, results = FALSE}
+tp.nmds<-metaMDS(TPExpDat.std, distance='euclidean', k=2, autotransform=FALSE, wascores = FALSE, noshare = FALSE, trymax=10000)
+#vec.tp<-envfit(tp.nmds$points, TPExpDat.std, perm=1000)
+pointlocation <- tp.nmds[['points']] %>% as.data.frame() %>% cbind(TPTreatDat)
+
+g<- ggplot(data = pointlocation, aes(x =MDS1, y =  MDS2, fill = Light.Status, 
+                                     shape = Cobalamin.Status, group = Supergroup))+
+  geom_polygon(fill = NA, color = "black") +
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(22,21)) +
+  scale_fill_manual(values = c("grey","black")) +   
+  ggtitle("Thalassiosira pseudonana") +
+  theme(plot.title = element_text(face= "italic", size = 9),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text( size = 8),
+        axis.text = element_text(size = 8))+
+  labs(y="Axis 2") +
+  theme(legend.position="none")
+g
+
+
+#Get and write out vector info, write out CSV into the correct folder.-----
+vec.info<-envfit(tp.nmds$points, TPExpDat.std, perm=9999)
+names <- as.data.frame(vec.info[[1]][[1]])%>%
+  mutate(Compound.Name = row.names(.),
+         pvalues = vec.info[[1]][[4]]) %>%
+  select(Compound.Name, pvalues)
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T12_NMDSVectors")
+#write_csv(names, "TP_TQS_vectors.csv")
+
+#Get and write out ANOSIM data info
+TPLight.anosim<-anosim(TPExpDat.std,TPTreatDat[,4], distance = 'euclidean')
+TPLightanosimResults <- c("Tp", "Light", TPLight.anosim$statistic, TPLight.anosim$signif)
+TPB12.anosim<-anosim(TPExpDat.std,TPTreatDat[,3], distance = 'euclidean')
+TPB12anosimResults <- c("Tp", "Cobalamin", TPB12.anosim$statistic, TPB12.anosim$signif)
+AnosimResults <- data.frame(x = TPLightanosimResults,  y = TPB12anosimResults, z= c("Org", "Variable", "ANOSIMStat", "ANOSIMpvalue"))
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T11_NMDSANOSIM_stats")
+#write_csv(AnosimResults, "TP_TQS_anosimstats.csv")
+
+```
+
+##NMDS with all compounds for NP with TQS data
+```{r NMDS, warning=FALSE, message=FALSE}
+np.nmds<-metaMDS(NPExpDat.std, distance='euclidean', k=2, autotransform=FALSE, wascores = FALSE, noshare = FALSE, trymax=1000)
+pointlocation <- np.nmds[['points']] %>% as.data.frame() %>% cbind(TPTreatDat)
+
+#ordiplot(np.nmds, type="text", display="sites", xlab="Axis 1", ylab="Axis 2")
+#plot(vec.info, p.max=.001, col="blue")
+
+
+
+h<- ggplot(data = pointlocation, aes(x =MDS1, y =  MDS2, fill = Light.Status, 
+                                     shape = Cobalamin.Status, group = Supergroup))+
+  geom_polygon(fill = NA, color = "black") +
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(22,21)) +
+  scale_fill_manual(values = c("grey","black")) +   
+  ggtitle("Navicula pelliculosa") +
+  theme(plot.title = element_text(face= "italic", size = 9),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text = element_text(size = 8))+
+  theme(legend.position="none")
+
+h
+
+#Get and write out vector info, write out CSV into the correct folder.-----
+vec.info<-envfit(np.nmds$points, NPExpDat.std, perm=9999)
+names <- as.data.frame(vec.info[[1]][[1]])%>%
+  mutate(Compound.Name = row.names(.),
+         pvalues = vec.info[[1]][[4]]) %>%
+  select(Compound.Name, pvalues)
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T12_NMDSVectors")
+#write_csv(names, "NP_TQS_vectors.csv")
+
+#Get and write out ANOSIM data info
+NPLight.anosim<-anosim(NPExpDat.std,TPTreatDat[,4], distance = 'euclidean')
+NPLightanosimResults <- c("Np", "Light", NPLight.anosim$statistic, NPLight.anosim$signif)
+NPB12.anosim<-anosim(NPExpDat.std,TPTreatDat[,3], distance = 'euclidean')
+NPB12anosimResults <- c("Np", "Cobalamin", NPB12.anosim$statistic, NPB12.anosim$signif)
+AnosimResults <- data.frame(x = NPLightanosimResults,  y = NPB12anosimResults, z= c("Org", "Variable", "ANOSIMStat", "ANOSIMpvalue"))
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T11_NMDSANOSIM_stats")
+#write_csv(AnosimResults, "NP_TQS_anosimstats.csv")
+
+```
+
+
+#Make QE plots, do QE stats
+##NMDS with all compounds for TP with QE data
+```{r NMDS, warning=FALSE, message=FALSE}
+TPExpDatQE.std <- TPExpDatQE.std[, !colSums(!is.finite(as.matrix(TPExpDatQE.std)))]
+tp.nmds<-metaMDS(TPExpDatQE.std, distance='euclidean', k=2, autotransform=FALSE, wascores = FALSE, noshare = FALSE, trymax=10000)
+#vec.tp<-envfit(tp.nmds$points, TPExpDat.std, perm=1000)
+pointlocation <- tp.nmds[['points']] %>% as.data.frame() %>% cbind(TPTreatDat)
+
+a<- ggplot(data = pointlocation, aes(x =MDS1, y =  MDS2, fill = Light.Status, 
+                                     shape = Cobalamin.Status, group = Supergroup, label = row.names(pointlocation)))+
+  geom_polygon(fill = NA, color = "black") +
+  #geom_text()+
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(22,21)) +
+  scale_fill_manual(values = c("grey","black")) +   
+  theme(plot.title = element_text(face= "italic"))+
+  labs(x="Axis 1",y="Axis 2") +
+  theme(legend.position="none",
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 8))
+
+
+ #Get and write out vector info, write out CSV into the correct folder.-----
+vec.info<-envfit(tp.nmds$points, TPExpDatQE.std, perm=999)
+names <- as.data.frame(vec.info[[1]][[1]])%>%
+  mutate(Compound.Name = row.names(.),
+         pvalues = vec.info[[1]][[4]]) %>%
+  select(Compound.Name, pvalues)
+
+a
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T12_NMDSVectors")
+#write_csv(names, "TP_QE_vectors.csv")
+
+#Get and write out ANOSIM data info
+TPLight.anosim<-anosim(TPExpDatQE.std,TPTreatDat[,4], distance = 'euclidean')
+TPLightanosimResults <- c("Tp", "Light", TPLight.anosim$statistic, TPLight.anosim$signif)
+TPB12.anosim<-anosim(TPExpDatQE.std,TPTreatDat[,3], distance = 'euclidean')
+TPB12anosimResults <- c("Tp", "Cobalamin", TPB12.anosim$statistic, TPB12.anosim$signif)
+AnosimResults <- data.frame(x = TPLightanosimResults,  y = TPB12anosimResults, z= c("Org", "Variable", "ANOSIMStat", "ANOSIMpvalue"))
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T11_NMDSANOSIM_stats")
+#write_csv(AnosimResults, "TP_QE_anosimstats.csv")
+```
+
+##NMDS with all compounds for NP with QE data
+```{r NMDS, warning=FALSE, message=FALSE}
+NPExpDatQE.std <- NPExpDatQE.std[, !colSums(!is.finite(as.matrix(NPExpDatQE.std)))]
+np.nmds<-metaMDS(NPExpDatQE.std, distance='euclidean', k=2, autotransform=FALSE, wascores = FALSE, noshare = FALSE, trymax=10000)
+#vec.tp<-envfit(tp.nmds$points, TPExpDat.std, perm=1000)
+pointlocation <- np.nmds[['points']] %>% cbind(TPTreatDat)
+
+b<- ggplot(data = pointlocation, aes(x =MDS1, y =  MDS2, fill = Light.Status, 
+                                     shape = Cobalamin.Status, group = Supergroup, label = Supergroup))+
+  geom_polygon(fill = NA, color = "black") +
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(22,21)) +
+  scale_fill_manual(values = c("grey","black")) +   
+  theme(plot.title = element_text(face= "italic"),
+        axis.title.y = element_blank())+
+  labs(x="Axis 1") +
+  theme(legend.position="none",
+        axis.text = element_text(size = 8),
+        axis.title.x = element_text(size =8))
+b
+#ordiplot(np.nmds, type="text", display="sites", xlab="Axis 1", ylab="Axis 2")
+#plot(vec.info, p.max=.001, col="blue")
+
+
+#Get and write out vector info, write out CSV into the correct folder.-----
+vec.info<-envfit(np.nmds$points, NPExpDatQE.std, perm=999)
+names <- as.data.frame(vec.info[[1]][[1]])%>%
+  mutate(Compound.Name = row.names(.),
+         pvalues = vec.info[[1]][[4]]) %>%
+  select(Compound.Name, pvalues)
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T12_NMDSVectors")
+#write_csv(names, "NP_QE_vectors.csv")
+
+#Get and write out ANOSIM data info
+NPLight.anosim<-anosim(NPExpDatQE.std,TPTreatDat[,4], distance = 'euclidean')
+NPLightanosimResults <- c("Np", "Light", NPLight.anosim$statistic, NPLight.anosim$signif)
+NPB12.anosim<-anosim(NPExpDatQE.std,TPTreatDat[,3], distance = 'euclidean')
+NPB12anosimResults <- c("Np", "Cobalamin", NPB12.anosim$statistic, NPB12.anosim$signif)
+AnosimResults <- data.frame(x = NPLightanosimResults,  y = NPB12anosimResults, z= c("Org", "Variable", "ANOSIMStat", "ANOSIMpvalue"))
+
+setwd("/Users/katherineheal/Google_Drive/0_Manuscripts/_Heal_DiatomsCobalamin/_Working_manuscript/2_Figures_Working/T11_NMDSANOSIM_stats")
+#write_csv(AnosimResults, "NP_QE_anosimstats.csv")
+
+
+
+```
+
+
+
+
+
+##Combine NP and TP TQS plots
+```{r Combined TQS NMDS, warning=FALSE, message=FALSE}
+j <- plot_grid(g, h, a, b, labels = "AUTO", ncol = 2,   align = 'v')
+j
+#ggsave(j, filename = "/Users/katherineheal/Google_Drive/0_Manuscripts/_B12_Demand_Cultures_paper/_Working_manuscript/2_Figures_Working/F5_NMDSplots/QEandTQS_NMDS.pdf", width = 5.5, height = 5.2, units = "in", device = pdf)
+```
+
+
+
+

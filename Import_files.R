@@ -1,5 +1,3 @@
-# Actual script goes here
-
 source("B12_Inc_Functions.R")
 
 # Import all MSDial files --------------------------------------------------
@@ -44,87 +42,36 @@ names(classes.changed) <- runs
 list2env(classes.changed, globalenv())
 
 
-######
-# START HERE #
-######
-
-
-
-
 # Rearrange datasets ------------------------------------------------------
 
 # Positive
-SN_HILIC.POS_B12.Inc <- SN_HILIC.POS_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "SN.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, SN.Value, everything())
+Area.pos <- RearrangeDatasets(Area_HILIC.POS_B12.Inc, parameter = "Area.Value")
+Mz.pos   <- RearrangeDatasets(Mz_HILIC.POS_B12.Inc, parameter = "Mz.Value")
+RT.pos   <- RearrangeDatasets(RT_HILIC.POS_B12.Inc, parameter = "RT.Value")
+SN.pos   <- RearrangeDatasets(SN_HILIC.POS_B12.Inc, parameter = "SN.Value")
 
-RT_HILIC.POS_B12.Inc <- RT_HILIC.POS_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "RT.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, RT.Value, everything())
-
-Area_HILIC.POS_B12.Inc <- Area_HILIC.POS_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "Area.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, Area.Value, everything())
-
-Mz_HILIC.POS_B12.Inc <- Mz_HILIC.POS_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "MZ.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, MZ.Value, everything())
 
 # Negative
-SN_HILIC.NEG_B12.Inc <- SN_HILIC.NEG_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "SN.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, SN.Value, everything())
+Area.neg <- RearrangeDatasets(Area_HILIC.NEG_B12.Inc, parameter = "Area.Value")
+Mz.neg   <- RearrangeDatasets(Mz_HILIC.NEG_B12.Inc, parameter = "Mz.Value")
+RT.neg   <- RearrangeDatasets(RT_HILIC.NEG_B12.Inc, parameter = "RT.Value")
+SN.neg   <- RearrangeDatasets(SN_HILIC.NEG_B12.Inc, parameter = "SN.Value")
 
-RT_HILIC.NEG_B12.Inc <- RT_HILIC.NEG_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "RT.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, RT.Value, everything())
-
-Area_HILIC.NEG_B12.Inc <- Area_HILIC.NEG_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "Area.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, Area.Value, everything())
-
-Mz_HILIC.NEG_B12.Inc <- Mz_HILIC.NEG_B12.Inc %>%
-  tidyr::gather(
-    key = "Replicate.Name",
-    value = "MZ.Value",
-    starts_with("X")) %>%
-  select(Replicate.Name, MZ.Value, everything())
 
 # Combine to one dataset --------------------------------------------------
-combined.pos <- Area_HILIC.POS_B12.Inc %>%
-  left_join(Mz_HILIC.POS_B12.Inc) %>%
-  left_join(SN_HILIC.POS_B12.Inc) %>%
-  left_join(RT_HILIC.POS_B12.Inc) %>%
+combined.pos <- Area.pos %>%
+  left_join(Mz.pos) %>%
+  left_join(SN.pos) %>%
+  left_join(RT.pos) %>%
   mutate(Column = "HILICPos") %>%
-  select(Replicate.Name, Column, Area.Value, MZ.Value, RT.Value, SN.Value, everything())
+  select(Replicate.Name, Column, Area.Value, Mz.Value, RT.Value, SN.Value, everything())
 
-combined.neg <- Area_HILIC.NEG_B12.Inc %>%
-  left_join(Mz_HILIC.NEG_B12.Inc) %>%
-  left_join(SN_HILIC.NEG_B12.Inc) %>%
-  left_join(RT_HILIC.NEG_B12.Inc) %>%
+combined.neg <- Area.neg %>%
+  left_join(Mz.neg) %>%
+  left_join(SN.neg) %>%
+  left_join(RT.neg) %>%
   mutate(Column = "HILICNeg") %>%
-  select(Replicate.Name, Column, Area.Value, MZ.Value, RT.Value, SN.Value, everything())
+  select(Replicate.Name, Column, Area.Value, Mz.Value, RT.Value, SN.Value, everything())
 
 combined <- rbind(combined.pos, combined.neg) %>%
   mutate(Metabolite.name = ifelse(str_detect(Metabolite.name, "Ingalls_"), sapply(strsplit(Metabolite.name, "_"), `[`, 2), Metabolite.name)) 

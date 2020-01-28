@@ -19,11 +19,13 @@ combined <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
 
 RT.table <- combined %>%
   filter(Run.Type == "std") %>%
+  mutate(RT.Value = na_if(RT.Value, 0)) %>%
   arrange(Metabolite.name) %>%
   group_by(Metabolite.name) %>%
   mutate(RT.min = min(RT.Value, na.rm = TRUE)) %>%
   mutate(RT.max = max(RT.Value, na.rm = TRUE)) %>%
-  select(Metabolite.name:RT.max) %>%
+  mutate(RT.diff = abs(RT.max - RT.min)) %>%
+  select(Metabolite.name:RT.diff) %>%
   unique()
 
 blank.table <- combined %>%
@@ -50,7 +52,7 @@ add.RT.Flag <- SN.Area.Flags %>%
   group_by(Metabolite.name) %>%
   left_join(RT.table, by = c("Metabolite.name", "Run.Type")) %>%
   mutate(RT.Flag = ifelse((RT.Value >= (RT.max + RT.flex) | RT.Value <= (RT.min - RT.flex)), "RT.Flag", NA)) %>%
-  select(-c("RT.max", "RT.min"))
+  select(-c("RT.max", "RT.min", "RT.diff"))
 
 add.blk.Flag <- add.RT.Flag %>%
   left_join(blank.table, by = c("Metabolite.name", "Run.Type")) %>%

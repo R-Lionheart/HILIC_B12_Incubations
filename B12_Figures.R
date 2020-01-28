@@ -1,20 +1,19 @@
 source("B12_Inc_Functions.R")
 source("src/biostats.R")
 
-
+library(data.table)
 library(pastecs) # masks dplyr + tidyr
 library(stringr)
 library(tidyverse) 
 library(vegan)
 
 # User data
-pattern = "duplicates"
+pattern = "BMIS"
 percentMissing = 0.5
 badSamps <- c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4", "DSW700m")
 currentDate <- Sys.Date()
 
 # Functions
-# TODO (rlionheart): Fix the removal of NA in makeWide. Can df.rownames work for future operations?
 makeWide <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
@@ -26,27 +25,18 @@ makeWide <- function(df) {
     
     df.rownames[is.na(df.rownames)] <- NA
     
-    df.noNA <- na.omit(df.rownames)
+    #df.noNA <- na.omit(df.rownames)
   
-  return(df.noNA)
+  return(df.rownames)
 }
-
 makeWideMassFeature <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
-    tidyr::spread(Mass.Feature, Area.Ave) %>%
+    tidyr::spread(Mass.Feature, Area.Ave, -Compound.Type) %>%
     as.data.frame()
-  
-  # df.rows <- df.wide[,-1]
-  # rownames(df.rows) <- df.wide[,1]
-  
-  #df.rownames[is.na(df.rownames)] <- NA
-  
-  #df.noNA <- na.omit(df.rownames)
   
   return(df.wide)
 }
-
 
 # Data import and first filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
@@ -73,8 +63,8 @@ HILIC_all <- HILIC_all %>%
   mutate(Missing = sum(is.nan(Area.Ave))) 
 
 # All HILICS plotted, no filtering
-#plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
-#pdf(plotName)
+# plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
+# pdf(plotName)
 all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Area.Ave)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
@@ -82,7 +72,7 @@ all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Ar
         legend.position = "top",
         strip.text = element_text(size = 10))
 print(all.hilics)
-#dev.off()
+# dev.off()
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_all %>%
@@ -111,47 +101,106 @@ IsoLagran2_5 <- IsoLagran2 %>%
 rm(list = c("IsoLagran1", "IsoLagran2"))
 
 # Transform to wide for analysis ------------------------------------------------------------------
-test <- makeWide(IsoLagran1_5)
-test <- test[, -1]
+Iso_BT <- IsoLagran1_0.2 %>% 
+  select(-Compound.Type) %>%
+  filter(str_detect(SampID, "IL1WBT|IL1noBT|IL1Control"))
 
-test2 <- makeWideMassFeature(IsoLagran1_5)
-test2 <- test2[, -(1:2)]
-test2[is.na(test2)] <- 0
-
-# Structure exploration + data screening --------------------------------------------
-class(test2)
-stat.desc(test2)
-
-# Plots
-ecdf.plots(test2)
-hist.plots(test)
-box.plots(test)
-qqnorm.plots(test)
-uv.plots(test)
-
-# Transformation
-data.trans(test2, method='log') # method = "power", "asin", exp
-
-test.normalized <- decostand(test, method = 'normalize', na.rm = TRUE)
-hist.plots(test.normalized)
-
-data.stand(test, method='standardize', na.rm = TRUE) # method = 'log'
-
-# Outliers
-# uv.outliers(test, id = 'IL1Control:IL1DMB', var='IT0', sd.limit=3) # sd.limit=1
-mv.outliers(test, method='euclidean', sd.limit=3) # sd.limit=1
+Iso_wide <- makeWide(Iso_BT)
+Iso_wide[is.na(Iso_wide)] <- 1000
 
 
-# NMDS Visualization --------------------------------------------
-test_log <- log(test2 +1)
-test.nmds <- metaMDS(test_log, distance='bray', k=2, autotransform=FALSE, trymax=100)
-test.nmds
-names(test.nmds)
+# Transformation from reading materials --------------------------------------------
+Iso_log <- log(Iso_wide)
 
+# NOT WORKING
+Iso_nmds <- metaMDS(Iso_log, distance="bray", k=2, autotransform=FALSE, trymax=100)
+
+# Working (sometimes?), but not a good way to approach this?
+Iso_nmds2 <- metaMDS(Iso_log, distance="bray", k=1, autotransform=FALSE, trymax=100)
+#nmds.scree(Iso_log, distance="bray", k=10, autotransform=FALSE, trymax=20)
+#nmds.monte(Iso_log, distance="bray", k=3, autotransform=FALSE, trymax=20)
+
+stressplot(Iso_nmds)
+
+plot(Iso_nmds2,type = "n")
+text(Iso_nmds2,labels = row.names(Iso_wide))
+
+vec.iso <- envfit(Iso_nmds$points, Iso_log, perm=1000)
+vec.iso
+
+# plot.envfit 
+ordiplot(Iso_nmds, choices = c(1, 2), type = "text", display = "sites",
+         xlab="Axis 1", ylab="Axis 2")
+plot(vec.iso, p.max=.01, col="blue")
+
+Iso_d <- vegdist(Iso_log, "bray")
+Iso_ward <- hclust(Iso_d, method = "ward.D")
+Iso_class <- cutree(Iso_ward, k = 4)
+groups <- levels(factor(Iso_class))
+
+Iso.sc <- scores(Iso_nmds)
+p <- ordiplot(Iso.sc, type = "n", main = "NMDS combined with clustering")
+for (i in 1:length(groups))
+{
+  points(Iso.sc[Iso_class == i,], pch = (14+i), cex=2, col=i+1)
+}
+text(Iso.sc, row.names(Iso_wide), pos=4, cex=0.7)
+
+ordicluster(p, Iso_ward, col="dark grey")
+
+# KRH transformations --------------------------------------------------------------
+# Compounds should end up +/- and add up to 0
+
+# NOT CORRECT
+Iso_wide_normalized <- decostand(Iso_wide, method = "standardize", na.rm = TRUE)
+Iso_wide_normalizedT <- decostand(t(Iso_wide), method = "standardize", na.rm = TRUE) #THIS IS THE STANDARDIZED RESULT
+
+
+Iso_matrix <- as.matrix(Iso_wide)
+Iso_matrix_normalized <- decostand(Iso_matrix, method = 'standardize', na.rm = TRUE)
+Iso_matrix_normalizedT <- decostand(t(Iso_matrix), method = "standardize", na.rm = TRUE) # poor/bad result
+
+# NOT WORKING
+Iso_matrix_nmds <- metaMDS(t(Iso_wide_normalized), distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
+# Add in replicates
+
+# Attempt to mimic figure from paper --------------------------------------------------------------
+
+# Attempt 1
+Iso_wide_wLog2 <- Iso_wide %>%
+  rownames_to_column("Metabolite.Name") %>%
+  mutate(Fold.Change = IL1noBT/IL1WBT) %>%
+  rowwise() %>% 
+  mutate(Avg.Area.btw.Treatments = mean(c(IL1noBT, IL1WBT))) 
+
+ggplot(Iso_wide_wLog2, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
+  geom_point() +
+  geom_text(aes(label=Metabolite.Name), hjust=0, vjust=-0.5)
+
+
+# Attempt 2
+Iso_wide_normalized_wLog2 <- Iso_wide_normalized %>%
+  rownames_to_column("Metabolite.Name") %>%
+  mutate(Fold.Change = IL1noBT/IL1WBT) %>%
+  rowwise() %>%
+  mutate(Avg.Area.btw.Treatments = mean(c(IL1noBT, IL1WBT))) 
+
+ggplot(Iso_wide_normalized_wLog2, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
+  geom_point() + 
+  geom_text(aes(label = Metabolite.Name), hjust = 0, vjust = -0.5)
+
+
+# Attempt 3
+No_BetaineDMSP <- Iso_wide_normalized_wLog2 %>%
+  filter(!Metabolite.Name == "Betaine") %>%
+  filter(!Metabolite.Name == "DMSP")
+
+ggplot(No_BetaineDMSP, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
+  geom_point() + 
+  geom_text(aes(label=Metabolite.Name), hjust=0, vjust=-0.5)
 
 
 ############################################################################################
-
 # B12 FOLD CHANGE --------------------------------------------
 BTs <- HILIC_grouped %>%
   filter(str_detect(SampID, "noBT|WBT|DSW|Control")) %>%

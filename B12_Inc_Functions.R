@@ -100,6 +100,27 @@ IdentifyDuplicates <- function(df) {
   return(duplicates)
 }
 
+RearrangeDatasets <- function(df, parameter) {
+  # Shortcut for altering multiple datasets using the tidyr::gather() function.
+  #
+  # Args
+  #   df: MSDial dataframe with first n empty rows removed.
+  #   parameter: Table value. This parameter will become the column name when 
+  #              changed to long format.
+  #
+  # Returns
+  #   df: MSDial dataframe, changed to long format and with a custom-named value column.
+  df <- df %>%
+    tidyr::gather(
+      key = "Replicate.Name",
+      value = "parameter",
+      starts_with("X")) %>%
+    select(Replicate.Name, parameter, everything())
+  
+  names(df)[2] <- parameter
+  
+  return(df)
+}
 
 # Functions --------------------------------------------
 
