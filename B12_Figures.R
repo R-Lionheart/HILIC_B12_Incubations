@@ -1,8 +1,9 @@
-source("B12_Inc_Functions.R")
+source("B12_Functions.R")
 source("src/biostats.R")
 
 library(data.table)
 library(pastecs) # masks dplyr + tidyr
+library(plotly)
 library(stringr)
 library(tidyverse) 
 library(vegan)
@@ -10,14 +11,12 @@ library(vegan)
 # User data
 pattern = "BMIS"
 percentMissing = 0.5
-badSamps <- c("Sept29QC", "TruePooWeek1", "TruePooWeek2", "TruePooWeek3", "TruePooWeek4", "DSW700m")
-currentDate <- Sys.Date()
 
 # Functions
 makeWide <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
-    tidyr::spread(SampID, Area.Ave) %>%
+    tidyr::spread(Replicate.Name, Adjusted.Area) %>%
     as.data.frame()
   
     df.rownames <- df.wide[,-1]
@@ -43,36 +42,19 @@ filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
 filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
 
 HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE)) %>%
-  select(Mass.Feature, SampID, Adjusted.Area) %>%
-  filter(!SampID %in% badSamps) %>%
+  select(Mass.Feature, runDate:replicate, Adjusted.Area) %>%
+  unite(Replicate.Name, runDate:replicate, sep = "_") %>%
+  filter(!str_detect(Replicate.Name, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   filter(!Mass.Feature == "Inj_vol") %>%
-  filter(!str_detect(Mass.Feature, ",")) %>% # Drop internal standards
-  group_by(Mass.Feature, SampID) %>%
-  mutate(Area.Ave = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  select(Mass.Feature, SampID, Area.Ave) %>%
-  unique()
-
-standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors = FALSE) %>%
-  rename(Mass.Feature = Compound.Name) %>%
-  filter(Mass.Feature %in% HILIC_all$Mass.Feature)
-
-HILIC_all <- HILIC_all %>%
-  left_join(standards %>% select(Mass.Feature, Compound.Type) %>% unique()) %>%
-  select(Mass.Feature, SampID, Area.Ave, Compound.Type) %>%
+  filter(!str_detect(Mass.Feature, ",")) %>%
   group_by(Mass.Feature) %>%
-  mutate(Missing = sum(is.nan(Area.Ave))) 
+  mutate(Missing = sum(is.na(Adjusted.Area))) 
 
 # All HILICS plotted, no filtering
-# plotName <- paste("figures/All_HILICS_", currentDate, ".pdf", sep = "")
-# pdf(plotName)
-all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Area.Ave), y = Area.Ave)) +
+all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
   geom_bar(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
-        axis.text.y = element_text(size = 10),
-        legend.position = "top",
-        strip.text = element_text(size = 10))
-print(all.hilics)
-# dev.off()
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+#print(all.hilics)
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_all %>%
@@ -84,121 +66,94 @@ HILIC_filtered <- HILIC_all %>%
 
 # Separate dataset into groups for analysis -------------------------------------------------------
 IsoLagran1 <- HILIC_filtered %>%
-  filter(str_detect(SampID, "IL1|IT0"))
+  filter(str_detect(Replicate.Name, "IL1|IT0"))
 IsoLagran2 <- HILIC_filtered %>%
-  filter(str_detect(SampID, "IL2|IT0"))
+  filter(str_detect(Replicate.Name, "IL2|IT0"))
 
 IsoLagran1_0.2 <- IsoLagran1 %>%
-  filter(!str_detect(SampID, "5um"))
+  filter(!str_detect(Replicate.Name, "5um"))
 IsoLagran1_5 <- IsoLagran1 %>%
-  filter(str_detect(SampID, "5um"))
+  filter(str_detect(Replicate.Name, "5um"))
+write.csv(IsoLagran1_0.2, "data_processed/IsoLagran_0.2_notnormed.csv")
 
 IsoLagran2_0.2 <- IsoLagran2 %>%
-  filter(!str_detect(SampID, "5um"))
+  filter(!str_detect(Replicate.Name, "5um"))
 IsoLagran2_5 <- IsoLagran2 %>%
-  filter(str_detect(SampID, "5um"))
+  filter(str_detect(Replicate.Name, "5um"))
 
 rm(list = c("IsoLagran1", "IsoLagran2"))
 
-# Transform to wide for analysis ------------------------------------------------------------------
-Iso_BT <- IsoLagran1_0.2 %>% 
-  select(-Compound.Type) %>%
-  filter(str_detect(SampID, "IL1WBT|IL1noBT|IL1Control"))
+# Treatment data info --------------------------------------------------------------------------
+Dataset <- IsoLagran2_5
+# 
+# Treatment <- Dataset %>%
+#   ungroup() %>%
+#   select(Replicate.Name) %>%
+#   unique() %>%
+#   separate(Replicate.Name, into = c("Date", "runtype", "Supergroup", "replicate"), remove = FALSE) %>%
+#   mutate(Supergroup = ifelse(Supergroup == "IT0", ifelse(str_detect(Replicate.Name, "171002"), "IT0.early", "IT0.late"), Supergroup)) %>%
+#   mutate(Control.Status = ifelse(str_detect(Supergroup, "Control|IT0|DSW"),
+#                                  "Control", ifelse(str_detect(Supergroup, "IT0"), "Incubation", "NonControl"))) %>%
+#   mutate(Nutrient.Status = ifelse(Control.Status == "Control", "NoNutrient",
+#                                  ifelse((str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "DMBnoBT")), "DMBnoBT",
+#                                         ifelse(str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "WBT"), "B12",
+#                                                ifelse(str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "noBT"), "noB12", "DMB"))))) %>%
+#   select(Replicate.Name, Control.Status, Nutrient.Status, Supergroup)
 
-Iso_wide <- makeWide(Iso_BT)
+
+Treatment <- Dataset %>%
+  ungroup() %>%
+  select(Replicate.Name) %>%
+  unique() %>%
+  separate(Replicate.Name, into = c("Date", "runtype", "Supergroup", "replicate"), remove = FALSE) %>%
+  mutate(Supergroup = ifelse(Supergroup == "IT0", ifelse(str_detect(Replicate.Name, "171002"), "IT0.early", "IT0.late"), Supergroup)) %>%
+  mutate(Control.Status = ifelse(str_detect(Supergroup, "IT0"),
+                                 "Incubation", ifelse(str_detect(Supergroup, "DSW"), "DeepSeaWater", 
+                                                      ifelse(str_detect(Supergroup, "Control"), "Control", "Treatments")))) %>%
+  mutate(Treatment.Status = ifelse(Control.Status == "Control", "FinalNutrients",
+                                  ifelse(Control.Status == "DeepSeaWater", "DeepNutrients",
+                                         ifelse(Control.Status == "Incubation", "InSituNutrients",
+                                                ifelse(str_detect(Supergroup, "DMBnoBT"), "DMBnoB12",
+                                                       ifelse(str_detect(Supergroup, "WBT"), "B12",
+                                                              ifelse(str_detect(Supergroup, "DMB"), "DMB", "noB12"))))))) %>%
+  select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
+
+# Transform to wide for analysis -----------------------------------------------------------------
+Iso_wide <- makeWide(Dataset)
 Iso_wide[is.na(Iso_wide)] <- 1000
-
-
-# Transformation from reading materials --------------------------------------------
-Iso_log <- log(Iso_wide)
-
-# NOT WORKING
-Iso_nmds <- metaMDS(Iso_log, distance="bray", k=2, autotransform=FALSE, trymax=100)
-
-# Working (sometimes?), but not a good way to approach this?
-Iso_nmds2 <- metaMDS(Iso_log, distance="bray", k=1, autotransform=FALSE, trymax=100)
-#nmds.scree(Iso_log, distance="bray", k=10, autotransform=FALSE, trymax=20)
-#nmds.monte(Iso_log, distance="bray", k=3, autotransform=FALSE, trymax=20)
-
-stressplot(Iso_nmds)
-
-plot(Iso_nmds2,type = "n")
-text(Iso_nmds2,labels = row.names(Iso_wide))
-
-vec.iso <- envfit(Iso_nmds$points, Iso_log, perm=1000)
-vec.iso
-
-# plot.envfit 
-ordiplot(Iso_nmds, choices = c(1, 2), type = "text", display = "sites",
-         xlab="Axis 1", ylab="Axis 2")
-plot(vec.iso, p.max=.01, col="blue")
-
-Iso_d <- vegdist(Iso_log, "bray")
-Iso_ward <- hclust(Iso_d, method = "ward.D")
-Iso_class <- cutree(Iso_ward, k = 4)
-groups <- levels(factor(Iso_class))
-
-Iso.sc <- scores(Iso_nmds)
-p <- ordiplot(Iso.sc, type = "n", main = "NMDS combined with clustering")
-for (i in 1:length(groups))
-{
-  points(Iso.sc[Iso_class == i,], pch = (14+i), cex=2, col=i+1)
-}
-text(Iso.sc, row.names(Iso_wide), pos=4, cex=0.7)
-
-ordicluster(p, Iso_ward, col="dark grey")
+Iso_wideT <- t(Iso_wide)
 
 # KRH transformations --------------------------------------------------------------
-# Compounds should end up +/- and add up to 0
+Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) #THIS IS THE STANDARDIZED RESULT from 1/28, but doesn't look right 1/29.
+#write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran_0.2_normed.csv")
 
-# NOT CORRECT
-Iso_wide_normalized <- decostand(Iso_wide, method = "standardize", na.rm = TRUE)
-Iso_wide_normalizedT <- decostand(t(Iso_wide), method = "standardize", na.rm = TRUE) #THIS IS THE STANDARDIZED RESULT
+Iso_wide_nmds <- metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
 
-
-Iso_matrix <- as.matrix(Iso_wide)
-Iso_matrix_normalized <- decostand(Iso_matrix, method = 'standardize', na.rm = TRUE)
-Iso_matrix_normalizedT <- decostand(t(Iso_matrix), method = "standardize", na.rm = TRUE) # poor/bad result
-
-# NOT WORKING
-Iso_matrix_nmds <- metaMDS(t(Iso_wide_normalized), distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
-# Add in replicates
-
-# Attempt to mimic figure from paper --------------------------------------------------------------
-
-# Attempt 1
-Iso_wide_wLog2 <- Iso_wide %>%
-  rownames_to_column("Metabolite.Name") %>%
-  mutate(Fold.Change = IL1noBT/IL1WBT) %>%
-  rowwise() %>% 
-  mutate(Avg.Area.btw.Treatments = mean(c(IL1noBT, IL1WBT))) 
-
-ggplot(Iso_wide_wLog2, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
-  geom_point() +
-  geom_text(aes(label=Metabolite.Name), hjust=0, vjust=-0.5)
+stressplot(Iso_wide_nmds)
 
 
-# Attempt 2
-Iso_wide_normalized_wLog2 <- Iso_wide_normalized %>%
-  rownames_to_column("Metabolite.Name") %>%
-  mutate(Fold.Change = IL1noBT/IL1WBT) %>%
-  rowwise() %>%
-  mutate(Avg.Area.btw.Treatments = mean(c(IL1noBT, IL1WBT))) 
+Iso_pointlocation <- Iso_wide_nmds[['points']] %>% as.data.frame() %>% cbind(Treatment)
 
-ggplot(Iso_wide_normalized_wLog2, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
-  geom_point() + 
-  geom_text(aes(label = Metabolite.Name), hjust = 0, vjust = -0.5)
+# NMDS graph --------------------------------------------------------------
+
+Isograph_2_5 <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, color = Control.Status, 
+                                                  shape = Treatment.Status, group = Supergroup)) +
+  geom_polygon(fill = NA, color = "black") +
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(15, 16, 17, 2, 16, 16, 0)) +
+  scale_color_manual(values = c("black","blue3", "chartreuse3", "red")) +   
+  ggtitle("IsoLagrangian Eddy 2: 5um") +
+  theme(plot.title = element_text(size = 15),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text( size = 8),
+        axis.text = element_text(size = 8))+
+  labs(y = "Axis 2") +
+  theme(legend.position = "left")
+Isograph_2_5
 
 
-# Attempt 3
-No_BetaineDMSP <- Iso_wide_normalized_wLog2 %>%
-  filter(!Metabolite.Name == "Betaine") %>%
-  filter(!Metabolite.Name == "DMSP")
-
-ggplot(No_BetaineDMSP, aes(x = Avg.Area.btw.Treatments, y = Fold.Change)) +
-  geom_point() + 
-  geom_text(aes(label=Metabolite.Name), hjust=0, vjust=-0.5)
-
+require(gridExtra)
+grid.arrange(Iso_graph1_0.2, Isograph_1_5, Isograph_2_0.2, Isograph_2_5, ncol=2)
 
 ############################################################################################
 # B12 FOLD CHANGE --------------------------------------------

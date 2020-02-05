@@ -1,6 +1,6 @@
 
 # Quality control script
-source("B12_Inc_Functions.R")
+source("B12_Functions.R")
 
 area.min   <- 1000
 RT.flex    <- 0.4

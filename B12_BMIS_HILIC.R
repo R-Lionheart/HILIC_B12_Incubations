@@ -1,5 +1,5 @@
 # Things to Return --------------------------------------------------------
-source("B12_Inc_Functions.R")
+source("B12_Functions.R")
 
 
 # IS_inspectPlot (plot to make sure there aren't any internal standards we should kick out)
@@ -134,6 +134,7 @@ for (i in 1:length(unique(HILIC.IS.data$Mass.Feature))) {
 
 HILIC.area.norm <- do.call(rbind, Split_Dat) %>%
   select(-IS_Area, -Average.Area)
+
 
 # Standardize name structure to: Date_type_ID_replicate_anythingextra) ----------------------------------------------------------------
 HILIC.mydata.new <- HILIC.area.norm %>%
