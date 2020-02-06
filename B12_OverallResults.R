@@ -1,42 +1,44 @@
-#source("src/biostats.R")
 library(tidyverse)
-#library("vegan")
 library(gridExtra) 
 
-
 # Get wide data with stats
-TPTQSdatAll <- read.csv("KRH_info/Filtered_Wide_Combined_wStats.csv")
-TPTQSdat <- TPTQSdatAll %>% 
-  select(Compound.Name:RB12LL_EF) 
-
+mydatAll <- read.csv("data_processed/WBMISd_wStats.csv")
 
 # Make new column that is a combo of BOTH, ONE, or NONE
-TPSigs <-TPTQSdatAll %>%
-  select(Compound.Name, B12Sig, B12HLSig, B12LLSig, LightSig, LightRB12Sig, LightLB12Sig)
-Both <- TPSigs %>%
+allSigs <-mydatAll %>%
+  select(Mass.Feature, contains("Sig"))
+Both <- allSigs %>%
   filter(B12Sig == "TRUE" | (B12HLSig == "TRUE" & B12LLSig == "TRUE")) %>%
   mutate(B12SigToPlot = "BOTH")
-One <- TPSigs %>%
+
+One <- allSigs %>%
   filter(B12HLSig == "TRUE" | B12LLSig == "TRUE") %>%
   filter(!Compound.Name %in% Both$Compound.Name) %>%
   mutate(B12SigToPlot = "ONE")
-Neither <- TPSigs %>%
+
+Neither <- allSigs %>%
   filter(!Compound.Name %in% Both$Compound.Name) %>%
   filter(!Compound.Name %in% One$Compound.Name) %>%
   mutate(B12SigToPlot = "NONE")
+
 B12SigToPlot <- rbind(Neither, One, Both)
-Both <- TPSigs %>%
+
+Both <- allSigs %>%
   filter(LightSig == "TRUE" | (LightRB12Sig == "TRUE" & LightLB12Sig == "TRUE")) %>%
   mutate(LightSigToPlot = "BOTH")
-One <- TPSigs %>%
+
+One <- allSigs %>%
   filter(LightRB12Sig == "TRUE" | LightLB12Sig == "TRUE") %>%
   filter(!Compound.Name %in% Both$Compound.Name) %>%
   mutate(LightSigToPlot = "ONE")
-Neither <- TPSigs %>%
+
+Neither <- allSigs %>%
   filter(!Compound.Name %in% Both$Compound.Name) %>%
   filter(!Compound.Name %in% One$Compound.Name) %>%
   mutate(LightSigToPlot = "NONE")
+
 LightSigToPlot <- rbind(Neither, One, Both)
+
 TPTQSdatAll <- TPTQSdatAll %>% left_join(B12SigToPlot) %>% left_join(LightSigToPlot)
 
 

@@ -1,15 +1,15 @@
 source("B12_Functions.R")
 source("src/biostats.R")
 
-library(data.table)
-library(pastecs) # masks dplyr + tidyr
+#library(data.table)
+#library(pastecs) # masks dplyr + tidyr
 library(plotly)
 library(stringr)
 library(tidyverse) 
 library(vegan)
 
 # User data
-pattern = "BMIS"
+pattern = "BMIS_Output"
 percentMissing = 0.5
 
 # Functions
@@ -85,21 +85,6 @@ rm(list = c("IsoLagran1", "IsoLagran2"))
 
 # Treatment data info --------------------------------------------------------------------------
 Dataset <- IsoLagran2_5
-# 
-# Treatment <- Dataset %>%
-#   ungroup() %>%
-#   select(Replicate.Name) %>%
-#   unique() %>%
-#   separate(Replicate.Name, into = c("Date", "runtype", "Supergroup", "replicate"), remove = FALSE) %>%
-#   mutate(Supergroup = ifelse(Supergroup == "IT0", ifelse(str_detect(Replicate.Name, "171002"), "IT0.early", "IT0.late"), Supergroup)) %>%
-#   mutate(Control.Status = ifelse(str_detect(Supergroup, "Control|IT0|DSW"),
-#                                  "Control", ifelse(str_detect(Supergroup, "IT0"), "Incubation", "NonControl"))) %>%
-#   mutate(Nutrient.Status = ifelse(Control.Status == "Control", "NoNutrient",
-#                                  ifelse((str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "DMBnoBT")), "DMBnoBT",
-#                                         ifelse(str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "WBT"), "B12",
-#                                                ifelse(str_detect(Control.Status, "NonControl") & str_detect(Replicate.Name, "noBT"), "noB12", "DMB"))))) %>%
-#   select(Replicate.Name, Control.Status, Nutrient.Status, Supergroup)
-
 
 Treatment <- Dataset %>%
   ungroup() %>%
@@ -267,22 +252,3 @@ print(aminos.plot.5um)
 
 
 
-# HEATMAPS -------------------------------------------------------------------
-DMBs_IL1 <- DMBs %>%
-  ungroup() %>%
-  filter(str_detect(SampID, "IL1")) %>%
-  mutate(SampID = as.factor(SampID))
-
-DMBs_IL1$SampID <- factor(DMBs_IL1$SampID, 
-                         levels = c("IL1Control", "IL1Control5um", "IL1DSW", "IL1DSW5um", 
-                                    "IL1DMB", "IL1DMB5um", "IL1DMBnoBT", "IL1DMBnoBT5um"))
-
-DMBs_IL1.heatmap <- ggplot(data = DMBs_IL1, aes(x = Mass.Feature, y = SampID, fill = Area.Ave)) + 
-  geom_tile(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-        axis.text.y = element_text(size = 10),
-        axis.ticks.length=unit(.25, "cm"),
-        strip.text = element_text(size = 10)) +
-  scale_y_discrete(limits = rev(levels(as.factor(DMBs_IL1$SampID))))
-  ggtitle("HILIC Full Heatmap") 
-print(DMBs_IL1.heatmap)
