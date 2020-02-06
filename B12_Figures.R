@@ -4,6 +4,7 @@ source("src/biostats.R")
 #library(data.table)
 #library(pastecs) # masks dplyr + tidyr
 library(plotly)
+library(plyr)
 library(stringr)
 library(tidyverse) 
 library(vegan)
@@ -49,6 +50,17 @@ HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = 
   filter(!str_detect(Mass.Feature, ",")) %>%
   group_by(Mass.Feature) %>%
   mutate(Missing = sum(is.na(Adjusted.Area))) 
+
+### ADJUST FOR IT0 ISSUES ###
+HILIC_fixed <- HILIC_all %>%
+  transmute(Replicate.Name = plyr::mapvalues(Replicate.Name, c("171002_Smp_IT0_1", "171002_Smp_IT0_2", "171002_Smp_IT0_3"), 
+                                  c("171002_Smp_IL1IT0_1", "171002_Smp_IL1IT0_2", "171002_Smp_IL1IT0_3")),
+            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171009_Smp_IT05um_1", "171009_Smp_IT05um_2", "171009_Smp_IT05um_3"),
+                                  c("171009_Smp_IL1IT05um_1", "171009_Smp_IL1IT05um_2", "171009_Smp_IL1IT05um_3")),
+            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171016_Smp_IT0_1", "171016_Smp_IT0_2", "171016_Smp_IT0_3"),
+                                  c("171016_Smp_IL2IT0_1", "171016_Smp_IL2IT0_2", "171016_Smp_IL2IT0_3")),
+            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171023_Smp_IT05um_1", "171023_Smp_IT05um_2", "171023_Smp_IT05um_3"),
+                                  c("171023_Smp_IL2IT05um_1", "171023_Smp_IL2IT05um_2", "171023_Smp_IL2IT05um_3")))
 
 # All HILICS plotted, no filtering
 all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +

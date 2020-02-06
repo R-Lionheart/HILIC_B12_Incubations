@@ -20,7 +20,6 @@ columns.to.drop <- c('Average.Rt.min.', 'Formula', 'Ontology', 'INCHIKEY',
                      'RT.similarity', 'Dot.product', 'Reverse.dot.product', 'Fragment.presence..')
 
 # Set header, filter unknowns ---------------------------------------
-
 runs <- grep(matching.variable, names(.GlobalEnv), value = TRUE, ignore.case = TRUE)
 runlist <- do.call("list", mget(runs))
 
