@@ -47,40 +47,41 @@ HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = 
   unite(Replicate.Name, runDate:replicate, sep = "_") %>%
   filter(!str_detect(Replicate.Name, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   filter(!Mass.Feature == "Inj_vol") %>%
-  filter(!str_detect(Mass.Feature, ",")) %>%
-  group_by(Mass.Feature) %>%
-  mutate(Missing = sum(is.na(Adjusted.Area))) 
+  filter(!str_detect(Mass.Feature, ","))
 
 ### ADJUST FOR IT0 ISSUES ###
 HILIC_fixed <- HILIC_all %>%
-  transmute(Replicate.Name = plyr::mapvalues(Replicate.Name, c("171002_Smp_IT0_1", "171002_Smp_IT0_2", "171002_Smp_IT0_3"), 
+  mutate(Replicate.Name1 = plyr::mapvalues(Replicate.Name, c("171002_Smp_IT0_1", "171002_Smp_IT0_2", "171002_Smp_IT0_3"), 
                                   c("171002_Smp_IL1IT0_1", "171002_Smp_IL1IT0_2", "171002_Smp_IL1IT0_3")),
-            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171009_Smp_IT05um_1", "171009_Smp_IT05um_2", "171009_Smp_IT05um_3"),
+            Replicate.Name2 = plyr::mapvalues(Replicate.Name1, c("171009_Smp_IT05um_1", "171009_Smp_IT05um_2", "171009_Smp_IT05um_3"),
                                   c("171009_Smp_IL1IT05um_1", "171009_Smp_IL1IT05um_2", "171009_Smp_IL1IT05um_3")),
-            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171016_Smp_IT0_1", "171016_Smp_IT0_2", "171016_Smp_IT0_3"),
+            Replicate.Name3 = plyr::mapvalues(Replicate.Name2, c("171016_Smp_IT0_1", "171016_Smp_IT0_2", "171016_Smp_IT0_3"),
                                   c("171016_Smp_IL2IT0_1", "171016_Smp_IL2IT0_2", "171016_Smp_IL2IT0_3")),
-            Replicate.Name = plyr::mapvalues(Replicate.Name, c("171023_Smp_IT05um_1", "171023_Smp_IT05um_2", "171023_Smp_IT05um_3"),
-                                  c("171023_Smp_IL2IT05um_1", "171023_Smp_IL2IT05um_2", "171023_Smp_IL2IT05um_3")))
+            Replicate.Name4 = plyr::mapvalues(Replicate.Name3, c("171023_Smp_IT05um_1", "171023_Smp_IT05um_2", "171023_Smp_IT05um_3"),
+                                  c("171023_Smp_IL2IT05um_1", "171023_Smp_IL2IT05um_2", "171023_Smp_IL2IT05um_3"))) %>%
+  select(Mass.Feature, Replicate.Name4, Adjusted.Area) %>%
+  dplyr::rename(Replicate.Name = Replicate.Name4)
+detach("package:plyr", unload=TRUE)
 
 # All HILICS plotted, no filtering
-all.hilics <- ggplot(HILIC_all, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
+all.hilics <- ggplot(HILIC_fixed, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 #print(all.hilics)
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
-HILIC_filtered <- HILIC_all %>%
+HILIC_filtered <- HILIC_fixed %>%
   group_by(Mass.Feature) %>%
+  mutate(Missing = sum(is.na(Adjusted.Area))) %>%
   mutate(MF.Count = n()) %>%
   filter(!Missing > (percentMissing*MF.Count)) %>%
   select(-c("Missing", "MF.Count"))
 
-
 # Separate dataset into groups for analysis -------------------------------------------------------
 IsoLagran1 <- HILIC_filtered %>%
-  filter(str_detect(Replicate.Name, "IL1|IT0"))
+  filter(str_detect(Replicate.Name, "IL1"))
 IsoLagran2 <- HILIC_filtered %>%
-  filter(str_detect(Replicate.Name, "IL2|IT0"))
+  filter(str_detect(Replicate.Name, "IL2"))
 
 IsoLagran1_0.2 <- IsoLagran1 %>%
   filter(!str_detect(Replicate.Name, "5um"))
@@ -93,7 +94,7 @@ IsoLagran2_0.2 <- IsoLagran2 %>%
 IsoLagran2_5 <- IsoLagran2 %>%
   filter(str_detect(Replicate.Name, "5um"))
 
-rm(list = c("IsoLagran1", "IsoLagran2"))
+rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
 
 # Treatment data info --------------------------------------------------------------------------
 Dataset <- IsoLagran2_5
@@ -103,7 +104,6 @@ Treatment <- Dataset %>%
   select(Replicate.Name) %>%
   unique() %>%
   separate(Replicate.Name, into = c("Date", "runtype", "Supergroup", "replicate"), remove = FALSE) %>%
-  mutate(Supergroup = ifelse(Supergroup == "IT0", ifelse(str_detect(Replicate.Name, "171002"), "IT0.early", "IT0.late"), Supergroup)) %>%
   mutate(Control.Status = ifelse(str_detect(Supergroup, "IT0"),
                                  "Incubation", ifelse(str_detect(Supergroup, "DSW"), "DeepSeaWater", 
                                                       ifelse(str_detect(Supergroup, "Control"), "Control", "Treatments")))) %>%
