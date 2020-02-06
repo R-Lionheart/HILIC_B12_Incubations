@@ -1,4 +1,4 @@
-source("B12_Functions.R")
+#source("B12_Functions.R")
 source("src/biostats.R")
 
 #library(data.table)
@@ -28,6 +28,21 @@ makeWide <- function(df) {
     #df.noNA <- na.omit(df.rownames)
   
   return(df.rownames)
+}
+
+RemoveCsv <- function(full.filepaths) {
+  # Remove a .csv file extension and obtain basename from a given list of filepaths.
+  #
+  # Args
+  #   Character strings of filepaths in a directory.
+  #
+  # Returns
+  #   Character strings of file basenames, without a csv extension.
+  #
+  no.path <- substr(full.filepaths, 1, nchar(full.filepaths)-4)
+  no.ID <-   gsub("\\_.*","", no.path)
+  
+  return(no.path)
 }
 
 # Data import and first filtering of unnecessary SampIDs --------------------------------------------
@@ -116,7 +131,7 @@ Iso_wideT <- t(Iso_wide)
 Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
 #write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran_0.2_normed.csv")
 
-Iso_wide_nmds <- metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
+Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
 
 stressplot(Iso_wide_nmds)
 
