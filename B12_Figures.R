@@ -29,14 +29,6 @@ makeWide <- function(df) {
   
   return(df.rownames)
 }
-makeWideMassFeature <- function(df) {
-  df.wide <- df %>%
-    ungroup() %>%
-    tidyr::spread(Mass.Feature, Area.Ave, -Compound.Type) %>%
-    as.data.frame()
-  
-  return(df.wide)
-}
 
 # Data import and first filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))
@@ -107,7 +99,7 @@ Treatment <- Dataset %>%
   mutate(Control.Status = ifelse(str_detect(Supergroup, "IT0"),
                                  "Incubation", ifelse(str_detect(Supergroup, "DSW"), "DeepSeaWater", 
                                                       ifelse(str_detect(Supergroup, "Control"), "Control", "Treatments")))) %>%
-  mutate(Treatment.Status = ifelse(Control.Status == "Control", "FinalNutrients",
+  mutate(Treatment.Status = ifelse(Control.Status == "Control", "NoAddedNutrients",
                                   ifelse(Control.Status == "DeepSeaWater", "DeepNutrients",
                                          ifelse(Control.Status == "Incubation", "InSituNutrients",
                                                 ifelse(str_detect(Supergroup, "DMBnoBT"), "DMBnoB12",
@@ -121,7 +113,7 @@ Iso_wide[is.na(Iso_wide)] <- 1000
 Iso_wideT <- t(Iso_wide)
 
 # KRH transformations --------------------------------------------------------------
-Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) #THIS IS THE STANDARDIZED RESULT from 1/28, but doesn't look right 1/29.
+Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
 #write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran_0.2_normed.csv")
 
 Iso_wide_nmds <- metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
