@@ -145,6 +145,8 @@ MakeBarPlot <- function(df, title) {
     ggtitle(title)
   print(df.plot)
 }
+
+
 MakeFacetGraphs <- function (df, title, scale) {
   df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +
     geom_bar(stat = "identity") +

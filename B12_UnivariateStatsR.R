@@ -20,7 +20,7 @@ for (i in c(2:ncol(data3))) {
 data3 <- data3 %>%
   mutate(Mass.Feature = as.character(Mass.Feature))
 
-data4 <- gather(data3, Replicate.Name, Area.BMISd.Normd, X171002_Smp_IL1Control_1:X171016_Smp_IT0_3)
+data4 <- gather(data3, Replicate.Name, Area.BMISd.Normd, data3[, 2:22])
 
 data4$Replicate.Name <- gsub("^.{0,1}", "", data4$Replicate.Name)
 
@@ -45,7 +45,7 @@ test.heatmap <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID, fi
         strip.text = element_text(size = 10)) +
   scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
   ggtitle("B12 HILIC Incubation: IsoLagran 0.2um") 
-#print(test.heatmap)
+print(test.heatmap)
 
 
 # KRH analysis ------------------------------------------------------------
