@@ -103,23 +103,7 @@ IsoLagran2_5 <- IsoLagran2 %>%
 rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
 
 # Treatment data info --------------------------------------------------------------------------
-Dataset <- IsoLagran1_5
-
-# Treatment <- Dataset %>%
-#   ungroup() %>%
-#   select(Replicate.Name) %>%
-#   unique() %>%
-#   separate(Replicate.Name, into = c("Date", "runtype", "Supergroup", "replicate"), remove = FALSE) %>%
-#   mutate(Control.Status = ifelse(str_detect(Supergroup, "IT0"),
-#                                  "Incubation", ifelse(str_detect(Supergroup, "DSW"), "DeepSeaWater", 
-#                                                       ifelse(str_detect(Supergroup, "Control"), "Control", "Treatments")))) %>%
-#   mutate(Treatment.Status = ifelse(Control.Status == "Control", "NoAddedNutrients",
-#                                   ifelse(Control.Status == "DeepSeaWater", "DeepNutrients",
-#                                          ifelse(Control.Status == "Incubation", "InSituNutrients",
-#                                                 ifelse(str_detect(Supergroup, "DMBnoBT"), "DMBnoB12",
-#                                                        ifelse(str_detect(Supergroup, "WBT"), "B12",
-#                                                               ifelse(str_detect(Supergroup, "DMB"), "DMB", "noB12"))))))) %>%
-#   select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
+Dataset <- IsoLagran2_5
 
 Treatment <- Dataset %>%
   ungroup() %>%
@@ -155,26 +139,25 @@ Iso_pointlocation <- Iso_wide_nmds[['points']] %>% as.data.frame() %>% cbind(Tre
 
 # NMDS graph --------------------------------------------------------------
 
-Isograph_1_5 <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
+Isograph_2_5 <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
                                                   shape = Treatment.Status, group = Supergroup)) +
   geom_polygon(fill = NA, color = "black") +
   geom_point(size = 3) + 
-  scale_shape_manual(values = c(15, 8, 17, 2, 16, 0, 10)) +
-  geom_text(aes(label = Treatment.Status), 
-            vjust=-0.25, size = 2.5) +
-  #scale_color_manual(values = c("black","blue3", "chartreuse3", "red")) +   
-  ggtitle("IsoLagrangian Eddy 1: 5um") +
+  scale_shape_manual(values = c(15, 8, 16, 17, 2, 0, 10)) +
+  # geom_text(aes(label = Treatment.Status), 
+  #           vjust=-0.25, size = 2.5) +
+  ggtitle("IsoLagrangian Eddy 2: 5um") +
   theme(plot.title = element_text(size = 15),
-        axis.title.x = element_blank(),
-        axis.title.y = element_text( size = 8),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
         axis.text = element_text(size = 8))+
   labs(y = "Axis 2") +
   theme(legend.position = "left")
-Isograph_1_5
+Isograph_2_5
 
 
-# require(gridExtra)
-# grid.arrange(Iso_graph1_0.2, Isograph_1_5, Isograph_2_0.2, Isograph_2_5, ncol=2)
+require(gridExtra)
+grid.arrange(Isograph_1_0.2, Isograph_1_5, Isograph_2_0.2, Isograph_2_5, ncol=2)
 
 # ############################################################################################
 # # B12 FOLD CHANGE --------------------------------------------
