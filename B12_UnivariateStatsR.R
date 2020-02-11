@@ -1,6 +1,6 @@
 library(tidyverse)
 
-BMISd <- read.csv("data_processed/IsoLagran_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/IsoLagran1_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
 
 # KRH analysis ------------------------------------------------------------
@@ -63,31 +63,30 @@ WBMISd <- WBMISd %>%
   mutate(DSW_ave = rowMeans(WBMISd[,myTreat2])) %>%
   mutate(T0vDSWSig = T0vDSW_qvalue < 0.05)  
 
-
-# #Add  Light stats at RB12
-# Treat1 <- Samps[grepl("RB12HL", Samps)]
-# Treat2 <- Samps[grepl("RB12LL", Samps)]
-# Treatsdf <- wdat2[, c(Treat1,Treat2) ]
-# wdat2$HvsLLRB12_pvalue <- apply(Treatsdf, 1, function(x) {t.test(x[Treat1],x[Treat2])$p.value}) #add a Pvalue for between the two treatments for QC
-# wdat2$HvsLLRB12_qvalue <- p.adjust(wdat2$HvsLLRB12_pvalue, method = "fdr") #This corrects for false discovery
-# wdat2 <- wdat2 %>%
-#   mutate(HvsLLRB12_FC = log2(rowMeans(wdat2[,Treat1])/rowMeans(wdat2[,Treat2])))%>%
-#   mutate(HLaveRB12 = rowMeans(wdat2[,Treat1])) %>%
-#   mutate(LLaveRB12 = rowMeans(wdat2[,Treat2])) %>%
-#   mutate(LightRB12Sig = HvsLLRB12_qvalue < 0.05)
-# 
-# #Add  Light stats at LB12
-# Treat1 <- Samps[grepl("LB12HL", Samps)]
-# Treat2 <- Samps[grepl("LB12LL", Samps)]
-# Treatsdf <- wdat2[, c(Treat1,Treat2) ]
-# wdat2$HvsLLLB12_pvalue <- apply(Treatsdf, 1, function(x) {t.test(x[Treat1],x[Treat2])$p.value}) #add a Pvalue for between the two treatments for QC
-# wdat2$HvsLLLB12_qvalue <- p.adjust(wdat2$HvsLLLB12_pvalue, method = "fdr") #This corrects for false discovery
-# wdat2 <- wdat2 %>%
-#   mutate(HvsLLLB12_FC = log2(rowMeans(wdat2[,Treat1])/rowMeans(wdat2[,Treat2])))%>%
-#   mutate(HLaveLB12 = rowMeans(wdat2[,Treat1])) %>%
-#   mutate(LLaveLB12 = rowMeans(wdat2[,Treat2])) %>%
-#   mutate(LightLB12Sig = HvsLLLB12_qvalue < 0.05)
+#Add T0 to Tfinal
+myTreat1 <- mySamps[grepl("IT0", mySamps)]
+myTreat2 <- mySamps[grepl("Control", mySamps)]
+myTreatsdf <- WBMISd[, c(myTreat1, myTreat2)]
+WBMISd$T0vTfinal_pvalue <- apply(myTreatsdf, 1, function(x) {t.test(x[myTreat1], x[myTreat2])$p.value}) #add a Pvalue for between the two treatments for QC
+WBMISd$T0vTfinal_qvalue <- p.adjust(WBMISd$T0vTfinal_pvalue, method = "fdr") #This corrects for false discovery
+WBMISd <- WBMISd %>%
+  mutate(T0vTfinal_FC = log2(rowMeans(WBMISd[,myTreat1])/rowMeans(WBMISd[,myTreat2])))%>%
+  mutate(T03_ave = rowMeans(WBMISd[,myTreat1])) %>%
+  mutate(Tfinal_ave = rowMeans(WBMISd[,myTreat2])) %>%
+  mutate(T0vTfinalSig = T0vTfinal_qvalue < 0.05)  
 
 write.csv(WBMISd, "data_processed/WBMISd_wStats.csv")
 
 # originally exported as filtered_wide_combined_stats
+
+myTreatsdf2 <- BMISd %>%
+  filter(str_detect(Replicate.Name, "WBT|IL1noBT|T0|Control")) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
+  select(Mass.Feature, SampID, Adjusted.Area) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
+  select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
+  unique()
+
+myTreatsdf2 <- myTreatsdf2[complete.cases(myTreatsdf2), ]
+summary(aovp(Average.Adjusted.Area ~ SampID, data = myTreatsdf2))
