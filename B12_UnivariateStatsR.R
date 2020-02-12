@@ -1,5 +1,5 @@
 library(tidyverse)
-
+options(scipen = 999)
 BMISd <- read.csv("data_processed/IsoLagran1_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
 
@@ -20,7 +20,7 @@ WBMISd <- WBMISd %>%
   mutate(WvnoB12_FC = log2(rowMeans(WBMISd[, myTreat1]) / rowMeans(WBMISd[, myTreat2]))) %>%
   mutate(WB12_ave = rowMeans(WBMISd[, myTreat1])) %>%
   mutate(noB12_ave = rowMeans(WBMISd[, myTreat2])) %>%
-  mutate(B12Sig = WvnoB12_qvalue < 0.05,
+  mutate(B12Sig = WvnoB12_qvalue < 0.1,
          AveSmp = rowMeans(WBMISd[, c(myTreat1, myTreat2)]))
 
 # Add Bulk DMB stats
@@ -33,7 +33,7 @@ WBMISd <- WBMISd %>%
   mutate(WDMBvnoDMB_FC = log2(rowMeans(WBMISd[, myTreat1])/rowMeans(WBMISd[, myTreat2])))%>%
   mutate(WDMBave = rowMeans(WBMISd[,myTreat1])) %>%
   mutate(noDMBave = rowMeans(WBMISd[,myTreat2])) %>%
-  mutate(DMBSig = WDMBvnoDMB_qvalue < 0.05)
+  mutate(DMBSig = WDMBvnoDMB_qvalue < 0.1)
 
 
 # Add T0 to Tfinal
@@ -47,7 +47,7 @@ WBMISd <- WBMISd %>%
   mutate(T0vTF_FC = log2(rowMeans(WBMISd[, myTreat1])/rowMeans(WBMISd[, myTreat2])))%>%
   mutate(T0_ave = rowMeans(WBMISd[,myTreat1])) %>%
   mutate(TF_ave = rowMeans(WBMISd[,myTreat2])) %>%
-  mutate(T0vTFSig = T0vTF_qvalue < 0.05)  
+  mutate(T0vTFSig = T0vTF_qvalue < 0.1)  
 
 
 #Add T0 to DSW
@@ -61,25 +61,14 @@ WBMISd <- WBMISd %>%
   mutate(T0vDSW_FC = log2(rowMeans(WBMISd[,myTreat1])/rowMeans(WBMISd[,myTreat2])))%>%
   mutate(T02_ave = rowMeans(WBMISd[,myTreat1])) %>%
   mutate(DSW_ave = rowMeans(WBMISd[,myTreat2])) %>%
-  mutate(T0vDSWSig = T0vDSW_qvalue < 0.05)  
-
-#Add T0 to Tfinal
-myTreat1 <- mySamps[grepl("IT0", mySamps)]
-myTreat2 <- mySamps[grepl("Control", mySamps)]
-myTreatsdf <- WBMISd[, c(myTreat1, myTreat2)]
-WBMISd$T0vTfinal_pvalue <- apply(myTreatsdf, 1, function(x) {t.test(x[myTreat1], x[myTreat2])$p.value}) #add a Pvalue for between the two treatments for QC
-WBMISd$T0vTfinal_qvalue <- p.adjust(WBMISd$T0vTfinal_pvalue, method = "fdr") #This corrects for false discovery
-WBMISd <- WBMISd %>%
-  mutate(T0vTfinal_FC = log2(rowMeans(WBMISd[,myTreat1])/rowMeans(WBMISd[,myTreat2])))%>%
-  mutate(T03_ave = rowMeans(WBMISd[,myTreat1])) %>%
-  mutate(Tfinal_ave = rowMeans(WBMISd[,myTreat2])) %>%
-  mutate(T0vTfinalSig = T0vTfinal_qvalue < 0.05)  
+  mutate(T0vDSWSig = T0vDSW_qvalue < 0.1)  
 
 write.csv(WBMISd, "data_processed/WBMISd_wStats.csv")
 
 # originally exported as filtered_wide_combined_stats
+## Test for ANOVA 
 
-myTreatsdf2 <- BMISd %>%
+AnovaB12 <- BMISd %>%
   filter(str_detect(Replicate.Name, "WBT|IL1noBT|T0|Control")) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
   select(Mass.Feature, SampID, Adjusted.Area) %>%
@@ -87,6 +76,12 @@ myTreatsdf2 <- BMISd %>%
   mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
   select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
   unique()
+AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
 
-myTreatsdf2 <- myTreatsdf2[complete.cases(myTreatsdf2), ]
+
+WAnovaB12 <- AnovaB12 %>%
+  pivot_wider(names_from = SampID,
+              values_from = Average.Adjusted.Area)
+
+
 summary(aovp(Average.Adjusted.Area ~ SampID, data = myTreatsdf2))
