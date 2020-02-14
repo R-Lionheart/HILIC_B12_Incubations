@@ -9,8 +9,8 @@ WBMISd <- BMISd %>%
 WBMISd <- WBMISd[complete.cases(WBMISd), ]
 mySamps <- colnames(WBMISd)
 
-#Add Bulk B12 stats
-myTreat1 <- mySamps[grepl("WBT", mySamps)]
+#Add B12 stats
+myTreat1 <- mySamps[grepl("IL1WBT", mySamps)]
 myTreat2 <- mySamps[grepl("IL1noBT", mySamps)]
 myTreatsdf <- WBMISd[, c(myTreat1, myTreat2)]
 

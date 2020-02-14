@@ -5,7 +5,7 @@ library(gridExtra)
 mydatAll <- read.csv("data_processed/WBMISd_wStats.csv")
 
 # Make new column that is a combo of BOTH, ONE, or NONE
-allSigs <-mydatAll %>%
+allSigs <- mydatAll %>%
   select(Mass.Feature, contains("Sig"))
 
 Both <- allSigs %>%

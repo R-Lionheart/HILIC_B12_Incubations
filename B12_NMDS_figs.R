@@ -142,13 +142,17 @@ stressplot(Iso_wide_nmds)
 
 Iso_pointlocation <- Iso_wide_nmds[['points']] %>% as.data.frame() %>% cbind(Treatment)
 
+Iso_pointlocation$Treatment.Status <- factor(Iso_pointlocation$Treatment.Status,
+                              levels = c("TimeZero", "Control", "DMB", "B12", "DeepSeaWater",
+                                         "DMBnoB12", "noB12"))
+
 # NMDS graph --------------------------------------------------------------
 
 Isograph_2_5 <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
                                                   shape = Treatment.Status, group = Supergroup)) +
   geom_polygon(fill = NA, color = "black") +
   geom_point(size = 3) + 
-  scale_shape_manual(values = c(15, 8, 16, 17, 2, 0, 10)) +
+  scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
   # geom_text(aes(label = Treatment.Status), 
   #           vjust=-0.25, size = 2.5) +
   ggtitle("IsoLagrangian Eddy 2: 5um") +
