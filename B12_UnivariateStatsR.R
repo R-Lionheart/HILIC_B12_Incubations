@@ -9,7 +9,7 @@ WBMISd <- BMISd %>%
 WBMISd <- WBMISd[complete.cases(WBMISd), ]
 mySamps <- colnames(WBMISd)
 
-#Add B12 stats
+# Add B12 vs noB12 stats
 myTreat1 <- mySamps[grepl("IL1WBT", mySamps)]
 myTreat2 <- mySamps[grepl("IL1noBT", mySamps)]
 myTreatsdf <- WBMISd[, c(myTreat1, myTreat2)]
@@ -20,10 +20,10 @@ WBMISd <- WBMISd %>%
   mutate(WvnoB12_FC = log2(rowMeans(WBMISd[, myTreat1]) / rowMeans(WBMISd[, myTreat2]))) %>%
   mutate(WB12_ave = rowMeans(WBMISd[, myTreat1])) %>%
   mutate(noB12_ave = rowMeans(WBMISd[, myTreat2])) %>%
-  mutate(B12Sig = WvnoB12_qvalue < 0.1,
+  mutate(B12vnoB12Sig = WvnoB12_qvalue < 0.1,
          AveSmp = rowMeans(WBMISd[, c(myTreat1, myTreat2)]))
 
-# Add Bulk DMB stats
+# Add DMB vs DMBnoB12 stats
 myTreat1 <- mySamps[grepl("DMB_", mySamps)]
 myTreat2 <- mySamps[grepl("DMBnoBT", mySamps)]
 myTreatsdf <- WBMISd[, c(myTreat1, myTreat2) ]
@@ -33,7 +33,7 @@ WBMISd <- WBMISd %>%
   mutate(WDMBvnoDMB_FC = log2(rowMeans(WBMISd[, myTreat1])/rowMeans(WBMISd[, myTreat2])))%>%
   mutate(WDMBave = rowMeans(WBMISd[,myTreat1])) %>%
   mutate(noDMBave = rowMeans(WBMISd[,myTreat2])) %>%
-  mutate(DMBSig = WDMBvnoDMB_qvalue < 0.1)
+  mutate(DMBvnoDMBSig = WDMBvnoDMB_qvalue < 0.1)
 
 
 # Add T0 to Tfinal

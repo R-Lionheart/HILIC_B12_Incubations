@@ -69,6 +69,14 @@ HILIC_fixed <- HILIC_all %>%
                                  "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
                                  "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3"))
 
+data4cmap <- HILIC_fixed %>%
+  separate(Replicate.Name, into = c("Date", "runtype", "SampID", "replicate")) %>%
+  select(Mass.Feature, SampID, Adjusted.Area) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(Average.Area.Normed = mean(Adjusted.Area, na.rm = TRUE)) %>%
+  select(Mass.Feature, SampID, Average.Area.Normed) %>%
+  unique()
+
 # All HILICS plotted, no filtering
 all.hilics <- ggplot(HILIC_fixed, aes(x = reorder(Mass.Feature, -Adjusted.Area), y = Adjusted.Area)) +
   geom_bar(stat = "identity") +
