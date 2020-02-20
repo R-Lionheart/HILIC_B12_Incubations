@@ -66,22 +66,4 @@ WBMISd <- WBMISd %>%
 write.csv(WBMISd, "data_processed/WBMISd_wStats.csv")
 
 # originally exported as filtered_wide_combined_stats
-## Test for ANOVA 
 
-AnovaB12 <- BMISd %>%
-  filter(str_detect(Replicate.Name, "WBT|IL1noBT|T0|Control")) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
-  select(Mass.Feature, SampID, Adjusted.Area) %>%
-  group_by(Mass.Feature, SampID) %>%
-  mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
-  unique()
-AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
-
-
-WAnovaB12 <- AnovaB12 %>%
-  pivot_wider(names_from = SampID,
-              values_from = Average.Adjusted.Area)
-
-
-summary(aovp(Average.Adjusted.Area ~ SampID, data = myTreatsdf2))

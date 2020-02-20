@@ -1,53 +1,75 @@
-library(dplyr)
-PATH <- "https://raw.githubusercontent.com/guru99-edu/R-Programming/master/poisons.csv"
-df <- read.csv(PATH) %>%
-  select(-X) %>% 
-  mutate(poison = factor(poison, ordered = TRUE))
-glimpse(df)
-
-levels(df$poison)
-
-
-df2 <- df %>%
-  group_by(poison) %>%
-  summarise(
-    count_poison = n(),
-    mean_time = mean(time, na.rm = TRUE),
-    sd_time = sd(time, na.rm = TRUE)
-  )
-
-ggplot(df, aes(x = poison, y = time, fill = poison)) +
-  geom_boxplot() +
-  geom_jitter(shape = 15,
-              color = "steelblue",
-              position = position_jitter(0.21)) +
-  theme_classic()
-
-anova_one_way <- aov(time~poison, data = df)
-summary(anova_one_way)
-
-TukeyHSD(anova_one_way)
-
+library(tidyverse)
+options(scipen = 999)
 
 ####
-WAnovaB12 <- AnovaB12 %>%
-  pivot_wider(names_from = SampID,
-              values_from = Average.Adjusted.Area)
+BMISd <- read.csv("data_processed/IsoLagran1_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
+  select(Mass.Feature:Adjusted.Area)
+WBMISd.normed <- read.csv("data_processed/IsoLagran2_5_normed.csv", stringsAsFactors = FALSE)
+BMISd.normed <- WBMISd.normed %>%
+  pivot_longer(-X,
+               names_to = "Mass.Feature",
+               values_to = "Area.BMISd.Normd") %>%
+  rename(Replicate.Name = X) %>%
+  select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
 
-AnovaB12_2 <- AnovaB12 %>%
-  group_by(Mass.Feature) %>%
+
+WBMISd <- BMISd %>%
+  spread(key = "Replicate.Name", value = "Adjusted.Area")
+WBMISd <- WBMISd[complete.cases(WBMISd), ]
+mySamps <- colnames(WBMISd)
+
+AnovaB12 <- BMISd.normed %>%
+  filter(str_detect(Replicate.Name, "WBT|IL2noBT|Control")) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
+  select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
+  # group_by(Mass.Feature, SampID) %>%
+  # mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
+  #select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
+  select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
+  unique()
+AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
+
+WAnovaB12 <- AnovaB12 %>%
+  pivot_wider(names_from = Mass.Feature,
+              values_from = Adjusted.Area)
+
+
+## my version of online test
+test_df <- AnovaB12 %>%
+  select(-Replicate.Name) %>%
+  #
+  filter(str_detect("Adenine", Mass.Feature)) %>%
+  #
+  mutate(SampID = factor(SampID, ordered = TRUE))
+glimpse(test_df)
+levels(test_df$SampID)
+
+summary_test_df <- test_df %>%
+  group_by(SampID, Mass.Feature) %>%
   summarise(
-    count_Mass.Feature = n(),
-    mean_Area = mean(Average.Adjusted.Area, na.rm = TRUE),
-    sd_Area = mean(Average.Adjusted.Area, na.rm = TRUE)
+    count_SampID = n(),
+    mean_area = mean(Area.BMISd.Normd, na.rm = TRUE),
+    sd_area = sd(Area.BMISd.Normd, na.rm = TRUE)
   )
 
-ggplot(AnovaB12, aes(x = SampID, y = Average.Adjusted.Area)) +
+ggplot(test_df, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
+  facet_wrap(~Mass.Feature) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   geom_jitter(shape = 15,
               color = "steelblue",
-              position = position_jitter(0.21)) +
-  theme_classic()
+              position = position_jitter(0.21))
 
-anova_one_way <- aov(Average.Adjusted.Area~SampID, data = AnovaB12)
-summary(anova_one_way)
+test_anova_one_way <- aov(Area.BMISd.Normd~SampID, data = test_df)
+summary(test_anova_one_way)
+summary(test_anova_one_way)[[1]][["Pr(>F)"]]
+TukeyHSD(test_anova_one_way)
+
+# two way isn't useful because mass feature isn't grouping?
+# test_anova_two_way <- aov(Area.BMISd.Normd~SampID + Mass.Feature, data = test_df)
+# summary(test_anova_two_way)
+
+
+
+
+
