@@ -37,10 +37,8 @@ AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
 ## my version of online test
 test_df <- AnovaB12 %>%
   select(-Replicate.Name) %>%
-  #
-  #filter(str_detect("Allopurinol", Mass.Feature)) %>%
-  #
-  mutate(SampID = factor(SampID, ordered = TRUE)) 
+  mutate(SampID = factor(SampID, ordered = TRUE)) %>%
+  arrange(Mass.Feature)
 glimpse(test_df)
 levels(test_df$SampID)
 
@@ -61,14 +59,26 @@ ggplot(test_df, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
               position = position_jitter(0.21))
 
 # split and apply function, result is a named list:
-lapply(split(test_df, test_df$Mass.Feature), function(i){
+mylist <- lapply(split(test_df, test_df$Mass.Feature), function(i) {
   anova(lm(Area.BMISd.Normd ~ SampID, data = i))
 })
+
+names(mylist)
+mylist[[1]][["Pr(>F)"]]
+
 
 test_anova_one_way <- aov(Area.BMISd.Normd~SampID, data = test_df)
 summary(test_anova_one_way)
 summary(test_anova_one_way)[[1]][["Pr(>F)"]]
 TukeyHSD(test_anova_one_way)
+
+
+df <- do.call(rbind,             # rbind list of data.frames output by lapply
+        lapply(mylist, # loop through list, first drop outer names
+               function(x) { 
+                 temp <- unlist(x)}))
+
+df <- as.data.frame(df)
 
 # two way isn't useful because mass feature isn't grouping?
 # test_anova_two_way <- aov(Area.BMISd.Normd~SampID + Mass.Feature, data = test_df)
