@@ -24,23 +24,23 @@ AnovaB12 <- BMISd.normed %>%
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
   # group_by(Mass.Feature, SampID) %>%
   # mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  #select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
+  # select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
   unique()
 AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
 
-WAnovaB12 <- AnovaB12 %>%
-  pivot_wider(names_from = Mass.Feature,
-              values_from = Adjusted.Area)
+# WAnovaB12 <- AnovaB12 %>%
+#   pivot_wider(names_from = Mass.Feature,
+#               values_from = Adjusted.Area)
 
 
 ## my version of online test
 test_df <- AnovaB12 %>%
   select(-Replicate.Name) %>%
   #
-  filter(str_detect("Adenine", Mass.Feature)) %>%
+  #filter(str_detect("Allopurinol", Mass.Feature)) %>%
   #
-  mutate(SampID = factor(SampID, ordered = TRUE))
+  mutate(SampID = factor(SampID, ordered = TRUE)) 
 glimpse(test_df)
 levels(test_df$SampID)
 
@@ -59,6 +59,11 @@ ggplot(test_df, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
+
+# split and apply function, result is a named list:
+lapply(split(test_df, test_df$Mass.Feature), function(i){
+  anova(lm(Area.BMISd.Normd ~ SampID, data = i))
+})
 
 test_anova_one_way <- aov(Area.BMISd.Normd~SampID, data = test_df)
 summary(test_anova_one_way)
