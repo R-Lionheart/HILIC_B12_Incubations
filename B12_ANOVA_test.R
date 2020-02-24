@@ -46,8 +46,8 @@ myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
 
 Analysis <- Analysis %>%
   mutate(WvnoB12_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat2]))) %>%
-  mutate(noB12vConv_FC = log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>%
-  mutate(WB12vConv_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>%
+  mutate(noB12vCon_FC = log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>%
+  mutate(WB12vCon_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>%
   select(matches('Mass|FC'))
   
   
@@ -70,7 +70,7 @@ Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = Sam
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
-Normd.Areas
+#Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
@@ -135,7 +135,40 @@ a <- ggplot(toPlot, aes(x = TotalAve, y = -1*(WvnoB12_FC), fill = WB12vControl_S
         axis.text=element_text(size=9)) +
   labs(x="Average normalized peak size", y=expression(paste(Log[2], "WithB12/noB12", sep = ""))) +
   theme(legend.position="right") +
-  geom_text(data = subset(toPlot, AnovaSig == TRUE), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) # | AveSmp > 100000000 | AveSmp < 100000 | (-1*(T0vDSW_FC) > 3)),
-            #hjust = "inward", nudge_x = 0.05) 
+  geom_text(data = subset(toPlot, WB12vControl_Sig == TRUE), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE)
 a
+
+b <- ggplot(toPlot, aes(x = TotalAve, y = -1*(noB12vCon_FC), fill = noB12vControl_Sig,
+                        label = Mass.Feature)) +
+  geom_point(size = 3, shape = 21, stroke=0) +  
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  ggtitle("No B12 v Control") +
+  theme(plot.title = element_text(size = 15),
+        legend.position="none",
+        axis.title.y=element_text(size=9),
+        axis.title.x=element_text(size=9),
+        axis.text=element_text(size=9)) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "NoB12/Control", sep = ""))) +
+  theme(legend.position="right") +
+  geom_text(data = subset(toPlot, noB12vControl_Sig == TRUE), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) 
+b
+
+c <- ggplot(toPlot, aes(x = TotalAve, y = -1*(WB12vCon_FC), fill = WB12vControl_Sig,
+                        label = Mass.Feature)) +
+  geom_point(size = 3, shape = 21, stroke=0) +  
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  ggtitle("With B12 v Control") +
+  theme(plot.title = element_text(size = 15),
+        legend.position="none",
+        axis.title.y=element_text(size=9),
+        axis.title.x=element_text(size=9),
+        axis.text=element_text(size=9)) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "With B12/Control", sep = ""))) +
+  theme(legend.position="right") +
+  geom_text(data = subset(toPlot, WB12vControl_Sig == TRUE), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) 
+c
+
+
 
