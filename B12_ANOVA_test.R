@@ -1,9 +1,14 @@
 library(tidyverse)
 options(scipen = 999)
 
+# Set treatment filters
+myTreatments <- c("WBT|IL2noBT|IL2Control")
+myTreatmentsSplit <- strsplit(myTreatments, split = '|', fixed = TRUE)
+
 # Import required files
 BMISd.long <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
+  select(Mass.Feature:Adjusted.Area) 
+  
 BMISd.wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
 colnames(BMISd.wide)[1] <- "Replicate.Name"
 BMISd.wide.notnormd <- BMISd.long %>%
@@ -23,19 +28,17 @@ BMISd.wide.normd <- BMISd.long.normd %>%
 # Combine all data and rearrange
 full.BMISd <- BMISd.long.normd %>%
   left_join(BMISd.long) %>%
-  filter(str_detect(Replicate.Name, "WBT|IL2noBT|IL2Control")) %>%
+  filter(str_detect(Replicate.Name, myTreatments)) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
   unique()
 full.BMISd <- full.BMISd[complete.cases(full.BMISd), ]
 
 
-
-# KRH analysis ------------------------------------------------------------
+# Calculate fold changes between treatments
 Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
 mySamps <- colnames(Analysis)
 
-# Add B12 vs noB12 stats
 myTreat1 <- mySamps[grepl("IL2WBT", mySamps)]
 myTreat2 <- mySamps[grepl("IL2noBT", mySamps)]
 myTreat3 <- mySamps[grepl("IL2Control", mySamps)]
@@ -67,7 +70,7 @@ Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = Sam
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
-#Normd.Areas
+Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
@@ -111,24 +114,28 @@ toPlot <- full.BMISd %>%
   select(Mass.Feature, SampID, AveSmp, AnovaSig) %>%
   unique() %>%
   left_join(TukeyDF) %>%
-  arrange(Mass.Feature)
+  left_join(Analysis) %>%
+  arrange(Mass.Feature) %>%
+  drop_na() %>%
+  group_by(Mass.Feature) %>%
+  mutate(TotalAve = mean(AveSmp))
 
 #mutate(WvnoB12_FC = log2(rowMeans(TukeyDF[, myTreat1]) / rowMeans(WBMISd[, myTreat2])))
 
-a <- ggplot(toPlot, aes(x = AveSmp, y = AnovaP, fill = AnovaSig,
+a <- ggplot(toPlot, aes(x = TotalAve, y = -1*(WvnoB12_FC), fill = WB12vControl_Sig,
                           label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +  
   scale_fill_manual(values = c("grey", "royalblue4")) +
   scale_alpha_manual(values = c(1, 0.5)) +
-  ggtitle("TEST") +
+  ggtitle("With and Without B12") +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
         axis.text=element_text(size=9)) +
-  labs(x="Average peak size") +
-  labs(x="Average peak size", y="AnovaP") +
-  theme(legend.position="right") 
-  #geom_text(data = toPlot)
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "WithB12/noB12", sep = ""))) +
+  theme(legend.position="right") +
+  geom_text(data = subset(toPlot, AnovaSig == TRUE), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) # | AveSmp > 100000000 | AveSmp < 100000 | (-1*(T0vDSW_FC) > 3)),
+            #hjust = "inward", nudge_x = 0.05) 
 a
 
