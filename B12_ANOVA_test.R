@@ -2,73 +2,86 @@ library(tidyverse)
 options(scipen = 999)
 
 # Import required files
-BMISd <- read.csv("data_processed/IsoLagran2_5_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd.long <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
-WBMISd.normed <- read.csv("data_processed/IsoLagran2_5_normed.csv", stringsAsFactors = FALSE, check.names = FALSE)
-colnames(WBMISd.normed)[1] <- "Replicate.Name"
+BMISd.wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+colnames(BMISd.wide)[1] <- "Replicate.Name"
+BMISd.wide.notnormd <- BMISd.long %>%
+  pivot_wider(names_from = Replicate.Name, 
+              values_from = Adjusted.Area)
 
 # Change all sets to long format
-BMISd.normed <- WBMISd.normed %>%
+BMISd.long.normd <- BMISd.wide %>%
   pivot_longer(-Replicate.Name,
     names_to = "Mass.Feature",
     values_to = "Area.BMISd.Normd") %>%
   select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
-#############################################################################
-WBMISd <- BMISd %>%
-  spread(key = "Replicate.Name", value = "Adjusted.Area")
-WBMISd <- WBMISd[complete.cases(WBMISd), ]
-mySamps <- colnames(WBMISd)
 
-AnovaB12 <- BMISd.normed %>%
-  filter(str_detect(Replicate.Name, "WBT|IL2noBT|Control")) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
-  select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
-  # group_by(Mass.Feature, SampID) %>%
-  # mutate(Average.Adjusted.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
-  # select(Mass.Feature, SampID, Average.Adjusted.Area) %>%
-  select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd) %>%
-  unique()
-AnovaB12 <- AnovaB12[complete.cases(AnovaB12), ]
-
-# WAnovaB12 <- AnovaB12 %>%
-#   pivot_wider(names_from = Mass.Feature,
-#               values_from = Adjusted.Area)
-###############################################################################
+BMISd.wide.normd <- BMISd.long.normd %>%
+  spread(key = "Replicate.Name", value = "Area.BMISd.Normd")
 
 # Combine all data and rearrange
-full.BMISd <- BMISd.normed %>%
-  left_join(BMISd) %>%
+full.BMISd <- BMISd.long.normd %>%
+  left_join(BMISd.long) %>%
   filter(str_detect(Replicate.Name, "WBT|IL2noBT|IL2Control")) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
   unique()
-full.BMISd <- AnovaB12[complete.cases(AnovaB12), ]
+full.BMISd <- full.BMISd[complete.cases(full.BMISd), ]
 
 
+
+# KRH analysis ------------------------------------------------------------
+Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
+mySamps <- colnames(Analysis)
+
+# Add B12 vs noB12 stats
+myTreat1 <- mySamps[grepl("IL2WBT", mySamps)]
+myTreat2 <- mySamps[grepl("IL2noBT", mySamps)]
+myTreat3 <- mySamps[grepl("IL2Control", mySamps)]
+myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
+
+Analysis <- Analysis %>%
+  mutate(WvnoB12_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat2]))) %>%
+  mutate(noB12vConv_FC = log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>%
+  mutate(WB12vConv_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>%
+  select(matches('Mass|FC'))
+  
+  
 # Set up data for ANOVA
 AnovaB12 <- full.BMISd %>%
   select(-Replicate.Name) %>%
   mutate(SampID = factor(SampID, ordered = TRUE)) %>%
-  arrange(Mass.Feature)
+  arrange(Mass.Feature) %>%
+  ##
+  filter(!Mass.Feature == "Hydroxylysine")
+  ##
 glimpse(AnovaB12) #Use for the future
 levels(AnovaB12$SampID)
 
 # Graph normalized areas for reference
-Norm.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
+Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
-#Norm.Areas
+#Normd.Areas
 
-# Apply ANOVA to dataframe and check significance
+# Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
   aov(lm(Area.BMISd.Normd ~ SampID, data = i))
+}) 
+AnovaListSummary <- lapply(AnovaList, function(i) {
+  summary(i)
 })
 
-AnovaDF <- as.data.frame(do.call(rbind, lapply(AnovaList, function(x) {temp <- unlist(x)})))
+# Apply Tukey to dataframe and check significance
+TukeyList <- lapply(AnovaList, function(x) TukeyHSD(x))
+
+# Summarize ANOVA and create dataframe of significance
+AnovaDF <- as.data.frame(do.call(rbind, lapply(AnovaListSummary, function(x) {temp <- unlist(x)})))
 colnames(AnovaDF)[9] <- "AnovaP"
 
 AnovaDF <- AnovaDF %>%
@@ -77,9 +90,7 @@ AnovaDF <- AnovaDF %>%
   select(Mass.Feature, AnovaP, AnovaSig) %>%
   arrange(Mass.Feature)
 
-
-# Apply Tukey HSD to AnovaList and check significance
-TukeyList <- lapply(AnovaList, function(x) TukeyHSD(x))
+# Summarize Tukey HSD and create dataframe of significance
 TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- unlist(x)}))) %>%
   select(SampID10:12) %>%
   rownames_to_column("Mass.Feature") %>%
@@ -89,7 +100,6 @@ TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- u
   mutate(noB12vControl_Sig = ifelse(noB12vControl < 0.1, TRUE, FALSE),
           WB12vControl_Sig = ifelse(WB12vControl < 0.1, TRUE, FALSE),
           WB12vnoB12_Sig = ifelse(WB12vnoB12 < 0.1, TRUE, FALSE)) %>%
-  #mutate(WvnoB12_FC = log2(rowMeans(TukeyDF[, myTreat1]) / rowMeans(WBMISd[, myTreat2])))
   arrange(Mass.Feature)
 
 
@@ -103,6 +113,7 @@ toPlot <- full.BMISd %>%
   left_join(TukeyDF) %>%
   arrange(Mass.Feature)
 
+#mutate(WvnoB12_FC = log2(rowMeans(TukeyDF[, myTreat1]) / rowMeans(WBMISd[, myTreat2])))
 
 a <- ggplot(toPlot, aes(x = AveSmp, y = AnovaP, fill = AnovaSig,
                           label = Mass.Feature)) +

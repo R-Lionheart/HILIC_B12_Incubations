@@ -99,18 +99,18 @@ IsoLagran2 <- HILIC_filtered %>%
 
 IsoLagran1_0.2 <- IsoLagran1 %>%
   filter(!str_detect(Replicate.Name, "5um"))
-write.csv(IsoLagran1_0.2, "data_processed/IsoLagran1_0.2_notnormed.csv")
+write.csv(IsoLagran1_0.2, "data_processed/IsoLagran1_0.2_notnormd.csv")
 IsoLagran1_5 <- IsoLagran1 %>%
   filter(str_detect(Replicate.Name, "5um"))
-write.csv(IsoLagran1_5, "data_processed/IsoLagran1_5_notnormed.csv")
+write.csv(IsoLagran1_5, "data_processed/IsoLagran1_5_notnormd.csv")
 
 IsoLagran2_0.2 <- IsoLagran2 %>%
   filter(!str_detect(Replicate.Name, "5um"))
-write.csv(IsoLagran2_0.2, "data_processed/IsoLagran2_0.2_notnormed.csv")
+write.csv(IsoLagran2_0.2, "data_processed/IsoLagran2_0.2_notnormd.csv")
 
 IsoLagran2_5 <- IsoLagran2 %>%
   filter(str_detect(Replicate.Name, "5um"))
-write.csv(IsoLagran2_5, "data_processed/IsoLagran2_5_notnormed.csv")
+write.csv(IsoLagran2_5, "data_processed/IsoLagran2_5_notnormd.csv")
 
 
 rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
@@ -141,7 +141,7 @@ Iso_wideT <- t(Iso_wide)
 
 # KRH transformations --------------------------------------------------------------
 Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
-write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran2_5_normed.csv")
+write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran2_5_normd.csv")
 
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
 

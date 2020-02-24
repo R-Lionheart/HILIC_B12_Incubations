@@ -1,6 +1,6 @@
 library(tidyverse)
 options(scipen = 999)
-BMISd <- read.csv("data_processed/IsoLagran1_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
 
 # KRH analysis ------------------------------------------------------------
