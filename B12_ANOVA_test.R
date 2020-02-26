@@ -2,8 +2,8 @@ library(tidyverse)
 options(scipen = 999)
 
 # Set treatment filters
-myTreatments <- c("WBT|IL2noBT|IL2Control")
-myTreatmentsSplit <- strsplit(myTreatments, split = '|', fixed = TRUE)
+myTreatments <- c("IL2WBT|IL2noBT|IL2Control")
+myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
 
 # Import required files
 BMISd.long <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
@@ -29,21 +29,21 @@ BMISd.wide.normd <- BMISd.long.normd %>%
 full.BMISd <- BMISd.long.normd %>%
   left_join(BMISd.long) %>%
   filter(str_detect(Replicate.Name, myTreatments)) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>% 
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
   unique()
 full.BMISd <- full.BMISd[complete.cases(full.BMISd), ]
-
 
 # Calculate fold changes between treatments
 Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
 mySamps <- colnames(Analysis)
 
-myTreat1 <- mySamps[grepl("IL2WBT", mySamps)]
-myTreat2 <- mySamps[grepl("IL2noBT", mySamps)]
-myTreat3 <- mySamps[grepl("IL2Control", mySamps)]
+myTreat1 <- mySamps[grepl(myTreatmentsSplit[1], mySamps)] # Treat1 = WBT
+myTreat2 <- mySamps[grepl(myTreatmentsSplit[2], mySamps)] # Treat2 = noB12
+myTreat3 <- mySamps[grepl(myTreatmentsSplit[3], mySamps)] # Treat3 = Control
 myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
 
+# why is this going down? Should be going up? Check that this is correct.
 Analysis <- Analysis %>%
   mutate(WvnoB12_FC = log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat2]))) %>%
   mutate(noB12vCon_FC = log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>%
@@ -55,10 +55,11 @@ Analysis <- Analysis %>%
 AnovaB12 <- full.BMISd %>%
   select(-Replicate.Name) %>%
   mutate(SampID = factor(SampID, ordered = TRUE)) %>%
+  group_by(Mass.Feature) %>%
+  mutate(Count = n()) %>%
+  filter(!Count < 9 ) %>% # 3 replicates of each treatment, total of 9. Filter those groups missing replicates.
   arrange(Mass.Feature) %>%
-  ##
-  filter(!Mass.Feature == "Hydroxylysine")
-  ##
+  select(-Count)
 glimpse(AnovaB12) #Use for the future
 levels(AnovaB12$SampID)
 
@@ -70,7 +71,7 @@ Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = Sam
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
-#Normd.Areas
+Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
