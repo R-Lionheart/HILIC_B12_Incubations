@@ -1,0 +1,2038 @@
+"","Mass.Feature","Replicate.Name","Adjusted.Area"
+"1","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2Control5um_1",269669.129032258
+"2","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2Control5um_2",190108.096774194
+"3","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2Control5um_3",330432.548387097
+"4","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMB5um_1",372090.580645161
+"5","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMB5um_2",214907.774193548
+"6","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMB5um_3",176406.064516129
+"7","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMBnoBT5um_1",292920.580645161
+"8","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMBnoBT5um_2",251664.806451613
+"9","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DMBnoBT5um_3",247831.193548387
+"10","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DSW5um_1",359423.193548387
+"11","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DSW5um_2",271296.870967742
+"12","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2DSW5um_3",224987.612903226
+"13","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2noBT5um_1",289759.580645161
+"14","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2noBT5um_2",195547.935483871
+"15","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2noBT5um_3",271309.967741935
+"16","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2WBT5um_1",233406.032258065
+"17","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2WBT5um_2",288666.935483871
+"18","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2WBT5um_3",196965.193548387
+"19","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2IT05um_1",192917.35483871
+"20","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2IT05um_2",281790.193548387
+"21","2-Hydroxy-4-(methylthio)butyric","171023_Smp_IL2IT05um_3",370685.483870968
+"22","4-Hydroxyisoleucine","171023_Smp_IL2Control5um_1",66379256.2580645
+"23","4-Hydroxyisoleucine","171023_Smp_IL2Control5um_2",54651674.9677419
+"24","4-Hydroxyisoleucine","171023_Smp_IL2Control5um_3",102435536.258065
+"25","4-Hydroxyisoleucine","171023_Smp_IL2DMB5um_1",72016422.1935484
+"26","4-Hydroxyisoleucine","171023_Smp_IL2DMB5um_2",71193465.8064516
+"27","4-Hydroxyisoleucine","171023_Smp_IL2DMB5um_3",100732334.451613
+"28","4-Hydroxyisoleucine","171023_Smp_IL2DMBnoBT5um_1",53403185.6774193
+"29","4-Hydroxyisoleucine","171023_Smp_IL2DMBnoBT5um_2",48849774.0645161
+"30","4-Hydroxyisoleucine","171023_Smp_IL2DMBnoBT5um_3",58659620.9032258
+"31","4-Hydroxyisoleucine","171023_Smp_IL2DSW5um_1",95291687.483871
+"32","4-Hydroxyisoleucine","171023_Smp_IL2DSW5um_2",79584396.9032258
+"33","4-Hydroxyisoleucine","171023_Smp_IL2DSW5um_3",80294578.8387097
+"34","4-Hydroxyisoleucine","171023_Smp_IL2noBT5um_1",51540472.6451613
+"35","4-Hydroxyisoleucine","171023_Smp_IL2noBT5um_2",82959443.0967742
+"36","4-Hydroxyisoleucine","171023_Smp_IL2noBT5um_3",85673783.2258064
+"37","4-Hydroxyisoleucine","171023_Smp_IL2WBT5um_1",67636232.2580645
+"38","4-Hydroxyisoleucine","171023_Smp_IL2WBT5um_2",87849890.8387097
+"39","4-Hydroxyisoleucine","171023_Smp_IL2WBT5um_3",45966223.6129032
+"40","4-Hydroxyisoleucine","171023_Smp_IL2IT05um_1",44490995.483871
+"41","4-Hydroxyisoleucine","171023_Smp_IL2IT05um_2",61515110.5806452
+"42","4-Hydroxyisoleucine","171023_Smp_IL2IT05um_3",64702412.6451613
+"43","Acetyl-L-carnitine","171023_Smp_IL2Control5um_1",75332877.1612903
+"44","Acetyl-L-carnitine","171023_Smp_IL2Control5um_2",48708186.7096774
+"45","Acetyl-L-carnitine","171023_Smp_IL2Control5um_3",99130853.4193548
+"46","Acetyl-L-carnitine","171023_Smp_IL2DMB5um_1",42994105.2903226
+"47","Acetyl-L-carnitine","171023_Smp_IL2DMB5um_2",57774181.6774193
+"48","Acetyl-L-carnitine","171023_Smp_IL2DMB5um_3",57379111.8709677
+"49","Acetyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_1",62835321.5483871
+"50","Acetyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_2",62338209.1612903
+"51","Acetyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_3",78664756.3870968
+"52","Acetyl-L-carnitine","171023_Smp_IL2DSW5um_1",170867506.064516
+"53","Acetyl-L-carnitine","171023_Smp_IL2DSW5um_2",187952884.129032
+"54","Acetyl-L-carnitine","171023_Smp_IL2DSW5um_3",220077684.645161
+"55","Acetyl-L-carnitine","171023_Smp_IL2noBT5um_1",62440798.0645161
+"56","Acetyl-L-carnitine","171023_Smp_IL2noBT5um_2",95903763.3548387
+"57","Acetyl-L-carnitine","171023_Smp_IL2noBT5um_3",126134224
+"58","Acetyl-L-carnitine","171023_Smp_IL2WBT5um_1",74032180.3870968
+"59","Acetyl-L-carnitine","171023_Smp_IL2WBT5um_2",86017435.0967742
+"60","Acetyl-L-carnitine","171023_Smp_IL2WBT5um_3",57770589.4193548
+"61","Acetyl-L-carnitine","171023_Smp_IL2IT05um_1",27353308.9032258
+"62","Acetyl-L-carnitine","171023_Smp_IL2IT05um_2",30161481.8064516
+"63","Acetyl-L-carnitine","171023_Smp_IL2IT05um_3",30499352.3870968
+"64","Aconitic Acid","171023_Smp_IL2Control5um_1",NA
+"65","Aconitic Acid","171023_Smp_IL2Control5um_2",NA
+"66","Aconitic Acid","171023_Smp_IL2Control5um_3",20845.3870967742
+"67","Aconitic Acid","171023_Smp_IL2DMB5um_1",311966.096774194
+"68","Aconitic Acid","171023_Smp_IL2DMB5um_2",5946.87096774193
+"69","Aconitic Acid","171023_Smp_IL2DMB5um_3",11227.6774193548
+"70","Aconitic Acid","171023_Smp_IL2DMBnoBT5um_1",18293.3870967742
+"71","Aconitic Acid","171023_Smp_IL2DMBnoBT5um_2",297998.387096774
+"72","Aconitic Acid","171023_Smp_IL2DMBnoBT5um_3",35776.6451612903
+"73","Aconitic Acid","171023_Smp_IL2DSW5um_1",46101.5806451613
+"74","Aconitic Acid","171023_Smp_IL2DSW5um_2",61988.9032258064
+"75","Aconitic Acid","171023_Smp_IL2DSW5um_3",89913.0967741935
+"76","Aconitic Acid","171023_Smp_IL2noBT5um_1",15175.4193548387
+"77","Aconitic Acid","171023_Smp_IL2noBT5um_2",800878.032258064
+"78","Aconitic Acid","171023_Smp_IL2noBT5um_3",27086.935483871
+"79","Aconitic Acid","171023_Smp_IL2WBT5um_1",NA
+"80","Aconitic Acid","171023_Smp_IL2WBT5um_2",NA
+"81","Aconitic Acid","171023_Smp_IL2WBT5um_3",10802.9677419355
+"82","Aconitic Acid","171023_Smp_IL2IT05um_1",15558.0322580645
+"83","Aconitic Acid","171023_Smp_IL2IT05um_2",NA
+"84","Aconitic Acid","171023_Smp_IL2IT05um_3",10898.3870967742
+"85","Adenine","171023_Smp_IL2Control5um_1",130021660.903226
+"86","Adenine","171023_Smp_IL2Control5um_2",89009808.516129
+"87","Adenine","171023_Smp_IL2Control5um_3",158848319.483871
+"88","Adenine","171023_Smp_IL2DMB5um_1",111384225.290323
+"89","Adenine","171023_Smp_IL2DMB5um_2",111521808.774194
+"90","Adenine","171023_Smp_IL2DMB5um_3",152324254.967742
+"91","Adenine","171023_Smp_IL2DMBnoBT5um_1",95599065.0322581
+"92","Adenine","171023_Smp_IL2DMBnoBT5um_2",131138044.903226
+"93","Adenine","171023_Smp_IL2DMBnoBT5um_3",150701392.516129
+"94","Adenine","171023_Smp_IL2DSW5um_1",443266743.741935
+"95","Adenine","171023_Smp_IL2DSW5um_2",407543413.677419
+"96","Adenine","171023_Smp_IL2DSW5um_3",254312772.129032
+"97","Adenine","171023_Smp_IL2noBT5um_1",96674437.4193548
+"98","Adenine","171023_Smp_IL2noBT5um_2",239738651.870968
+"99","Adenine","171023_Smp_IL2noBT5um_3",372483154.580645
+"100","Adenine","171023_Smp_IL2WBT5um_1",125687047.741935
+"101","Adenine","171023_Smp_IL2WBT5um_2",156485885.935484
+"102","Adenine","171023_Smp_IL2WBT5um_3",87899770.8387097
+"103","Adenine","171023_Smp_IL2IT05um_1",34633214.4516129
+"104","Adenine","171023_Smp_IL2IT05um_2",134381225.290323
+"105","Adenine","171023_Smp_IL2IT05um_3",108743286.967742
+"106","Adenosine","171023_Smp_IL2Control5um_1",63452583.7419355
+"107","Adenosine","171023_Smp_IL2Control5um_2",86194892.6451613
+"108","Adenosine","171023_Smp_IL2Control5um_3",92239038.9677419
+"109","Adenosine","171023_Smp_IL2DMB5um_1",79512693.9354839
+"110","Adenosine","171023_Smp_IL2DMB5um_2",105758532.129032
+"111","Adenosine","171023_Smp_IL2DMB5um_3",146116144.516129
+"112","Adenosine","171023_Smp_IL2DMBnoBT5um_1",110899382.709677
+"113","Adenosine","171023_Smp_IL2DMBnoBT5um_2",201409363.096774
+"114","Adenosine","171023_Smp_IL2DMBnoBT5um_3",193111830.709677
+"115","Adenosine","171023_Smp_IL2DSW5um_1",292615972.129032
+"116","Adenosine","171023_Smp_IL2DSW5um_2",415396957.935484
+"117","Adenosine","171023_Smp_IL2DSW5um_3",403047373.419355
+"118","Adenosine","171023_Smp_IL2noBT5um_1",111029429.935484
+"119","Adenosine","171023_Smp_IL2noBT5um_2",345924572.903226
+"120","Adenosine","171023_Smp_IL2noBT5um_3",204891174.193548
+"121","Adenosine","171023_Smp_IL2WBT5um_1",60761312.6451613
+"122","Adenosine","171023_Smp_IL2WBT5um_2",83240739.3548387
+"123","Adenosine","171023_Smp_IL2WBT5um_3",88389163.6129032
+"124","Adenosine","171023_Smp_IL2IT05um_1",20670623.7419355
+"125","Adenosine","171023_Smp_IL2IT05um_2",56631155.0967742
+"126","Adenosine","171023_Smp_IL2IT05um_3",36297743.3548387
+"127","Adenosyl Methionine","171023_Smp_IL2Control5um_1",440864.548387097
+"128","Adenosyl Methionine","171023_Smp_IL2Control5um_2",381195.64516129
+"129","Adenosyl Methionine","171023_Smp_IL2Control5um_3",1903929.51612903
+"130","Adenosyl Methionine","171023_Smp_IL2DMB5um_1",1663867.51612903
+"131","Adenosyl Methionine","171023_Smp_IL2DMB5um_2",481583.35483871
+"132","Adenosyl Methionine","171023_Smp_IL2DMB5um_3",283451.612903226
+"133","Adenosyl Methionine","171023_Smp_IL2DMBnoBT5um_1",455682.612903226
+"134","Adenosyl Methionine","171023_Smp_IL2DMBnoBT5um_2",4078939.80645161
+"135","Adenosyl Methionine","171023_Smp_IL2DMBnoBT5um_3",1186680
+"136","Adenosyl Methionine","171023_Smp_IL2DSW5um_1",972627.258064516
+"137","Adenosyl Methionine","171023_Smp_IL2DSW5um_2",1423471.5483871
+"138","Adenosyl Methionine","171023_Smp_IL2DSW5um_3",1474550.83870968
+"139","Adenosyl Methionine","171023_Smp_IL2noBT5um_1",640455.64516129
+"140","Adenosyl Methionine","171023_Smp_IL2noBT5um_2",9772405.03225806
+"141","Adenosyl Methionine","171023_Smp_IL2noBT5um_3",1402509.22580645
+"142","Adenosyl Methionine","171023_Smp_IL2WBT5um_1",337078.225806452
+"143","Adenosyl Methionine","171023_Smp_IL2WBT5um_2",126752.451612903
+"144","Adenosyl Methionine","171023_Smp_IL2WBT5um_3",314245.870967742
+"145","Adenosyl Methionine","171023_Smp_IL2IT05um_1",188123.935483871
+"146","Adenosyl Methionine","171023_Smp_IL2IT05um_2",169780.967741935
+"147","Adenosyl Methionine","171023_Smp_IL2IT05um_3",187486.870967742
+"148","Alanine","171023_Smp_IL2Control5um_1",6970754.4504782
+"149","Alanine","171023_Smp_IL2Control5um_2",13627216.7122327
+"150","Alanine","171023_Smp_IL2Control5um_3",9870966.11784512
+"151","Alanine","171023_Smp_IL2DMB5um_1",5880778.29440226
+"152","Alanine","171023_Smp_IL2DMB5um_2",13491923.6325249
+"153","Alanine","171023_Smp_IL2DMB5um_3",9365571.7025596
+"154","Alanine","171023_Smp_IL2DMBnoBT5um_1",7816470.16129775
+"155","Alanine","171023_Smp_IL2DMBnoBT5um_2",10518369.9535375
+"156","Alanine","171023_Smp_IL2DMBnoBT5um_3",12306312.9622885
+"157","Alanine","171023_Smp_IL2DSW5um_1",9373922.73880335
+"158","Alanine","171023_Smp_IL2DSW5um_2",9945210.07994932
+"159","Alanine","171023_Smp_IL2DSW5um_3",28932722.0709765
+"160","Alanine","171023_Smp_IL2noBT5um_1",17708623.7846131
+"161","Alanine","171023_Smp_IL2noBT5um_2",14818866.0335312
+"162","Alanine","171023_Smp_IL2noBT5um_3",13606367.9277158
+"163","Alanine","171023_Smp_IL2WBT5um_1",4800451.59401017
+"164","Alanine","171023_Smp_IL2WBT5um_2",7869726.66246059
+"165","Alanine","171023_Smp_IL2WBT5um_3",10295295.3420556
+"166","Alanine","171023_Smp_IL2IT05um_1",3880265.91321548
+"167","Alanine","171023_Smp_IL2IT05um_2",3260936.51154053
+"168","Alanine","171023_Smp_IL2IT05um_3",3722207.29355637
+"169","Allopurinol","171023_Smp_IL2Control5um_1",40947831.6129032
+"170","Allopurinol","171023_Smp_IL2Control5um_2",36408867.6129032
+"171","Allopurinol","171023_Smp_IL2Control5um_3",164230030.967742
+"172","Allopurinol","171023_Smp_IL2DMB5um_1",70590834.5806452
+"173","Allopurinol","171023_Smp_IL2DMB5um_2",53269228.1290323
+"174","Allopurinol","171023_Smp_IL2DMB5um_3",66598443.8709677
+"175","Allopurinol","171023_Smp_IL2DMBnoBT5um_1",60217841.4193548
+"176","Allopurinol","171023_Smp_IL2DMBnoBT5um_2",100814642.064516
+"177","Allopurinol","171023_Smp_IL2DMBnoBT5um_3",63967773.4193548
+"178","Allopurinol","171023_Smp_IL2DSW5um_1",98202584
+"179","Allopurinol","171023_Smp_IL2DSW5um_2",121017643.612903
+"180","Allopurinol","171023_Smp_IL2DSW5um_3",106707943.483871
+"181","Allopurinol","171023_Smp_IL2noBT5um_1",63179602.0645161
+"182","Allopurinol","171023_Smp_IL2noBT5um_2",122999410.064516
+"183","Allopurinol","171023_Smp_IL2noBT5um_3",158278811.870968
+"184","Allopurinol","171023_Smp_IL2WBT5um_1",37860877.0322581
+"185","Allopurinol","171023_Smp_IL2WBT5um_2",57853866.1935484
+"186","Allopurinol","171023_Smp_IL2WBT5um_3",35786411.6129032
+"187","Allopurinol","171023_Smp_IL2IT05um_1",41110639.483871
+"188","Allopurinol","171023_Smp_IL2IT05um_2",46151902.1935484
+"189","Allopurinol","171023_Smp_IL2IT05um_3",52493551.0967742
+"190","Amino Propanesulfonic Acid","171023_Smp_IL2Control5um_1",8203494.0041819
+"191","Amino Propanesulfonic Acid","171023_Smp_IL2Control5um_2",6816170.63119936
+"192","Amino Propanesulfonic Acid","171023_Smp_IL2Control5um_3",10012050.205199
+"193","Amino Propanesulfonic Acid","171023_Smp_IL2DMB5um_1",8880767.6207403
+"194","Amino Propanesulfonic Acid","171023_Smp_IL2DMB5um_2",6187339.1910888
+"195","Amino Propanesulfonic Acid","171023_Smp_IL2DMB5um_3",6478042.49271226
+"196","Amino Propanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_1",6122142.97980491
+"197","Amino Propanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_2",8977676.53904155
+"198","Amino Propanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_3",6784709.55499449
+"199","Amino Propanesulfonic Acid","171023_Smp_IL2DSW5um_1",10885672.8081095
+"200","Amino Propanesulfonic Acid","171023_Smp_IL2DSW5um_2",11018129.4927104
+"201","Amino Propanesulfonic Acid","171023_Smp_IL2DSW5um_3",7046612.16187451
+"202","Amino Propanesulfonic Acid","171023_Smp_IL2noBT5um_1",7362509.04793391
+"203","Amino Propanesulfonic Acid","171023_Smp_IL2noBT5um_2",8645145.30018041
+"204","Amino Propanesulfonic Acid","171023_Smp_IL2noBT5um_3",12326079.6589889
+"205","Amino Propanesulfonic Acid","171023_Smp_IL2WBT5um_1",16121345.511954
+"206","Amino Propanesulfonic Acid","171023_Smp_IL2WBT5um_2",11432791.7747916
+"207","Amino Propanesulfonic Acid","171023_Smp_IL2WBT5um_3",6337256.7587633
+"208","Amino Propanesulfonic Acid","171023_Smp_IL2IT05um_1",8419801.85342894
+"209","Amino Propanesulfonic Acid","171023_Smp_IL2IT05um_2",15368270.5850653
+"210","Amino Propanesulfonic Acid","171023_Smp_IL2IT05um_3",10525277.3121952
+"211","Aminobutyric Acid","171023_Smp_IL2Control5um_1",19256621.1730512
+"212","Aminobutyric Acid","171023_Smp_IL2Control5um_2",20585754.0010562
+"213","Aminobutyric Acid","171023_Smp_IL2Control5um_3",25872177.7539487
+"214","Aminobutyric Acid","171023_Smp_IL2DMB5um_1",21060792.3577713
+"215","Aminobutyric Acid","171023_Smp_IL2DMB5um_2",17654568.6733137
+"216","Aminobutyric Acid","171023_Smp_IL2DMB5um_3",22134136.100156
+"217","Aminobutyric Acid","171023_Smp_IL2DMBnoBT5um_1",19650953.0857813
+"218","Aminobutyric Acid","171023_Smp_IL2DMBnoBT5um_2",24404214.3685048
+"219","Aminobutyric Acid","171023_Smp_IL2DMBnoBT5um_3",25872201.326714
+"220","Aminobutyric Acid","171023_Smp_IL2DSW5um_1",32978556.1024147
+"221","Aminobutyric Acid","171023_Smp_IL2DSW5um_2",38905137.2334768
+"222","Aminobutyric Acid","171023_Smp_IL2DSW5um_3",27505728.68138
+"223","Aminobutyric Acid","171023_Smp_IL2noBT5um_1",20840023.3724256
+"224","Aminobutyric Acid","171023_Smp_IL2noBT5um_2",26075784.3447446
+"225","Aminobutyric Acid","171023_Smp_IL2noBT5um_3",36792771.5120189
+"226","Aminobutyric Acid","171023_Smp_IL2WBT5um_1",21920412.0899152
+"227","Aminobutyric Acid","171023_Smp_IL2WBT5um_2",19100324.4942902
+"228","Aminobutyric Acid","171023_Smp_IL2WBT5um_3",16682855.2177437
+"229","Aminobutyric Acid","171023_Smp_IL2IT05um_1",17675009.7359011
+"230","Aminobutyric Acid","171023_Smp_IL2IT05um_2",19823074.0148069
+"231","Aminobutyric Acid","171023_Smp_IL2IT05um_3",23538563.2875399
+"232","AMP","171023_Smp_IL2Control5um_1",1860144.36691907
+"233","AMP","171023_Smp_IL2Control5um_2",1559362.03754429
+"234","AMP","171023_Smp_IL2Control5um_3",2365185.20686162
+"235","AMP","171023_Smp_IL2DMB5um_1",1996124.93690608
+"236","AMP","171023_Smp_IL2DMB5um_2",1655591.21450695
+"237","AMP","171023_Smp_IL2DMB5um_3",4004237.86103709
+"238","AMP","171023_Smp_IL2DMBnoBT5um_1",3095466.26468734
+"239","AMP","171023_Smp_IL2DMBnoBT5um_2",4485687.95856301
+"240","AMP","171023_Smp_IL2DMBnoBT5um_3",6639041.69932367
+"241","AMP","171023_Smp_IL2DSW5um_1",8279038.4266592
+"242","AMP","171023_Smp_IL2DSW5um_2",7471338.87527637
+"243","AMP","171023_Smp_IL2DSW5um_3",8210021.74051009
+"244","AMP","171023_Smp_IL2noBT5um_1",4440744.17456299
+"245","AMP","171023_Smp_IL2noBT5um_2",6614850.27741277
+"246","AMP","171023_Smp_IL2noBT5um_3",4507795.6122896
+"247","AMP","171023_Smp_IL2WBT5um_1",1425345.44426136
+"248","AMP","171023_Smp_IL2WBT5um_2",1865666.53008524
+"249","AMP","171023_Smp_IL2WBT5um_3",1623980.0700627
+"250","AMP","171023_Smp_IL2IT05um_1",1242695.84353296
+"251","AMP","171023_Smp_IL2IT05um_2",2293377.51189508
+"252","AMP","171023_Smp_IL2IT05um_3",2053313.72224295
+"253","Arginine","171023_Smp_IL2Control5um_1",13022630.1364391
+"254","Arginine","171023_Smp_IL2Control5um_2",12654523.3448446
+"255","Arginine","171023_Smp_IL2Control5um_3",25617674.5623443
+"256","Arginine","171023_Smp_IL2DMB5um_1",25745916.6694185
+"257","Arginine","171023_Smp_IL2DMB5um_2",14773334.6439451
+"258","Arginine","171023_Smp_IL2DMB5um_3",72573218.1524643
+"259","Arginine","171023_Smp_IL2DMBnoBT5um_1",25254257.0114365
+"260","Arginine","171023_Smp_IL2DMBnoBT5um_2",43995709.0063053
+"261","Arginine","171023_Smp_IL2DMBnoBT5um_3",44028704.7735462
+"262","Arginine","171023_Smp_IL2DSW5um_1",66475467.5587608
+"263","Arginine","171023_Smp_IL2DSW5um_2",78050557.0499431
+"264","Arginine","171023_Smp_IL2DSW5um_3",115308947.540583
+"265","Arginine","171023_Smp_IL2noBT5um_1",38575637.9755461
+"266","Arginine","171023_Smp_IL2noBT5um_2",74473192.8493624
+"267","Arginine","171023_Smp_IL2noBT5um_3",54989733.6595244
+"268","Arginine","171023_Smp_IL2WBT5um_1",9831499.07594698
+"269","Arginine","171023_Smp_IL2WBT5um_2",16561150.8743503
+"270","Arginine","171023_Smp_IL2WBT5um_3",24650926.8473491
+"271","Arginine","171023_Smp_IL2IT05um_1",7694804.35223324
+"272","Arginine","171023_Smp_IL2IT05um_2",11437397.3844826
+"273","Arginine","171023_Smp_IL2IT05um_3",12000444.5404476
+"274","Arsenobetaine","171023_Smp_IL2Control5um_1",16667250
+"275","Arsenobetaine","171023_Smp_IL2Control5um_2",12127232
+"276","Arsenobetaine","171023_Smp_IL2Control5um_3",24520993
+"277","Arsenobetaine","171023_Smp_IL2DMB5um_1",16169515
+"278","Arsenobetaine","171023_Smp_IL2DMB5um_2",17539295
+"279","Arsenobetaine","171023_Smp_IL2DMB5um_3",27528218
+"280","Arsenobetaine","171023_Smp_IL2DMBnoBT5um_1",10376294
+"281","Arsenobetaine","171023_Smp_IL2DMBnoBT5um_2",7612568
+"282","Arsenobetaine","171023_Smp_IL2DMBnoBT5um_3",10059835
+"283","Arsenobetaine","171023_Smp_IL2DSW5um_1",18710130
+"284","Arsenobetaine","171023_Smp_IL2DSW5um_2",18162294
+"285","Arsenobetaine","171023_Smp_IL2DSW5um_3",15174368
+"286","Arsenobetaine","171023_Smp_IL2noBT5um_1",8247242
+"287","Arsenobetaine","171023_Smp_IL2noBT5um_2",13487324
+"288","Arsenobetaine","171023_Smp_IL2noBT5um_3",15680715
+"289","Arsenobetaine","171023_Smp_IL2WBT5um_1",18352261
+"290","Arsenobetaine","171023_Smp_IL2WBT5um_2",22149540
+"291","Arsenobetaine","171023_Smp_IL2WBT5um_3",11536939
+"292","Arsenobetaine","171023_Smp_IL2IT05um_1",20861530
+"293","Arsenobetaine","171023_Smp_IL2IT05um_2",16124275
+"294","Arsenobetaine","171023_Smp_IL2IT05um_3",16983083
+"295","Asparagine","171023_Smp_IL2Control5um_1",1202767
+"296","Asparagine","171023_Smp_IL2Control5um_2",860269.1
+"297","Asparagine","171023_Smp_IL2Control5um_3",2736897
+"298","Asparagine","171023_Smp_IL2DMB5um_1",2207715
+"299","Asparagine","171023_Smp_IL2DMB5um_2",959007.5
+"300","Asparagine","171023_Smp_IL2DMB5um_3",1024235
+"301","Asparagine","171023_Smp_IL2DMBnoBT5um_1",2177051
+"302","Asparagine","171023_Smp_IL2DMBnoBT5um_2",5145655
+"303","Asparagine","171023_Smp_IL2DMBnoBT5um_3",3041010
+"304","Asparagine","171023_Smp_IL2DSW5um_1",4123705
+"305","Asparagine","171023_Smp_IL2DSW5um_2",4811612
+"306","Asparagine","171023_Smp_IL2DSW5um_3",5146602
+"307","Asparagine","171023_Smp_IL2noBT5um_1",2185391
+"308","Asparagine","171023_Smp_IL2noBT5um_2",7079226
+"309","Asparagine","171023_Smp_IL2noBT5um_3",4077719
+"310","Asparagine","171023_Smp_IL2WBT5um_1",1053344
+"311","Asparagine","171023_Smp_IL2WBT5um_2",980527.4
+"312","Asparagine","171023_Smp_IL2WBT5um_3",599580.6
+"313","Asparagine","171023_Smp_IL2IT05um_1",380979.5
+"314","Asparagine","171023_Smp_IL2IT05um_2",551544.5
+"315","Asparagine","171023_Smp_IL2IT05um_3",748442.3
+"316","Aspartic acid","171023_Smp_IL2Control5um_1",1677486
+"317","Aspartic acid","171023_Smp_IL2Control5um_2",1541346
+"318","Aspartic acid","171023_Smp_IL2Control5um_3",3614671
+"319","Aspartic acid","171023_Smp_IL2DMB5um_1",2350390
+"320","Aspartic acid","171023_Smp_IL2DMB5um_2",1612308
+"321","Aspartic acid","171023_Smp_IL2DMB5um_3",1602485
+"322","Aspartic acid","171023_Smp_IL2DMBnoBT5um_1",2473836
+"323","Aspartic acid","171023_Smp_IL2DMBnoBT5um_2",4984505
+"324","Aspartic acid","171023_Smp_IL2DMBnoBT5um_3",3827952
+"325","Aspartic acid","171023_Smp_IL2DSW5um_1",3607856
+"326","Aspartic acid","171023_Smp_IL2DSW5um_2",4686001
+"327","Aspartic acid","171023_Smp_IL2DSW5um_3",4385208
+"328","Aspartic acid","171023_Smp_IL2noBT5um_1",2749371
+"329","Aspartic acid","171023_Smp_IL2noBT5um_2",7012033
+"330","Aspartic acid","171023_Smp_IL2noBT5um_3",5386001
+"331","Aspartic acid","171023_Smp_IL2WBT5um_1",1749923
+"332","Aspartic acid","171023_Smp_IL2WBT5um_2",1449459
+"333","Aspartic acid","171023_Smp_IL2WBT5um_3",1828596
+"334","Aspartic acid","171023_Smp_IL2IT05um_1",843911.9
+"335","Aspartic acid","171023_Smp_IL2IT05um_2",922521.7
+"336","Aspartic acid","171023_Smp_IL2IT05um_3",1045379
+"337","Betaine","171023_Smp_IL2Control5um_1",4967129220
+"338","Betaine","171023_Smp_IL2Control5um_2",4318541279
+"339","Betaine","171023_Smp_IL2Control5um_3",8233936367
+"340","Betaine","171023_Smp_IL2DMB5um_1",5109531119
+"341","Betaine","171023_Smp_IL2DMB5um_2",5638353656
+"342","Betaine","171023_Smp_IL2DMB5um_3",10493831663
+"343","Betaine","171023_Smp_IL2DMBnoBT5um_1",5545717942
+"344","Betaine","171023_Smp_IL2DMBnoBT5um_2",5874274486
+"345","Betaine","171023_Smp_IL2DMBnoBT5um_3",6784322775
+"346","Betaine","171023_Smp_IL2DSW5um_1",10151035409
+"347","Betaine","171023_Smp_IL2DSW5um_2",8718492705
+"348","Betaine","171023_Smp_IL2DSW5um_3",8483345408
+"349","Betaine","171023_Smp_IL2noBT5um_1",5837509401
+"350","Betaine","171023_Smp_IL2noBT5um_2",10085607457
+"351","Betaine","171023_Smp_IL2noBT5um_3",7714054243
+"352","Betaine","171023_Smp_IL2WBT5um_1",4331415453
+"353","Betaine","171023_Smp_IL2WBT5um_2",8570866226
+"354","Betaine","171023_Smp_IL2WBT5um_3",3870682252
+"355","Betaine","171023_Smp_IL2IT05um_1",3007415461
+"356","Betaine","171023_Smp_IL2IT05um_2",4943367630
+"357","Betaine","171023_Smp_IL2IT05um_3",7042137220
+"358","Butyryl-L-carnitine","171023_Smp_IL2Control5um_1",5291395
+"359","Butyryl-L-carnitine","171023_Smp_IL2Control5um_2",3028525
+"360","Butyryl-L-carnitine","171023_Smp_IL2Control5um_3",7035595
+"361","Butyryl-L-carnitine","171023_Smp_IL2DMB5um_1",4245424
+"362","Butyryl-L-carnitine","171023_Smp_IL2DMB5um_2",4902714
+"363","Butyryl-L-carnitine","171023_Smp_IL2DMB5um_3",10309119
+"364","Butyryl-L-carnitine","171023_Smp_IL2DMBnoBT5um_1",4006970
+"365","Butyryl-L-carnitine","171023_Smp_IL2DMBnoBT5um_2",4515815
+"366","Butyryl-L-carnitine","171023_Smp_IL2DMBnoBT5um_3",5046221
+"367","Butyryl-L-carnitine","171023_Smp_IL2DSW5um_1",5233956
+"368","Butyryl-L-carnitine","171023_Smp_IL2DSW5um_2",5422918
+"369","Butyryl-L-carnitine","171023_Smp_IL2DSW5um_3",6561845
+"370","Butyryl-L-carnitine","171023_Smp_IL2noBT5um_1",3490482
+"371","Butyryl-L-carnitine","171023_Smp_IL2noBT5um_2",5904340
+"372","Butyryl-L-carnitine","171023_Smp_IL2noBT5um_3",7468563
+"373","Butyryl-L-carnitine","171023_Smp_IL2WBT5um_1",3858608
+"374","Butyryl-L-carnitine","171023_Smp_IL2WBT5um_2",5300526
+"375","Butyryl-L-carnitine","171023_Smp_IL2WBT5um_3",3762194
+"376","Butyryl-L-carnitine","171023_Smp_IL2IT05um_1",2095823
+"377","Butyryl-L-carnitine","171023_Smp_IL2IT05um_2",1934139
+"378","Butyryl-L-carnitine","171023_Smp_IL2IT05um_3",2007023
+"379","Carnitine","171023_Smp_IL2Control5um_1",151176499
+"380","Carnitine","171023_Smp_IL2Control5um_2",115981665
+"381","Carnitine","171023_Smp_IL2Control5um_3",215956437
+"382","Carnitine","171023_Smp_IL2DMB5um_1",134325201
+"383","Carnitine","171023_Smp_IL2DMB5um_2",132772103
+"384","Carnitine","171023_Smp_IL2DMB5um_3",151485268
+"385","Carnitine","171023_Smp_IL2DMBnoBT5um_1",173600361
+"386","Carnitine","171023_Smp_IL2DMBnoBT5um_2",235392828
+"387","Carnitine","171023_Smp_IL2DMBnoBT5um_3",218103574
+"388","Carnitine","171023_Smp_IL2DSW5um_1",336105555
+"389","Carnitine","171023_Smp_IL2DSW5um_2",290181469
+"390","Carnitine","171023_Smp_IL2DSW5um_3",261811820
+"391","Carnitine","171023_Smp_IL2noBT5um_1",160951991
+"392","Carnitine","171023_Smp_IL2noBT5um_2",322347027
+"393","Carnitine","171023_Smp_IL2noBT5um_3",243796033
+"394","Carnitine","171023_Smp_IL2WBT5um_1",145659314
+"395","Carnitine","171023_Smp_IL2WBT5um_2",174701508
+"396","Carnitine","171023_Smp_IL2WBT5um_3",100423730
+"397","Carnitine","171023_Smp_IL2IT05um_1",80830723
+"398","Carnitine","171023_Smp_IL2IT05um_2",134333269
+"399","Carnitine","171023_Smp_IL2IT05um_3",140267230
+"400","Choline","171023_Smp_IL2Control5um_1",83237357
+"401","Choline","171023_Smp_IL2Control5um_2",74811723
+"402","Choline","171023_Smp_IL2Control5um_3",117867151
+"403","Choline","171023_Smp_IL2DMB5um_1",84869671
+"404","Choline","171023_Smp_IL2DMB5um_2",87695940
+"405","Choline","171023_Smp_IL2DMB5um_3",196791800
+"406","Choline","171023_Smp_IL2DMBnoBT5um_1",106749778
+"407","Choline","171023_Smp_IL2DMBnoBT5um_2",178483782
+"408","Choline","171023_Smp_IL2DMBnoBT5um_3",155526753
+"409","Choline","171023_Smp_IL2DSW5um_1",274067078
+"410","Choline","171023_Smp_IL2DSW5um_2",248335614
+"411","Choline","171023_Smp_IL2DSW5um_3",208025704
+"412","Choline","171023_Smp_IL2noBT5um_1",112651649
+"413","Choline","171023_Smp_IL2noBT5um_2",298960948
+"414","Choline","171023_Smp_IL2noBT5um_3",147494584
+"415","Choline","171023_Smp_IL2WBT5um_1",65428565
+"416","Choline","171023_Smp_IL2WBT5um_2",79304934
+"417","Choline","171023_Smp_IL2WBT5um_3",54426395
+"418","Choline","171023_Smp_IL2IT05um_1",47693149
+"419","Choline","171023_Smp_IL2IT05um_2",172780219
+"420","Choline","171023_Smp_IL2IT05um_3",125959625
+"421","Citric Acid","171023_Smp_IL2Control5um_1",2117743
+"422","Citric Acid","171023_Smp_IL2Control5um_2",1874058
+"423","Citric Acid","171023_Smp_IL2Control5um_3",4514716
+"424","Citric Acid","171023_Smp_IL2DMB5um_1",10537306
+"425","Citric Acid","171023_Smp_IL2DMB5um_2",2577205
+"426","Citric Acid","171023_Smp_IL2DMB5um_3",1422003
+"427","Citric Acid","171023_Smp_IL2DMBnoBT5um_1",2025125
+"428","Citric Acid","171023_Smp_IL2DMBnoBT5um_2",17552330
+"429","Citric Acid","171023_Smp_IL2DMBnoBT5um_3",5588715
+"430","Citric Acid","171023_Smp_IL2DSW5um_1",7053066
+"431","Citric Acid","171023_Smp_IL2DSW5um_2",8837228
+"432","Citric Acid","171023_Smp_IL2DSW5um_3",7671897
+"433","Citric Acid","171023_Smp_IL2noBT5um_1",4099311
+"434","Citric Acid","171023_Smp_IL2noBT5um_2",18180107
+"435","Citric Acid","171023_Smp_IL2noBT5um_3",6596443
+"436","Citric Acid","171023_Smp_IL2WBT5um_1",2515860
+"437","Citric Acid","171023_Smp_IL2WBT5um_2",354985.3
+"438","Citric Acid","171023_Smp_IL2WBT5um_3",163802.3
+"439","Citric Acid","171023_Smp_IL2IT05um_1",147429.5
+"440","Citric Acid","171023_Smp_IL2IT05um_2",623334.4
+"441","Citric Acid","171023_Smp_IL2IT05um_3",1161709
+"442","Citrulline","171023_Smp_IL2Control5um_1",264652.1
+"443","Citrulline","171023_Smp_IL2Control5um_2",753039.3
+"444","Citrulline","171023_Smp_IL2Control5um_3",3430719
+"445","Citrulline","171023_Smp_IL2DMB5um_1",1741603
+"446","Citrulline","171023_Smp_IL2DMB5um_2",500918.9
+"447","Citrulline","171023_Smp_IL2DMB5um_3",486001.6
+"448","Citrulline","171023_Smp_IL2DMBnoBT5um_1",1265053
+"449","Citrulline","171023_Smp_IL2DMBnoBT5um_2",3724077
+"450","Citrulline","171023_Smp_IL2DMBnoBT5um_3",2564202
+"451","Citrulline","171023_Smp_IL2DSW5um_1",3688778
+"452","Citrulline","171023_Smp_IL2DSW5um_2",4704450
+"453","Citrulline","171023_Smp_IL2DSW5um_3",5238996
+"454","Citrulline","171023_Smp_IL2noBT5um_1",1806969
+"455","Citrulline","171023_Smp_IL2noBT5um_2",5923444
+"456","Citrulline","171023_Smp_IL2noBT5um_3",4724766
+"457","Citrulline","171023_Smp_IL2WBT5um_1",390158.5
+"458","Citrulline","171023_Smp_IL2WBT5um_2",279795.7
+"459","Citrulline","171023_Smp_IL2WBT5um_3",276372.8
+"460","Citrulline","171023_Smp_IL2IT05um_1",608251.6
+"461","Citrulline","171023_Smp_IL2IT05um_2",220781.7
+"462","Citrulline","171023_Smp_IL2IT05um_3",384993.7
+"463","Creatine","171023_Smp_IL2Control5um_1",7791870
+"464","Creatine","171023_Smp_IL2Control5um_2",8668856
+"465","Creatine","171023_Smp_IL2Control5um_3",7034294
+"466","Creatine","171023_Smp_IL2DMB5um_1",4094557
+"467","Creatine","171023_Smp_IL2DMB5um_2",7239371
+"468","Creatine","171023_Smp_IL2DMB5um_3",12568487
+"469","Creatine","171023_Smp_IL2DMBnoBT5um_1",11307778
+"470","Creatine","171023_Smp_IL2DMBnoBT5um_2",15983253
+"471","Creatine","171023_Smp_IL2DMBnoBT5um_3",16202136
+"472","Creatine","171023_Smp_IL2DSW5um_1",14826605
+"473","Creatine","171023_Smp_IL2DSW5um_2",15065690
+"474","Creatine","171023_Smp_IL2DSW5um_3",20137335
+"475","Creatine","171023_Smp_IL2noBT5um_1",15664081
+"476","Creatine","171023_Smp_IL2noBT5um_2",26812676
+"477","Creatine","171023_Smp_IL2noBT5um_3",8372247
+"478","Creatine","171023_Smp_IL2WBT5um_1",3605550
+"479","Creatine","171023_Smp_IL2WBT5um_2",6465297
+"480","Creatine","171023_Smp_IL2WBT5um_3",5914491
+"481","Creatine","171023_Smp_IL2IT05um_1",6560751
+"482","Creatine","171023_Smp_IL2IT05um_2",5443888
+"483","Creatine","171023_Smp_IL2IT05um_3",37977404
+"484","Cystathionine","171023_Smp_IL2Control5um_1",51270.13
+"485","Cystathionine","171023_Smp_IL2Control5um_2",47821
+"486","Cystathionine","171023_Smp_IL2Control5um_3",465526.7
+"487","Cystathionine","171023_Smp_IL2DMB5um_1",194850.1
+"488","Cystathionine","171023_Smp_IL2DMB5um_2",80941.81
+"489","Cystathionine","171023_Smp_IL2DMB5um_3",149515.6
+"490","Cystathionine","171023_Smp_IL2DMBnoBT5um_1",878001.2
+"491","Cystathionine","171023_Smp_IL2DMBnoBT5um_2",2894611
+"492","Cystathionine","171023_Smp_IL2DMBnoBT5um_3",1761896
+"493","Cystathionine","171023_Smp_IL2DSW5um_1",635660.4
+"494","Cystathionine","171023_Smp_IL2DSW5um_2",554582
+"495","Cystathionine","171023_Smp_IL2DSW5um_3",1668461
+"496","Cystathionine","171023_Smp_IL2noBT5um_1",1675062
+"497","Cystathionine","171023_Smp_IL2noBT5um_2",5035616
+"498","Cystathionine","171023_Smp_IL2noBT5um_3",903108.6
+"499","Cystathionine","171023_Smp_IL2WBT5um_1",38137.81
+"500","Cystathionine","171023_Smp_IL2WBT5um_2",11239.84
+"501","Cystathionine","171023_Smp_IL2WBT5um_3",22344.03
+"502","Cystathionine","171023_Smp_IL2IT05um_1",NA
+"503","Cystathionine","171023_Smp_IL2IT05um_2",21837.94
+"504","Cystathionine","171023_Smp_IL2IT05um_3",30343.35
+"505","Cysteic Acid","171023_Smp_IL2Control5um_1",431920.4
+"506","Cysteic Acid","171023_Smp_IL2Control5um_2",415759
+"507","Cysteic Acid","171023_Smp_IL2Control5um_3",593864.8
+"508","Cysteic Acid","171023_Smp_IL2DMB5um_1",515561.1
+"509","Cysteic Acid","171023_Smp_IL2DMB5um_2",415258.5
+"510","Cysteic Acid","171023_Smp_IL2DMB5um_3",446322.2
+"511","Cysteic Acid","171023_Smp_IL2DMBnoBT5um_1",734657
+"512","Cysteic Acid","171023_Smp_IL2DMBnoBT5um_2",707844.2
+"513","Cysteic Acid","171023_Smp_IL2DMBnoBT5um_3",819886.1
+"514","Cysteic Acid","171023_Smp_IL2DSW5um_1",721880.2
+"515","Cysteic Acid","171023_Smp_IL2DSW5um_2",890147.5
+"516","Cysteic Acid","171023_Smp_IL2DSW5um_3",919508.6
+"517","Cysteic Acid","171023_Smp_IL2noBT5um_1",560957.3
+"518","Cysteic Acid","171023_Smp_IL2noBT5um_2",968622.5
+"519","Cysteic Acid","171023_Smp_IL2noBT5um_3",761929.2
+"520","Cysteic Acid","171023_Smp_IL2WBT5um_1",368294.4
+"521","Cysteic Acid","171023_Smp_IL2WBT5um_2",416410.1
+"522","Cysteic Acid","171023_Smp_IL2WBT5um_3",301183.7
+"523","Cysteic Acid","171023_Smp_IL2IT05um_1",132856.5
+"524","Cysteic Acid","171023_Smp_IL2IT05um_2",66025.52
+"525","Cysteic Acid","171023_Smp_IL2IT05um_3",148447.3
+"526","Cytidine","171023_Smp_IL2Control5um_1",3262589
+"527","Cytidine","171023_Smp_IL2Control5um_2",3289338
+"528","Cytidine","171023_Smp_IL2Control5um_3",8569456
+"529","Cytidine","171023_Smp_IL2DMB5um_1",4757405
+"530","Cytidine","171023_Smp_IL2DMB5um_2",3292749
+"531","Cytidine","171023_Smp_IL2DMB5um_3",4027049
+"532","Cytidine","171023_Smp_IL2DMBnoBT5um_1",8421241
+"533","Cytidine","171023_Smp_IL2DMBnoBT5um_2",19353786
+"534","Cytidine","171023_Smp_IL2DMBnoBT5um_3",13070675
+"535","Cytidine","171023_Smp_IL2DSW5um_1",20482331
+"536","Cytidine","171023_Smp_IL2DSW5um_2",21872610
+"537","Cytidine","171023_Smp_IL2DSW5um_3",23519921
+"538","Cytidine","171023_Smp_IL2noBT5um_1",8936199
+"539","Cytidine","171023_Smp_IL2noBT5um_2",28713682
+"540","Cytidine","171023_Smp_IL2noBT5um_3",14138801
+"541","Cytidine","171023_Smp_IL2WBT5um_1",3958244
+"542","Cytidine","171023_Smp_IL2WBT5um_2",4049335
+"543","Cytidine","171023_Smp_IL2WBT5um_3",2695581
+"544","Cytidine","171023_Smp_IL2IT05um_1",1782420
+"545","Cytidine","171023_Smp_IL2IT05um_2",3545345
+"546","Cytidine","171023_Smp_IL2IT05um_3",3172134
+"547","Cytosine","171023_Smp_IL2Control5um_1",110377145
+"548","Cytosine","171023_Smp_IL2Control5um_2",71952929
+"549","Cytosine","171023_Smp_IL2Control5um_3",122141644
+"550","Cytosine","171023_Smp_IL2DMB5um_1",71519766
+"551","Cytosine","171023_Smp_IL2DMB5um_2",85252512
+"552","Cytosine","171023_Smp_IL2DMB5um_3",96917192
+"553","Cytosine","171023_Smp_IL2DMBnoBT5um_1",93149000
+"554","Cytosine","171023_Smp_IL2DMBnoBT5um_2",115430268
+"555","Cytosine","171023_Smp_IL2DMBnoBT5um_3",120148059
+"556","Cytosine","171023_Smp_IL2DSW5um_1",263471006
+"557","Cytosine","171023_Smp_IL2DSW5um_2",257577553
+"558","Cytosine","171023_Smp_IL2DSW5um_3",167704496
+"559","Cytosine","171023_Smp_IL2noBT5um_1",86600081
+"560","Cytosine","171023_Smp_IL2noBT5um_2",173955507
+"561","Cytosine","171023_Smp_IL2noBT5um_3",149822121
+"562","Cytosine","171023_Smp_IL2WBT5um_1",106743743
+"563","Cytosine","171023_Smp_IL2WBT5um_2",125538352
+"564","Cytosine","171023_Smp_IL2WBT5um_3",93542822
+"565","Cytosine","171023_Smp_IL2IT05um_1",37570249
+"566","Cytosine","171023_Smp_IL2IT05um_2",88124011
+"567","Cytosine","171023_Smp_IL2IT05um_3",79359956
+"568","Deoxyadenosine","171023_Smp_IL2Control5um_1",15449897
+"569","Deoxyadenosine","171023_Smp_IL2Control5um_2",14272160
+"570","Deoxyadenosine","171023_Smp_IL2Control5um_3",6568262
+"571","Deoxyadenosine","171023_Smp_IL2DMB5um_1",6549407
+"572","Deoxyadenosine","171023_Smp_IL2DMB5um_2",14179099
+"573","Deoxyadenosine","171023_Smp_IL2DMB5um_3",16625403
+"574","Deoxyadenosine","171023_Smp_IL2DMBnoBT5um_1",7077493
+"575","Deoxyadenosine","171023_Smp_IL2DMBnoBT5um_2",10184248
+"576","Deoxyadenosine","171023_Smp_IL2DMBnoBT5um_3",13266400
+"577","Deoxyadenosine","171023_Smp_IL2DSW5um_1",46084345
+"578","Deoxyadenosine","171023_Smp_IL2DSW5um_2",89425059
+"579","Deoxyadenosine","171023_Smp_IL2DSW5um_3",60338044
+"580","Deoxyadenosine","171023_Smp_IL2noBT5um_1",6649068
+"581","Deoxyadenosine","171023_Smp_IL2noBT5um_2",22045422
+"582","Deoxyadenosine","171023_Smp_IL2noBT5um_3",17451867
+"583","Deoxyadenosine","171023_Smp_IL2WBT5um_1",14956531
+"584","Deoxyadenosine","171023_Smp_IL2WBT5um_2",13516120
+"585","Deoxyadenosine","171023_Smp_IL2WBT5um_3",12206754
+"586","Deoxyadenosine","171023_Smp_IL2IT05um_1",1261712
+"587","Deoxyadenosine","171023_Smp_IL2IT05um_2",5860006
+"588","Deoxyadenosine","171023_Smp_IL2IT05um_3",4707726
+"589","DHAP","171023_Smp_IL2Control5um_1",38629.87
+"590","DHAP","171023_Smp_IL2Control5um_2",117289.1
+"591","DHAP","171023_Smp_IL2Control5um_3",38763.65
+"592","DHAP","171023_Smp_IL2DMB5um_1",61596.94
+"593","DHAP","171023_Smp_IL2DMB5um_2",67656.06
+"594","DHAP","171023_Smp_IL2DMB5um_3",29776.45
+"595","DHAP","171023_Smp_IL2DMBnoBT5um_1",54974.65
+"596","DHAP","171023_Smp_IL2DMBnoBT5um_2",57165.55
+"597","DHAP","171023_Smp_IL2DMBnoBT5um_3",60187.16
+"598","DHAP","171023_Smp_IL2DSW5um_1",72847.06
+"599","DHAP","171023_Smp_IL2DSW5um_2",116814.8
+"600","DHAP","171023_Smp_IL2DSW5um_3",65970.32
+"601","DHAP","171023_Smp_IL2noBT5um_1",96568.13
+"602","DHAP","171023_Smp_IL2noBT5um_2",68357.68
+"603","DHAP","171023_Smp_IL2noBT5um_3",41813.32
+"604","DHAP","171023_Smp_IL2WBT5um_1",34376.23
+"605","DHAP","171023_Smp_IL2WBT5um_2",59678.26
+"606","DHAP","171023_Smp_IL2WBT5um_3",34107.74
+"607","DHAP","171023_Smp_IL2IT05um_1",51759.39
+"608","DHAP","171023_Smp_IL2IT05um_2",66991.87
+"609","DHAP","171023_Smp_IL2IT05um_3",45713.35
+"610","DHPS","171023_Smp_IL2Control5um_1",10086874
+"611","DHPS","171023_Smp_IL2Control5um_2",16292120
+"612","DHPS","171023_Smp_IL2Control5um_3",34557560
+"613","DHPS","171023_Smp_IL2DMB5um_1",18712108
+"614","DHPS","171023_Smp_IL2DMB5um_2",14752287
+"615","DHPS","171023_Smp_IL2DMB5um_3",13628493
+"616","DHPS","171023_Smp_IL2DMBnoBT5um_1",13806778
+"617","DHPS","171023_Smp_IL2DMBnoBT5um_2",38252587
+"618","DHPS","171023_Smp_IL2DMBnoBT5um_3",19342394
+"619","DHPS","171023_Smp_IL2DSW5um_1",38374001
+"620","DHPS","171023_Smp_IL2DSW5um_2",63476487
+"621","DHPS","171023_Smp_IL2DSW5um_3",69375125
+"622","DHPS","171023_Smp_IL2noBT5um_1",21618701
+"623","DHPS","171023_Smp_IL2noBT5um_2",64539915
+"624","DHPS","171023_Smp_IL2noBT5um_3",17740138
+"625","DHPS","171023_Smp_IL2WBT5um_1",9708727
+"626","DHPS","171023_Smp_IL2WBT5um_2",9938074
+"627","DHPS","171023_Smp_IL2WBT5um_3",10122918
+"628","DHPS","171023_Smp_IL2IT05um_1",7285588
+"629","DHPS","171023_Smp_IL2IT05um_2",7085670
+"630","DHPS","171023_Smp_IL2IT05um_3",7874698
+"631","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2Control5um_1",322934840
+"632","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2Control5um_2",419095128
+"633","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2Control5um_3",496309907
+"634","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMB5um_1",358236409
+"635","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMB5um_2",365083821
+"636","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMB5um_3",339721402
+"637","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMBnoBT5um_1",719873309
+"638","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMBnoBT5um_2",1101843378
+"639","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DMBnoBT5um_3",1060008060
+"640","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DSW5um_1",1533453543
+"641","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DSW5um_2",1273250366
+"642","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2DSW5um_3",1846363169
+"643","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2noBT5um_1",893677531
+"644","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2noBT5um_2",1577475468
+"645","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2noBT5um_3",973872716
+"646","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2WBT5um_1",307407364
+"647","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2WBT5um_2",516189702
+"648","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2WBT5um_3",271372765
+"649","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2IT05um_1",214561159
+"650","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2IT05um_2",349134794
+"651","Dimethylsulfonioacetate (DMS-Ac)","171023_Smp_IL2IT05um_3",345927596
+"652","DMSP","171023_Smp_IL2Control5um_1",4984303087
+"653","DMSP","171023_Smp_IL2Control5um_2",3958370709
+"654","DMSP","171023_Smp_IL2Control5um_3",8116362240
+"655","DMSP","171023_Smp_IL2DMB5um_1",3705762882
+"656","DMSP","171023_Smp_IL2DMB5um_2",3424722093
+"657","DMSP","171023_Smp_IL2DMB5um_3",2612241928
+"658","DMSP","171023_Smp_IL2DMBnoBT5um_1",7772235413
+"659","DMSP","171023_Smp_IL2DMBnoBT5um_2",7294763008
+"660","DMSP","171023_Smp_IL2DMBnoBT5um_3",3997477706
+"661","DMSP","171023_Smp_IL2DSW5um_1",7794910703
+"662","DMSP","171023_Smp_IL2DSW5um_2",8915780476
+"663","DMSP","171023_Smp_IL2DSW5um_3",11303299601
+"664","DMSP","171023_Smp_IL2noBT5um_1",6930391172
+"665","DMSP","171023_Smp_IL2noBT5um_2",10095092934
+"666","DMSP","171023_Smp_IL2noBT5um_3",11009637772
+"667","DMSP","171023_Smp_IL2WBT5um_1",4789154387
+"668","DMSP","171023_Smp_IL2WBT5um_2",5318708786
+"669","DMSP","171023_Smp_IL2WBT5um_3",3806115006
+"670","DMSP","171023_Smp_IL2IT05um_1",4689286739
+"671","DMSP","171023_Smp_IL2IT05um_2",2163712347
+"672","DMSP","171023_Smp_IL2IT05um_3",3509167220
+"673","Ectoine","171023_Smp_IL2Control5um_1",79654206
+"674","Ectoine","171023_Smp_IL2Control5um_2",59836194
+"675","Ectoine","171023_Smp_IL2Control5um_3",35941668
+"676","Ectoine","171023_Smp_IL2DMB5um_1",151057310
+"677","Ectoine","171023_Smp_IL2DMB5um_2",39765335
+"678","Ectoine","171023_Smp_IL2DMB5um_3",30462506
+"679","Ectoine","171023_Smp_IL2DMBnoBT5um_1",368538706
+"680","Ectoine","171023_Smp_IL2DMBnoBT5um_2",187254025
+"681","Ectoine","171023_Smp_IL2DMBnoBT5um_3",235625606
+"682","Ectoine","171023_Smp_IL2DSW5um_1",325199220
+"683","Ectoine","171023_Smp_IL2DSW5um_2",221843294
+"684","Ectoine","171023_Smp_IL2DSW5um_3",261966557
+"685","Ectoine","171023_Smp_IL2noBT5um_1",238122540
+"686","Ectoine","171023_Smp_IL2noBT5um_2",293508648
+"687","Ectoine","171023_Smp_IL2noBT5um_3",521746087
+"688","Ectoine","171023_Smp_IL2WBT5um_1",15724034
+"689","Ectoine","171023_Smp_IL2WBT5um_2",23923943
+"690","Ectoine","171023_Smp_IL2WBT5um_3",26776316
+"691","Ectoine","171023_Smp_IL2IT05um_1",37919622
+"692","Ectoine","171023_Smp_IL2IT05um_2",38051671
+"693","Ectoine","171023_Smp_IL2IT05um_3",41035853
+"694","Ethanesulfonic Acid","171023_Smp_IL2Control5um_1",9434.355
+"695","Ethanesulfonic Acid","171023_Smp_IL2Control5um_2",32102.06
+"696","Ethanesulfonic Acid","171023_Smp_IL2Control5um_3",11683.26
+"697","Ethanesulfonic Acid","171023_Smp_IL2DMB5um_1",39715.97
+"698","Ethanesulfonic Acid","171023_Smp_IL2DMB5um_2",11773.06
+"699","Ethanesulfonic Acid","171023_Smp_IL2DMB5um_3",4594.161
+"700","Ethanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_1",23984.87
+"701","Ethanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_2",4912.226
+"702","Ethanesulfonic Acid","171023_Smp_IL2DMBnoBT5um_3",27779.19
+"703","Ethanesulfonic Acid","171023_Smp_IL2DSW5um_1",25177.61
+"704","Ethanesulfonic Acid","171023_Smp_IL2DSW5um_2",26931.65
+"705","Ethanesulfonic Acid","171023_Smp_IL2DSW5um_3",10084.52
+"706","Ethanesulfonic Acid","171023_Smp_IL2noBT5um_1",10106.97
+"707","Ethanesulfonic Acid","171023_Smp_IL2noBT5um_2",6986.194
+"708","Ethanesulfonic Acid","171023_Smp_IL2noBT5um_3",13300.71
+"709","Ethanesulfonic Acid","171023_Smp_IL2WBT5um_1",35625.1
+"710","Ethanesulfonic Acid","171023_Smp_IL2WBT5um_2",11658.94
+"711","Ethanesulfonic Acid","171023_Smp_IL2WBT5um_3",21088.61
+"712","Ethanesulfonic Acid","171023_Smp_IL2IT05um_1",28538.81
+"713","Ethanesulfonic Acid","171023_Smp_IL2IT05um_2",24830.55
+"714","Ethanesulfonic Acid","171023_Smp_IL2IT05um_3",18716.23
+"715","Fructose 6 phosphate","171023_Smp_IL2Control5um_1",543037.3
+"716","Fructose 6 phosphate","171023_Smp_IL2Control5um_2",372511
+"717","Fructose 6 phosphate","171023_Smp_IL2Control5um_3",966663.7
+"718","Fructose 6 phosphate","171023_Smp_IL2DMB5um_1",253766.5
+"719","Fructose 6 phosphate","171023_Smp_IL2DMB5um_2",463472.7
+"720","Fructose 6 phosphate","171023_Smp_IL2DMB5um_3",368710.3
+"721","Fructose 6 phosphate","171023_Smp_IL2DMBnoBT5um_1",578957.4
+"722","Fructose 6 phosphate","171023_Smp_IL2DMBnoBT5um_2",774035
+"723","Fructose 6 phosphate","171023_Smp_IL2DMBnoBT5um_3",1967138
+"724","Fructose 6 phosphate","171023_Smp_IL2DSW5um_1",2264839
+"725","Fructose 6 phosphate","171023_Smp_IL2DSW5um_2",2953435
+"726","Fructose 6 phosphate","171023_Smp_IL2DSW5um_3",2481390
+"727","Fructose 6 phosphate","171023_Smp_IL2noBT5um_1",603263.2
+"728","Fructose 6 phosphate","171023_Smp_IL2noBT5um_2",1685982
+"729","Fructose 6 phosphate","171023_Smp_IL2noBT5um_3",2759790
+"730","Fructose 6 phosphate","171023_Smp_IL2WBT5um_1",277661.6
+"731","Fructose 6 phosphate","171023_Smp_IL2WBT5um_2",280520.7
+"732","Fructose 6 phosphate","171023_Smp_IL2WBT5um_3",456207.3
+"733","Fructose 6 phosphate","171023_Smp_IL2IT05um_1",18887.22
+"734","Fructose 6 phosphate","171023_Smp_IL2IT05um_2",130049.4
+"735","Fructose 6 phosphate","171023_Smp_IL2IT05um_3",157168.2
+"736","Fumaric Acid","171023_Smp_IL2Control5um_1",9318611
+"737","Fumaric Acid","171023_Smp_IL2Control5um_2",8226448
+"738","Fumaric Acid","171023_Smp_IL2Control5um_3",11776038
+"739","Fumaric Acid","171023_Smp_IL2DMB5um_1",14057835
+"740","Fumaric Acid","171023_Smp_IL2DMB5um_2",7375559
+"741","Fumaric Acid","171023_Smp_IL2DMB5um_3",8724741
+"742","Fumaric Acid","171023_Smp_IL2DMBnoBT5um_1",9083541
+"743","Fumaric Acid","171023_Smp_IL2DMBnoBT5um_2",10125611
+"744","Fumaric Acid","171023_Smp_IL2DMBnoBT5um_3",7184390
+"745","Fumaric Acid","171023_Smp_IL2DSW5um_1",13945640
+"746","Fumaric Acid","171023_Smp_IL2DSW5um_2",10694624
+"747","Fumaric Acid","171023_Smp_IL2DSW5um_3",7610798
+"748","Fumaric Acid","171023_Smp_IL2noBT5um_1",8130462
+"749","Fumaric Acid","171023_Smp_IL2noBT5um_2",8317766
+"750","Fumaric Acid","171023_Smp_IL2noBT5um_3",10009454
+"751","Fumaric Acid","171023_Smp_IL2WBT5um_1",9286687
+"752","Fumaric Acid","171023_Smp_IL2WBT5um_2",10015849
+"753","Fumaric Acid","171023_Smp_IL2WBT5um_3",8500776
+"754","Fumaric Acid","171023_Smp_IL2IT05um_1",6277275
+"755","Fumaric Acid","171023_Smp_IL2IT05um_2",12579028
+"756","Fumaric Acid","171023_Smp_IL2IT05um_3",11249623
+"757","Gluconic Acid","171023_Smp_IL2Control5um_1",1251324
+"758","Gluconic Acid","171023_Smp_IL2Control5um_2",3560158
+"759","Gluconic Acid","171023_Smp_IL2Control5um_3",1416692
+"760","Gluconic Acid","171023_Smp_IL2DMB5um_1",1491901
+"761","Gluconic Acid","171023_Smp_IL2DMB5um_2",2554623
+"762","Gluconic Acid","171023_Smp_IL2DMB5um_3",1520275
+"763","Gluconic Acid","171023_Smp_IL2DMBnoBT5um_1",2385535
+"764","Gluconic Acid","171023_Smp_IL2DMBnoBT5um_2",3227064
+"765","Gluconic Acid","171023_Smp_IL2DMBnoBT5um_3",4638537
+"766","Gluconic Acid","171023_Smp_IL2DSW5um_1",2614560
+"767","Gluconic Acid","171023_Smp_IL2DSW5um_2",4231662
+"768","Gluconic Acid","171023_Smp_IL2DSW5um_3",8885599
+"769","Gluconic Acid","171023_Smp_IL2noBT5um_1",4962060
+"770","Gluconic Acid","171023_Smp_IL2noBT5um_2",6062579
+"771","Gluconic Acid","171023_Smp_IL2noBT5um_3",2691865
+"772","Gluconic Acid","171023_Smp_IL2WBT5um_1",733467.1
+"773","Gluconic Acid","171023_Smp_IL2WBT5um_2",1262718
+"774","Gluconic Acid","171023_Smp_IL2WBT5um_3",2753679
+"775","Gluconic Acid","171023_Smp_IL2IT05um_1",1561364
+"776","Gluconic Acid","171023_Smp_IL2IT05um_2",1091294
+"777","Gluconic Acid","171023_Smp_IL2IT05um_3",1145776
+"778","Glucosylglycerol","171023_Smp_IL2Control5um_1",111829.6
+"779","Glucosylglycerol","171023_Smp_IL2Control5um_2",300393.2
+"780","Glucosylglycerol","171023_Smp_IL2Control5um_3",400155.1
+"781","Glucosylglycerol","171023_Smp_IL2DMB5um_1",430489.1
+"782","Glucosylglycerol","171023_Smp_IL2DMB5um_2",233393.9
+"783","Glucosylglycerol","171023_Smp_IL2DMB5um_3",347379.8
+"784","Glucosylglycerol","171023_Smp_IL2DMBnoBT5um_1",623071.5
+"785","Glucosylglycerol","171023_Smp_IL2DMBnoBT5um_2",1295115
+"786","Glucosylglycerol","171023_Smp_IL2DMBnoBT5um_3",1342639
+"787","Glucosylglycerol","171023_Smp_IL2DSW5um_1",2233140
+"788","Glucosylglycerol","171023_Smp_IL2DSW5um_2",2525698
+"789","Glucosylglycerol","171023_Smp_IL2DSW5um_3",3894909
+"790","Glucosylglycerol","171023_Smp_IL2noBT5um_1",1152635
+"791","Glucosylglycerol","171023_Smp_IL2noBT5um_2",2774470
+"792","Glucosylglycerol","171023_Smp_IL2noBT5um_3",1431274
+"793","Glucosylglycerol","171023_Smp_IL2WBT5um_1",129266.1
+"794","Glucosylglycerol","171023_Smp_IL2WBT5um_2",175784.9
+"795","Glucosylglycerol","171023_Smp_IL2WBT5um_3",189820
+"796","Glucosylglycerol","171023_Smp_IL2IT05um_1",NA
+"797","Glucosylglycerol","171023_Smp_IL2IT05um_2",120863.6
+"798","Glucosylglycerol","171023_Smp_IL2IT05um_3",78742.48
+"799","Glutamic acid","171023_Smp_IL2Control5um_1",51453055
+"800","Glutamic acid","171023_Smp_IL2Control5um_2",42294723
+"801","Glutamic acid","171023_Smp_IL2Control5um_3",75742093
+"802","Glutamic acid","171023_Smp_IL2DMB5um_1",57870060
+"803","Glutamic acid","171023_Smp_IL2DMB5um_2",41661710
+"804","Glutamic acid","171023_Smp_IL2DMB5um_3",35916079
+"805","Glutamic acid","171023_Smp_IL2DMBnoBT5um_1",75533509
+"806","Glutamic acid","171023_Smp_IL2DMBnoBT5um_2",117044915
+"807","Glutamic acid","171023_Smp_IL2DMBnoBT5um_3",128062825
+"808","Glutamic acid","171023_Smp_IL2DSW5um_1",115267548
+"809","Glutamic acid","171023_Smp_IL2DSW5um_2",153525172
+"810","Glutamic acid","171023_Smp_IL2DSW5um_3",138374156
+"811","Glutamic acid","171023_Smp_IL2noBT5um_1",75067798
+"812","Glutamic acid","171023_Smp_IL2noBT5um_2",165565578
+"813","Glutamic acid","171023_Smp_IL2noBT5um_3",184565493
+"814","Glutamic acid","171023_Smp_IL2WBT5um_1",52134625
+"815","Glutamic acid","171023_Smp_IL2WBT5um_2",35109482
+"816","Glutamic acid","171023_Smp_IL2WBT5um_3",39377878
+"817","Glutamic acid","171023_Smp_IL2IT05um_1",23817024
+"818","Glutamic acid","171023_Smp_IL2IT05um_2",26868662
+"819","Glutamic acid","171023_Smp_IL2IT05um_3",27560465
+"820","Glutamine","171023_Smp_IL2Control5um_1",46040978
+"821","Glutamine","171023_Smp_IL2Control5um_2",44537243
+"822","Glutamine","171023_Smp_IL2Control5um_3",68228353
+"823","Glutamine","171023_Smp_IL2DMB5um_1",53778654
+"824","Glutamine","171023_Smp_IL2DMB5um_2",40905308
+"825","Glutamine","171023_Smp_IL2DMB5um_3",34554640
+"826","Glutamine","171023_Smp_IL2DMBnoBT5um_1",53373727
+"827","Glutamine","171023_Smp_IL2DMBnoBT5um_2",86034350
+"828","Glutamine","171023_Smp_IL2DMBnoBT5um_3",97512564
+"829","Glutamine","171023_Smp_IL2DSW5um_1",98064758
+"830","Glutamine","171023_Smp_IL2DSW5um_2",141633150
+"831","Glutamine","171023_Smp_IL2DSW5um_3",138301943
+"832","Glutamine","171023_Smp_IL2noBT5um_1",62832329
+"833","Glutamine","171023_Smp_IL2noBT5um_2",133412616
+"834","Glutamine","171023_Smp_IL2noBT5um_3",175836244
+"835","Glutamine","171023_Smp_IL2WBT5um_1",39176045
+"836","Glutamine","171023_Smp_IL2WBT5um_2",33035853
+"837","Glutamine","171023_Smp_IL2WBT5um_3",29936661
+"838","Glutamine","171023_Smp_IL2IT05um_1",24363406
+"839","Glutamine","171023_Smp_IL2IT05um_2",31700163
+"840","Glutamine","171023_Smp_IL2IT05um_3",39926343
+"841","Glutathione Disulfide","171023_Smp_IL2Control5um_1",NA
+"842","Glutathione Disulfide","171023_Smp_IL2Control5um_2",NA
+"843","Glutathione Disulfide","171023_Smp_IL2Control5um_3",11105.13
+"844","Glutathione Disulfide","171023_Smp_IL2DMB5um_1",9172.419
+"845","Glutathione Disulfide","171023_Smp_IL2DMB5um_2",NA
+"846","Glutathione Disulfide","171023_Smp_IL2DMB5um_3",NA
+"847","Glutathione Disulfide","171023_Smp_IL2DMBnoBT5um_1",NA
+"848","Glutathione Disulfide","171023_Smp_IL2DMBnoBT5um_2",26508.81
+"849","Glutathione Disulfide","171023_Smp_IL2DMBnoBT5um_3",NA
+"850","Glutathione Disulfide","171023_Smp_IL2DSW5um_1",NA
+"851","Glutathione Disulfide","171023_Smp_IL2DSW5um_2",20967.94
+"852","Glutathione Disulfide","171023_Smp_IL2DSW5um_3",97720.65
+"853","Glutathione Disulfide","171023_Smp_IL2noBT5um_1",NA
+"854","Glutathione Disulfide","171023_Smp_IL2noBT5um_2",159628.2
+"855","Glutathione Disulfide","171023_Smp_IL2noBT5um_3",10164.97
+"856","Glutathione Disulfide","171023_Smp_IL2WBT5um_1",7187.323
+"857","Glutathione Disulfide","171023_Smp_IL2WBT5um_2",10832.9
+"858","Glutathione Disulfide","171023_Smp_IL2WBT5um_3",NA
+"859","Glutathione Disulfide","171023_Smp_IL2IT05um_1",NA
+"860","Glutathione Disulfide","171023_Smp_IL2IT05um_2",NA
+"861","Glutathione Disulfide","171023_Smp_IL2IT05um_3",NA
+"862","glycerol 3 phosphate","171023_Smp_IL2Control5um_1",1100853
+"863","glycerol 3 phosphate","171023_Smp_IL2Control5um_2",1159713
+"864","glycerol 3 phosphate","171023_Smp_IL2Control5um_3",1164522
+"865","glycerol 3 phosphate","171023_Smp_IL2DMB5um_1",1087509
+"866","glycerol 3 phosphate","171023_Smp_IL2DMB5um_2",1526836
+"867","glycerol 3 phosphate","171023_Smp_IL2DMB5um_3",1524879
+"868","glycerol 3 phosphate","171023_Smp_IL2DMBnoBT5um_1",1160953
+"869","glycerol 3 phosphate","171023_Smp_IL2DMBnoBT5um_2",1992319
+"870","glycerol 3 phosphate","171023_Smp_IL2DMBnoBT5um_3",1702573
+"871","glycerol 3 phosphate","171023_Smp_IL2DSW5um_1",2157349
+"872","glycerol 3 phosphate","171023_Smp_IL2DSW5um_2",2571197
+"873","glycerol 3 phosphate","171023_Smp_IL2DSW5um_3",2971260
+"874","glycerol 3 phosphate","171023_Smp_IL2noBT5um_1",904624.4
+"875","glycerol 3 phosphate","171023_Smp_IL2noBT5um_2",3225301
+"876","glycerol 3 phosphate","171023_Smp_IL2noBT5um_3",1751310
+"877","glycerol 3 phosphate","171023_Smp_IL2WBT5um_1",497665.7
+"878","glycerol 3 phosphate","171023_Smp_IL2WBT5um_2",450002.3
+"879","glycerol 3 phosphate","171023_Smp_IL2WBT5um_3",1438500
+"880","glycerol 3 phosphate","171023_Smp_IL2IT05um_1",72010.68
+"881","glycerol 3 phosphate","171023_Smp_IL2IT05um_2",310705.4
+"882","glycerol 3 phosphate","171023_Smp_IL2IT05um_3",212707.8
+"883","Glycerophosphocholine","171023_Smp_IL2Control5um_1",11799620
+"884","Glycerophosphocholine","171023_Smp_IL2Control5um_2",9505172
+"885","Glycerophosphocholine","171023_Smp_IL2Control5um_3",7586603
+"886","Glycerophosphocholine","171023_Smp_IL2DMB5um_1",10593062
+"887","Glycerophosphocholine","171023_Smp_IL2DMB5um_2",8765384
+"888","Glycerophosphocholine","171023_Smp_IL2DMB5um_3",19121691
+"889","Glycerophosphocholine","171023_Smp_IL2DMBnoBT5um_1",22110471
+"890","Glycerophosphocholine","171023_Smp_IL2DMBnoBT5um_2",34606903
+"891","Glycerophosphocholine","171023_Smp_IL2DMBnoBT5um_3",34355481
+"892","Glycerophosphocholine","171023_Smp_IL2DSW5um_1",44508640
+"893","Glycerophosphocholine","171023_Smp_IL2DSW5um_2",41231342
+"894","Glycerophosphocholine","171023_Smp_IL2DSW5um_3",69051824
+"895","Glycerophosphocholine","171023_Smp_IL2noBT5um_1",38921256
+"896","Glycerophosphocholine","171023_Smp_IL2noBT5um_2",57908956
+"897","Glycerophosphocholine","171023_Smp_IL2noBT5um_3",25238116
+"898","Glycerophosphocholine","171023_Smp_IL2WBT5um_1",6925325
+"899","Glycerophosphocholine","171023_Smp_IL2WBT5um_2",8471252
+"900","Glycerophosphocholine","171023_Smp_IL2WBT5um_3",11001026
+"901","Glycerophosphocholine","171023_Smp_IL2IT05um_1",8505465
+"902","Glycerophosphocholine","171023_Smp_IL2IT05um_2",12592971
+"903","Glycerophosphocholine","171023_Smp_IL2IT05um_3",10616935
+"904","Gonyol","171023_Smp_IL2Control5um_1",173990632
+"905","Gonyol","171023_Smp_IL2Control5um_2",247595494
+"906","Gonyol","171023_Smp_IL2Control5um_3",57291720
+"907","Gonyol","171023_Smp_IL2DMB5um_1",45735601
+"908","Gonyol","171023_Smp_IL2DMB5um_2",180031776
+"909","Gonyol","171023_Smp_IL2DMB5um_3",185718960
+"910","Gonyol","171023_Smp_IL2DMBnoBT5um_1",165922283
+"911","Gonyol","171023_Smp_IL2DMBnoBT5um_2",103632260
+"912","Gonyol","171023_Smp_IL2DMBnoBT5um_3",289021289
+"913","Gonyol","171023_Smp_IL2DSW5um_1",299726858
+"914","Gonyol","171023_Smp_IL2DSW5um_2",299992970
+"915","Gonyol","171023_Smp_IL2DSW5um_3",500951067
+"916","Gonyol","171023_Smp_IL2noBT5um_1",255686607
+"917","Gonyol","171023_Smp_IL2noBT5um_2",126504822
+"918","Gonyol","171023_Smp_IL2noBT5um_3",168713853
+"919","Gonyol","171023_Smp_IL2WBT5um_1",89123775
+"920","Gonyol","171023_Smp_IL2WBT5um_2",202645701
+"921","Gonyol","171023_Smp_IL2WBT5um_3",155145988
+"922","Gonyol","171023_Smp_IL2IT05um_1",106138290
+"923","Gonyol","171023_Smp_IL2IT05um_2",101852592
+"924","Gonyol","171023_Smp_IL2IT05um_3",147566984
+"925","Guanine","171023_Smp_IL2Control5um_1",74924455
+"926","Guanine","171023_Smp_IL2Control5um_2",104346710
+"927","Guanine","171023_Smp_IL2Control5um_3",206246824
+"928","Guanine","171023_Smp_IL2DMB5um_1",130443079
+"929","Guanine","171023_Smp_IL2DMB5um_2",112647894
+"930","Guanine","171023_Smp_IL2DMB5um_3",131473778
+"931","Guanine","171023_Smp_IL2DMBnoBT5um_1",406947542
+"932","Guanine","171023_Smp_IL2DMBnoBT5um_2",558801583
+"933","Guanine","171023_Smp_IL2DMBnoBT5um_3",480343486
+"934","Guanine","171023_Smp_IL2DSW5um_1",486653043
+"935","Guanine","171023_Smp_IL2DSW5um_2",426469559
+"936","Guanine","171023_Smp_IL2DSW5um_3",542015932
+"937","Guanine","171023_Smp_IL2noBT5um_1",528083911
+"938","Guanine","171023_Smp_IL2noBT5um_2",479736656
+"939","Guanine","171023_Smp_IL2noBT5um_3",495670776
+"940","Guanine","171023_Smp_IL2WBT5um_1",92466513
+"941","Guanine","171023_Smp_IL2WBT5um_2",103908320
+"942","Guanine","171023_Smp_IL2WBT5um_3",67303628
+"943","Guanine","171023_Smp_IL2IT05um_1",142771677
+"944","Guanine","171023_Smp_IL2IT05um_2",184665459
+"945","Guanine","171023_Smp_IL2IT05um_3",196457481
+"946","Guanosine","171023_Smp_IL2Control5um_1",1176362
+"947","Guanosine","171023_Smp_IL2Control5um_2",2096758
+"948","Guanosine","171023_Smp_IL2Control5um_3",2685170
+"949","Guanosine","171023_Smp_IL2DMB5um_1",2221400
+"950","Guanosine","171023_Smp_IL2DMB5um_2",1664157
+"951","Guanosine","171023_Smp_IL2DMB5um_3",1459186
+"952","Guanosine","171023_Smp_IL2DMBnoBT5um_1",2149940
+"953","Guanosine","171023_Smp_IL2DMBnoBT5um_2",5889110
+"954","Guanosine","171023_Smp_IL2DMBnoBT5um_3",4044255
+"955","Guanosine","171023_Smp_IL2DSW5um_1",4725388
+"956","Guanosine","171023_Smp_IL2DSW5um_2",6499733
+"957","Guanosine","171023_Smp_IL2DSW5um_3",9820323
+"958","Guanosine","171023_Smp_IL2noBT5um_1",3181049
+"959","Guanosine","171023_Smp_IL2noBT5um_2",9671726
+"960","Guanosine","171023_Smp_IL2noBT5um_3",2774499
+"961","Guanosine","171023_Smp_IL2WBT5um_1",1140616
+"962","Guanosine","171023_Smp_IL2WBT5um_2",1198186
+"963","Guanosine","171023_Smp_IL2WBT5um_3",1292844
+"964","Guanosine","171023_Smp_IL2IT05um_1",447113.6
+"965","Guanosine","171023_Smp_IL2IT05um_2",622949.9
+"966","Guanosine","171023_Smp_IL2IT05um_3",718591.9
+"967","Histidine","171023_Smp_IL2Control5um_1",1432812
+"968","Histidine","171023_Smp_IL2Control5um_2",1771778
+"969","Histidine","171023_Smp_IL2Control5um_3",6221335
+"970","Histidine","171023_Smp_IL2DMB5um_1",2957711
+"971","Histidine","171023_Smp_IL2DMB5um_2",2511260
+"972","Histidine","171023_Smp_IL2DMB5um_3",2609899
+"973","Histidine","171023_Smp_IL2DMBnoBT5um_1",1794103
+"974","Histidine","171023_Smp_IL2DMBnoBT5um_2",4362437
+"975","Histidine","171023_Smp_IL2DMBnoBT5um_3",2892093
+"976","Histidine","171023_Smp_IL2DSW5um_1",3715622
+"977","Histidine","171023_Smp_IL2DSW5um_2",4138635
+"978","Histidine","171023_Smp_IL2DSW5um_3",6661368
+"979","Histidine","171023_Smp_IL2noBT5um_1",3092623
+"980","Histidine","171023_Smp_IL2noBT5um_2",6265191
+"981","Histidine","171023_Smp_IL2noBT5um_3",4369266
+"982","Histidine","171023_Smp_IL2WBT5um_1",1368769
+"983","Histidine","171023_Smp_IL2WBT5um_2",3007062
+"984","Histidine","171023_Smp_IL2WBT5um_3",2284364
+"985","Histidine","171023_Smp_IL2IT05um_1",1428026
+"986","Histidine","171023_Smp_IL2IT05um_2",1340684
+"987","Histidine","171023_Smp_IL2IT05um_3",1607874
+"988","Homarine","171023_Smp_IL2Control5um_1",424773620
+"989","Homarine","171023_Smp_IL2Control5um_2",305571122
+"990","Homarine","171023_Smp_IL2Control5um_3",596919057
+"991","Homarine","171023_Smp_IL2DMB5um_1",432102844
+"992","Homarine","171023_Smp_IL2DMB5um_2",479383576
+"993","Homarine","171023_Smp_IL2DMB5um_3",1089477029
+"994","Homarine","171023_Smp_IL2DMBnoBT5um_1",950808623
+"995","Homarine","171023_Smp_IL2DMBnoBT5um_2",837662972
+"996","Homarine","171023_Smp_IL2DMBnoBT5um_3",1416568291
+"997","Homarine","171023_Smp_IL2DSW5um_1",2201834587
+"998","Homarine","171023_Smp_IL2DSW5um_2",2376975129
+"999","Homarine","171023_Smp_IL2DSW5um_3",2260329241
+"1000","Homarine","171023_Smp_IL2noBT5um_1",1154962696
+"1001","Homarine","171023_Smp_IL2noBT5um_2",1593773184
+"1002","Homarine","171023_Smp_IL2noBT5um_3",2529195148
+"1003","Homarine","171023_Smp_IL2WBT5um_1",386372561
+"1004","Homarine","171023_Smp_IL2WBT5um_2",557614844
+"1005","Homarine","171023_Smp_IL2WBT5um_3",397981870
+"1006","Homarine","171023_Smp_IL2IT05um_1",253077155
+"1007","Homarine","171023_Smp_IL2IT05um_2",351922147
+"1008","Homarine","171023_Smp_IL2IT05um_3",461651082
+"1009","Homocystine","171023_Smp_IL2Control5um_1",237014.2
+"1010","Homocystine","171023_Smp_IL2Control5um_2",233500.5
+"1011","Homocystine","171023_Smp_IL2Control5um_3",392413
+"1012","Homocystine","171023_Smp_IL2DMB5um_1",700630.6
+"1013","Homocystine","171023_Smp_IL2DMB5um_2",306216.6
+"1014","Homocystine","171023_Smp_IL2DMB5um_3",289934.5
+"1015","Homocystine","171023_Smp_IL2DMBnoBT5um_1",301734.7
+"1016","Homocystine","171023_Smp_IL2DMBnoBT5um_2",1028481
+"1017","Homocystine","171023_Smp_IL2DMBnoBT5um_3",200412.5
+"1018","Homocystine","171023_Smp_IL2DSW5um_1",193923
+"1019","Homocystine","171023_Smp_IL2DSW5um_2",198076.5
+"1020","Homocystine","171023_Smp_IL2DSW5um_3",193834.1
+"1021","Homocystine","171023_Smp_IL2noBT5um_1",303501.8
+"1022","Homocystine","171023_Smp_IL2noBT5um_2",1390999
+"1023","Homocystine","171023_Smp_IL2noBT5um_3",171452.7
+"1024","Homocystine","171023_Smp_IL2WBT5um_1",71431.68
+"1025","Homocystine","171023_Smp_IL2WBT5um_2",200681.9
+"1026","Homocystine","171023_Smp_IL2WBT5um_3",183087.3
+"1027","Homocystine","171023_Smp_IL2IT05um_1",178932.8
+"1028","Homocystine","171023_Smp_IL2IT05um_2",168031.6
+"1029","Homocystine","171023_Smp_IL2IT05um_3",216796.5
+"1030","Hydroxyectoine","171023_Smp_IL2Control5um_1",3558671
+"1031","Hydroxyectoine","171023_Smp_IL2Control5um_2",1491502
+"1032","Hydroxyectoine","171023_Smp_IL2Control5um_3",963132.5
+"1033","Hydroxyectoine","171023_Smp_IL2DMB5um_1",1397895
+"1034","Hydroxyectoine","171023_Smp_IL2DMB5um_2",333795.8
+"1035","Hydroxyectoine","171023_Smp_IL2DMB5um_3",756013.8
+"1036","Hydroxyectoine","171023_Smp_IL2DMBnoBT5um_1",1687785
+"1037","Hydroxyectoine","171023_Smp_IL2DMBnoBT5um_2",2325516
+"1038","Hydroxyectoine","171023_Smp_IL2DMBnoBT5um_3",731477.4
+"1039","Hydroxyectoine","171023_Smp_IL2DSW5um_1",897077.4
+"1040","Hydroxyectoine","171023_Smp_IL2DSW5um_2",1175399
+"1041","Hydroxyectoine","171023_Smp_IL2DSW5um_3",312013.3
+"1042","Hydroxyectoine","171023_Smp_IL2noBT5um_1",1535759
+"1043","Hydroxyectoine","171023_Smp_IL2noBT5um_2",1371148
+"1044","Hydroxyectoine","171023_Smp_IL2noBT5um_3",1448939
+"1045","Hydroxyectoine","171023_Smp_IL2WBT5um_1",286513.7
+"1046","Hydroxyectoine","171023_Smp_IL2WBT5um_2",129387.6
+"1047","Hydroxyectoine","171023_Smp_IL2WBT5um_3",793479
+"1048","Hydroxyectoine","171023_Smp_IL2IT05um_1",1984153
+"1049","Hydroxyectoine","171023_Smp_IL2IT05um_2",833803.7
+"1050","Hydroxyectoine","171023_Smp_IL2IT05um_3",3978464
+"1051","Hydroxylysine","171023_Smp_IL2Control5um_1",NA
+"1052","Hydroxylysine","171023_Smp_IL2Control5um_2",NA
+"1053","Hydroxylysine","171023_Smp_IL2Control5um_3",123017.8
+"1054","Hydroxylysine","171023_Smp_IL2DMB5um_1",140804.9
+"1055","Hydroxylysine","171023_Smp_IL2DMB5um_2",NA
+"1056","Hydroxylysine","171023_Smp_IL2DMB5um_3",NA
+"1057","Hydroxylysine","171023_Smp_IL2DMBnoBT5um_1",NA
+"1058","Hydroxylysine","171023_Smp_IL2DMBnoBT5um_2",113404.1
+"1059","Hydroxylysine","171023_Smp_IL2DMBnoBT5um_3",36878.37
+"1060","Hydroxylysine","171023_Smp_IL2DSW5um_1",30986.09
+"1061","Hydroxylysine","171023_Smp_IL2DSW5um_2",NA
+"1062","Hydroxylysine","171023_Smp_IL2DSW5um_3",NA
+"1063","Hydroxylysine","171023_Smp_IL2noBT5um_1",NA
+"1064","Hydroxylysine","171023_Smp_IL2noBT5um_2",85254.37
+"1065","Hydroxylysine","171023_Smp_IL2noBT5um_3",NA
+"1066","Hydroxylysine","171023_Smp_IL2WBT5um_1",36960.06
+"1067","Hydroxylysine","171023_Smp_IL2WBT5um_2",NA
+"1068","Hydroxylysine","171023_Smp_IL2WBT5um_3",39838.71
+"1069","Hydroxylysine","171023_Smp_IL2IT05um_1",40972.01
+"1070","Hydroxylysine","171023_Smp_IL2IT05um_2",20314.52
+"1071","Hydroxylysine","171023_Smp_IL2IT05um_3",NA
+"1072","Hypotaurine","171023_Smp_IL2Control5um_1",123940.8
+"1073","Hypotaurine","171023_Smp_IL2Control5um_2",207114.7
+"1074","Hypotaurine","171023_Smp_IL2Control5um_3",310795.9
+"1075","Hypotaurine","171023_Smp_IL2DMB5um_1",284005.8
+"1076","Hypotaurine","171023_Smp_IL2DMB5um_2",103391.5
+"1077","Hypotaurine","171023_Smp_IL2DMB5um_3",80321.55
+"1078","Hypotaurine","171023_Smp_IL2DMBnoBT5um_1",107736.3
+"1079","Hypotaurine","171023_Smp_IL2DMBnoBT5um_2",581406.2
+"1080","Hypotaurine","171023_Smp_IL2DMBnoBT5um_3",110657
+"1081","Hypotaurine","171023_Smp_IL2DSW5um_1",322194.9
+"1082","Hypotaurine","171023_Smp_IL2DSW5um_2",438623.3
+"1083","Hypotaurine","171023_Smp_IL2DSW5um_3",712600.5
+"1084","Hypotaurine","171023_Smp_IL2noBT5um_1",335078.1
+"1085","Hypotaurine","171023_Smp_IL2noBT5um_2",677531
+"1086","Hypotaurine","171023_Smp_IL2noBT5um_3",150439.2
+"1087","Hypotaurine","171023_Smp_IL2WBT5um_1",147191.8
+"1088","Hypotaurine","171023_Smp_IL2WBT5um_2",356215.1
+"1089","Hypotaurine","171023_Smp_IL2WBT5um_3",27407.08
+"1090","Hypotaurine","171023_Smp_IL2IT05um_1",34276.45
+"1091","Hypotaurine","171023_Smp_IL2IT05um_2",24831.45
+"1092","Hypotaurine","171023_Smp_IL2IT05um_3",951007
+"1093","Hypoxanthine","171023_Smp_IL2Control5um_1",5846007
+"1094","Hypoxanthine","171023_Smp_IL2Control5um_2",5780871
+"1095","Hypoxanthine","171023_Smp_IL2Control5um_3",15063876
+"1096","Hypoxanthine","171023_Smp_IL2DMB5um_1",7913958
+"1097","Hypoxanthine","171023_Smp_IL2DMB5um_2",7124514
+"1098","Hypoxanthine","171023_Smp_IL2DMB5um_3",8134261
+"1099","Hypoxanthine","171023_Smp_IL2DMBnoBT5um_1",6907684
+"1100","Hypoxanthine","171023_Smp_IL2DMBnoBT5um_2",9528145
+"1101","Hypoxanthine","171023_Smp_IL2DMBnoBT5um_3",7133461
+"1102","Hypoxanthine","171023_Smp_IL2DSW5um_1",9952996
+"1103","Hypoxanthine","171023_Smp_IL2DSW5um_2",10436725
+"1104","Hypoxanthine","171023_Smp_IL2DSW5um_3",12195647
+"1105","Hypoxanthine","171023_Smp_IL2noBT5um_1",7343740
+"1106","Hypoxanthine","171023_Smp_IL2noBT5um_2",10921262
+"1107","Hypoxanthine","171023_Smp_IL2noBT5um_3",14693287
+"1108","Hypoxanthine","171023_Smp_IL2WBT5um_1",5542680
+"1109","Hypoxanthine","171023_Smp_IL2WBT5um_2",9754878
+"1110","Hypoxanthine","171023_Smp_IL2WBT5um_3",5536151
+"1111","Hypoxanthine","171023_Smp_IL2IT05um_1",5723981
+"1112","Hypoxanthine","171023_Smp_IL2IT05um_2",6556274
+"1113","Hypoxanthine","171023_Smp_IL2IT05um_3",7974708
+"1114","Imidazoleacrylic Acid","171023_Smp_IL2Control5um_1",2653131
+"1115","Imidazoleacrylic Acid","171023_Smp_IL2Control5um_2",2952581
+"1116","Imidazoleacrylic Acid","171023_Smp_IL2Control5um_3",10884189
+"1117","Imidazoleacrylic Acid","171023_Smp_IL2DMB5um_1",5328200
+"1118","Imidazoleacrylic Acid","171023_Smp_IL2DMB5um_2",2674318
+"1119","Imidazoleacrylic Acid","171023_Smp_IL2DMB5um_3",1826435
+"1120","Imidazoleacrylic Acid","171023_Smp_IL2DMBnoBT5um_1",2124355
+"1121","Imidazoleacrylic Acid","171023_Smp_IL2DMBnoBT5um_2",3050933
+"1122","Imidazoleacrylic Acid","171023_Smp_IL2DMBnoBT5um_3",2255249
+"1123","Imidazoleacrylic Acid","171023_Smp_IL2DSW5um_1",1810681
+"1124","Imidazoleacrylic Acid","171023_Smp_IL2DSW5um_2",2119114
+"1125","Imidazoleacrylic Acid","171023_Smp_IL2DSW5um_3",2377266
+"1126","Imidazoleacrylic Acid","171023_Smp_IL2noBT5um_1",2563027
+"1127","Imidazoleacrylic Acid","171023_Smp_IL2noBT5um_2",2583877
+"1128","Imidazoleacrylic Acid","171023_Smp_IL2noBT5um_3",2805781
+"1129","Imidazoleacrylic Acid","171023_Smp_IL2WBT5um_1",2495051
+"1130","Imidazoleacrylic Acid","171023_Smp_IL2WBT5um_2",7924050
+"1131","Imidazoleacrylic Acid","171023_Smp_IL2WBT5um_3",2499356
+"1132","Imidazoleacrylic Acid","171023_Smp_IL2IT05um_1",5514313
+"1133","Imidazoleacrylic Acid","171023_Smp_IL2IT05um_2",2989611
+"1134","Imidazoleacrylic Acid","171023_Smp_IL2IT05um_3",2675704
+"1135","Inosine","171023_Smp_IL2Control5um_1",2693544
+"1136","Inosine","171023_Smp_IL2Control5um_2",2966165
+"1137","Inosine","171023_Smp_IL2Control5um_3",10256719
+"1138","Inosine","171023_Smp_IL2DMB5um_1",6236771
+"1139","Inosine","171023_Smp_IL2DMB5um_2",3350089
+"1140","Inosine","171023_Smp_IL2DMB5um_3",12701105
+"1141","Inosine","171023_Smp_IL2DMBnoBT5um_1",3620046
+"1142","Inosine","171023_Smp_IL2DMBnoBT5um_2",9751216
+"1143","Inosine","171023_Smp_IL2DMBnoBT5um_3",6145182
+"1144","Inosine","171023_Smp_IL2DSW5um_1",11219260
+"1145","Inosine","171023_Smp_IL2DSW5um_2",15117218
+"1146","Inosine","171023_Smp_IL2DSW5um_3",16944339
+"1147","Inosine","171023_Smp_IL2noBT5um_1",5110065
+"1148","Inosine","171023_Smp_IL2noBT5um_2",19062136
+"1149","Inosine","171023_Smp_IL2noBT5um_3",5520222
+"1150","Inosine","171023_Smp_IL2WBT5um_1",2733736
+"1151","Inosine","171023_Smp_IL2WBT5um_2",2443376
+"1152","Inosine","171023_Smp_IL2WBT5um_3",2682846
+"1153","Inosine","171023_Smp_IL2IT05um_1",1309593
+"1154","Inosine","171023_Smp_IL2IT05um_2",2221129
+"1155","Inosine","171023_Smp_IL2IT05um_3",2220097
+"1156","Isethionic Acid","171023_Smp_IL2Control5um_1",166489168
+"1157","Isethionic Acid","171023_Smp_IL2Control5um_2",111179091
+"1158","Isethionic Acid","171023_Smp_IL2Control5um_3",187838989
+"1159","Isethionic Acid","171023_Smp_IL2DMB5um_1",99180069
+"1160","Isethionic Acid","171023_Smp_IL2DMB5um_2",134758846
+"1161","Isethionic Acid","171023_Smp_IL2DMB5um_3",145127133
+"1162","Isethionic Acid","171023_Smp_IL2DMBnoBT5um_1",148165611
+"1163","Isethionic Acid","171023_Smp_IL2DMBnoBT5um_2",143284027
+"1164","Isethionic Acid","171023_Smp_IL2DMBnoBT5um_3",192470785
+"1165","Isethionic Acid","171023_Smp_IL2DSW5um_1",281300012
+"1166","Isethionic Acid","171023_Smp_IL2DSW5um_2",312816368
+"1167","Isethionic Acid","171023_Smp_IL2DSW5um_3",307522296
+"1168","Isethionic Acid","171023_Smp_IL2noBT5um_1",115185268
+"1169","Isethionic Acid","171023_Smp_IL2noBT5um_2",200344743
+"1170","Isethionic Acid","171023_Smp_IL2noBT5um_3",379549783
+"1171","Isethionic Acid","171023_Smp_IL2WBT5um_1",149738592
+"1172","Isethionic Acid","171023_Smp_IL2WBT5um_2",136022933
+"1173","Isethionic Acid","171023_Smp_IL2WBT5um_3",143675270
+"1174","Isethionic Acid","171023_Smp_IL2IT05um_1",43385494
+"1175","Isethionic Acid","171023_Smp_IL2IT05um_2",55258763
+"1176","Isethionic Acid","171023_Smp_IL2IT05um_3",59624794
+"1177","Ketoglutaric Acid","171023_Smp_IL2Control5um_1",1060916
+"1178","Ketoglutaric Acid","171023_Smp_IL2Control5um_2",775464.1
+"1179","Ketoglutaric Acid","171023_Smp_IL2Control5um_3",1210926
+"1180","Ketoglutaric Acid","171023_Smp_IL2DMB5um_1",842400.6
+"1181","Ketoglutaric Acid","171023_Smp_IL2DMB5um_2",930272.3
+"1182","Ketoglutaric Acid","171023_Smp_IL2DMB5um_3",705568
+"1183","Ketoglutaric Acid","171023_Smp_IL2DMBnoBT5um_1",1332255
+"1184","Ketoglutaric Acid","171023_Smp_IL2DMBnoBT5um_2",2035488
+"1185","Ketoglutaric Acid","171023_Smp_IL2DMBnoBT5um_3",2405009
+"1186","Ketoglutaric Acid","171023_Smp_IL2DSW5um_1",2259532
+"1187","Ketoglutaric Acid","171023_Smp_IL2DSW5um_2",3475391
+"1188","Ketoglutaric Acid","171023_Smp_IL2DSW5um_3",4388438
+"1189","Ketoglutaric Acid","171023_Smp_IL2noBT5um_1",1711610
+"1190","Ketoglutaric Acid","171023_Smp_IL2noBT5um_2",2773631
+"1191","Ketoglutaric Acid","171023_Smp_IL2noBT5um_3",2084922
+"1192","Ketoglutaric Acid","171023_Smp_IL2WBT5um_1",624698
+"1193","Ketoglutaric Acid","171023_Smp_IL2WBT5um_2",728327.1
+"1194","Ketoglutaric Acid","171023_Smp_IL2WBT5um_3",880160.2
+"1195","Ketoglutaric Acid","171023_Smp_IL2IT05um_1",416523.2
+"1196","Ketoglutaric Acid","171023_Smp_IL2IT05um_2",128679.3
+"1197","Ketoglutaric Acid","171023_Smp_IL2IT05um_3",350539.1
+"1198","L-Pyroglutamic acid","171023_Smp_IL2Control5um_1",35265824
+"1199","L-Pyroglutamic acid","171023_Smp_IL2Control5um_2",39235704
+"1200","L-Pyroglutamic acid","171023_Smp_IL2Control5um_3",65888394
+"1201","L-Pyroglutamic acid","171023_Smp_IL2DMB5um_1",41580124
+"1202","L-Pyroglutamic acid","171023_Smp_IL2DMB5um_2",29206506
+"1203","L-Pyroglutamic acid","171023_Smp_IL2DMB5um_3",39315100
+"1204","L-Pyroglutamic acid","171023_Smp_IL2DMBnoBT5um_1",30374835
+"1205","L-Pyroglutamic acid","171023_Smp_IL2DMBnoBT5um_2",45178542
+"1206","L-Pyroglutamic acid","171023_Smp_IL2DMBnoBT5um_3",43214293
+"1207","L-Pyroglutamic acid","171023_Smp_IL2DSW5um_1",69223319
+"1208","L-Pyroglutamic acid","171023_Smp_IL2DSW5um_2",87585100
+"1209","L-Pyroglutamic acid","171023_Smp_IL2DSW5um_3",85854736
+"1210","L-Pyroglutamic acid","171023_Smp_IL2noBT5um_1",48639918
+"1211","L-Pyroglutamic acid","171023_Smp_IL2noBT5um_2",71179197
+"1212","L-Pyroglutamic acid","171023_Smp_IL2noBT5um_3",58168485
+"1213","L-Pyroglutamic acid","171023_Smp_IL2WBT5um_1",24145083
+"1214","L-Pyroglutamic acid","171023_Smp_IL2WBT5um_2",48638976
+"1215","L-Pyroglutamic acid","171023_Smp_IL2WBT5um_3",32915207
+"1216","L-Pyroglutamic acid","171023_Smp_IL2IT05um_1",38457133
+"1217","L-Pyroglutamic acid","171023_Smp_IL2IT05um_2",41721256
+"1218","L-Pyroglutamic acid","171023_Smp_IL2IT05um_3",46362028
+"1219","Leucine","171023_Smp_IL2Control5um_1",330502829
+"1220","Leucine","171023_Smp_IL2Control5um_2",273107885
+"1221","Leucine","171023_Smp_IL2Control5um_3",457040659
+"1222","Leucine","171023_Smp_IL2DMB5um_1",263468570
+"1223","Leucine","171023_Smp_IL2DMB5um_2",338397535
+"1224","Leucine","171023_Smp_IL2DMB5um_3",425165535
+"1225","Leucine","171023_Smp_IL2DMBnoBT5um_1",286836987
+"1226","Leucine","171023_Smp_IL2DMBnoBT5um_2",311364655
+"1227","Leucine","171023_Smp_IL2DMBnoBT5um_3",318024163
+"1228","Leucine","171023_Smp_IL2DSW5um_1",451666132
+"1229","Leucine","171023_Smp_IL2DSW5um_2",451151810
+"1230","Leucine","171023_Smp_IL2DSW5um_3",479300505
+"1231","Leucine","171023_Smp_IL2noBT5um_1",293321102
+"1232","Leucine","171023_Smp_IL2noBT5um_2",491701369
+"1233","Leucine","171023_Smp_IL2noBT5um_3",448118537
+"1234","Leucine","171023_Smp_IL2WBT5um_1",278903186
+"1235","Leucine","171023_Smp_IL2WBT5um_2",367394751
+"1236","Leucine","171023_Smp_IL2WBT5um_3",229635710
+"1237","Leucine","171023_Smp_IL2IT05um_1",207147666
+"1238","Leucine","171023_Smp_IL2IT05um_2",259439403
+"1239","Leucine","171023_Smp_IL2IT05um_3",298176279
+"1240","Lipoic Acid","171023_Smp_IL2Control5um_1",6359.419
+"1241","Lipoic Acid","171023_Smp_IL2Control5um_2",NA
+"1242","Lipoic Acid","171023_Smp_IL2Control5um_3",7378.161
+"1243","Lipoic Acid","171023_Smp_IL2DMB5um_1",7722.419
+"1244","Lipoic Acid","171023_Smp_IL2DMB5um_2",NA
+"1245","Lipoic Acid","171023_Smp_IL2DMB5um_3",14396.16
+"1246","Lipoic Acid","171023_Smp_IL2DMBnoBT5um_1",NA
+"1247","Lipoic Acid","171023_Smp_IL2DMBnoBT5um_2",NA
+"1248","Lipoic Acid","171023_Smp_IL2DMBnoBT5um_3",7502.581
+"1249","Lipoic Acid","171023_Smp_IL2DSW5um_1",NA
+"1250","Lipoic Acid","171023_Smp_IL2DSW5um_2",12340.9
+"1251","Lipoic Acid","171023_Smp_IL2DSW5um_3",20957.65
+"1252","Lipoic Acid","171023_Smp_IL2noBT5um_1",7329.516
+"1253","Lipoic Acid","171023_Smp_IL2noBT5um_2",14440.13
+"1254","Lipoic Acid","171023_Smp_IL2noBT5um_3",6017.032
+"1255","Lipoic Acid","171023_Smp_IL2WBT5um_1",21268.23
+"1256","Lipoic Acid","171023_Smp_IL2WBT5um_2",11684.19
+"1257","Lipoic Acid","171023_Smp_IL2WBT5um_3",13644.97
+"1258","Lipoic Acid","171023_Smp_IL2IT05um_1",6412.742
+"1259","Lipoic Acid","171023_Smp_IL2IT05um_2",NA
+"1260","Lipoic Acid","171023_Smp_IL2IT05um_3",5554.903
+"1261","Lysine","171023_Smp_IL2Control5um_1",3385658
+"1262","Lysine","171023_Smp_IL2Control5um_2",4319124
+"1263","Lysine","171023_Smp_IL2Control5um_3",3939370
+"1264","Lysine","171023_Smp_IL2DMB5um_1",3561269
+"1265","Lysine","171023_Smp_IL2DMB5um_2",4584778
+"1266","Lysine","171023_Smp_IL2DMB5um_3",5756988
+"1267","Lysine","171023_Smp_IL2DMBnoBT5um_1",4377942
+"1268","Lysine","171023_Smp_IL2DMBnoBT5um_2",5400960
+"1269","Lysine","171023_Smp_IL2DMBnoBT5um_3",6266091
+"1270","Lysine","171023_Smp_IL2DSW5um_1",7222739
+"1271","Lysine","171023_Smp_IL2DSW5um_2",8682564
+"1272","Lysine","171023_Smp_IL2DSW5um_3",12027850
+"1273","Lysine","171023_Smp_IL2noBT5um_1",5747594
+"1274","Lysine","171023_Smp_IL2noBT5um_2",7877097
+"1275","Lysine","171023_Smp_IL2noBT5um_3",6955488
+"1276","Lysine","171023_Smp_IL2WBT5um_1",3480221
+"1277","Lysine","171023_Smp_IL2WBT5um_2",3581370
+"1278","Lysine","171023_Smp_IL2WBT5um_3",4196379
+"1279","Lysine","171023_Smp_IL2IT05um_1",2367088
+"1280","Lysine","171023_Smp_IL2IT05um_2",2624547
+"1281","Lysine","171023_Smp_IL2IT05um_3",2655417
+"1282","Malic Acid","171023_Smp_IL2Control5um_1",9546981
+"1283","Malic Acid","171023_Smp_IL2Control5um_2",16606203
+"1284","Malic Acid","171023_Smp_IL2Control5um_3",7591941
+"1285","Malic Acid","171023_Smp_IL2DMB5um_1",11665256
+"1286","Malic Acid","171023_Smp_IL2DMB5um_2",17680286
+"1287","Malic Acid","171023_Smp_IL2DMB5um_3",11107804
+"1288","Malic Acid","171023_Smp_IL2DMBnoBT5um_1",12776222
+"1289","Malic Acid","171023_Smp_IL2DMBnoBT5um_2",18060515
+"1290","Malic Acid","171023_Smp_IL2DMBnoBT5um_3",19512410
+"1291","Malic Acid","171023_Smp_IL2DSW5um_1",15341551
+"1292","Malic Acid","171023_Smp_IL2DSW5um_2",21252462
+"1293","Malic Acid","171023_Smp_IL2DSW5um_3",41760023
+"1294","Malic Acid","171023_Smp_IL2noBT5um_1",25448760
+"1295","Malic Acid","171023_Smp_IL2noBT5um_2",23038760
+"1296","Malic Acid","171023_Smp_IL2noBT5um_3",13813778
+"1297","Malic Acid","171023_Smp_IL2WBT5um_1",5232758
+"1298","Malic Acid","171023_Smp_IL2WBT5um_2",7431222
+"1299","Malic Acid","171023_Smp_IL2WBT5um_3",15493707
+"1300","Malic Acid","171023_Smp_IL2IT05um_1",8462823
+"1301","Malic Acid","171023_Smp_IL2IT05um_2",6083516
+"1302","Malic Acid","171023_Smp_IL2IT05um_3",6913036
+"1303","Melamine","171023_Smp_IL2Control5um_1",2358829
+"1304","Melamine","171023_Smp_IL2Control5um_2",7398065
+"1305","Melamine","171023_Smp_IL2Control5um_3",5850943
+"1306","Melamine","171023_Smp_IL2DMB5um_1",49696391
+"1307","Melamine","171023_Smp_IL2DMB5um_2",4253602
+"1308","Melamine","171023_Smp_IL2DMB5um_3",2400474
+"1309","Melamine","171023_Smp_IL2DMBnoBT5um_1",7135330
+"1310","Melamine","171023_Smp_IL2DMBnoBT5um_2",4954470
+"1311","Melamine","171023_Smp_IL2DMBnoBT5um_3",2652052
+"1312","Melamine","171023_Smp_IL2DSW5um_1",4633410
+"1313","Melamine","171023_Smp_IL2DSW5um_2",5095173
+"1314","Melamine","171023_Smp_IL2DSW5um_3",3187752
+"1315","Melamine","171023_Smp_IL2noBT5um_1",3391146
+"1316","Melamine","171023_Smp_IL2noBT5um_2",2806783
+"1317","Melamine","171023_Smp_IL2noBT5um_3",5568310
+"1318","Melamine","171023_Smp_IL2WBT5um_1",2086054
+"1319","Melamine","171023_Smp_IL2WBT5um_2",3738028
+"1320","Melamine","171023_Smp_IL2WBT5um_3",2226466
+"1321","Melamine","171023_Smp_IL2IT05um_1",6870942
+"1322","Melamine","171023_Smp_IL2IT05um_2",4235560
+"1323","Melamine","171023_Smp_IL2IT05um_3",4960787
+"1324","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2Control5um_1",9501805
+"1325","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2Control5um_2",7349193
+"1326","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2Control5um_3",48784.55
+"1327","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMB5um_1",787659.6
+"1328","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMB5um_2",7413308
+"1329","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMB5um_3",9673473
+"1330","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMBnoBT5um_1",9153016
+"1331","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMBnoBT5um_2",48096.97
+"1332","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DMBnoBT5um_3",8858922
+"1333","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DSW5um_1",9403922
+"1334","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DSW5um_2",8284753
+"1335","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2DSW5um_3",7480593
+"1336","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2noBT5um_1",7708128
+"1337","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2noBT5um_2",69580.35
+"1338","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2noBT5um_3",9355625
+"1339","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2WBT5um_1",6266137
+"1340","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2WBT5um_2",10322171
+"1341","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2WBT5um_3",7967243
+"1342","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2IT05um_1",7924514
+"1343","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2IT05um_2",9046617
+"1344","MESNA (Sodium 2-mercaptoethanesulfonate)","171023_Smp_IL2IT05um_3",10312804
+"1345","Methionine","171023_Smp_IL2Control5um_1",6731809
+"1346","Methionine","171023_Smp_IL2Control5um_2",5667440
+"1347","Methionine","171023_Smp_IL2Control5um_3",7595122
+"1348","Methionine","171023_Smp_IL2DMB5um_1",5192957
+"1349","Methionine","171023_Smp_IL2DMB5um_2",7014957
+"1350","Methionine","171023_Smp_IL2DMB5um_3",9012839
+"1351","Methionine","171023_Smp_IL2DMBnoBT5um_1",6712555
+"1352","Methionine","171023_Smp_IL2DMBnoBT5um_2",11675505
+"1353","Methionine","171023_Smp_IL2DMBnoBT5um_3",13209324
+"1354","Methionine","171023_Smp_IL2DSW5um_1",19224405
+"1355","Methionine","171023_Smp_IL2DSW5um_2",24424745
+"1356","Methionine","171023_Smp_IL2DSW5um_3",38805764
+"1357","Methionine","171023_Smp_IL2noBT5um_1",7984691
+"1358","Methionine","171023_Smp_IL2noBT5um_2",19828293
+"1359","Methionine","171023_Smp_IL2noBT5um_3",20674706
+"1360","Methionine","171023_Smp_IL2WBT5um_1",5957300
+"1361","Methionine","171023_Smp_IL2WBT5um_2",5097147
+"1362","Methionine","171023_Smp_IL2WBT5um_3",4760664
+"1363","Methionine","171023_Smp_IL2IT05um_1",1110462
+"1364","Methionine","171023_Smp_IL2IT05um_2",1306288
+"1365","Methionine","171023_Smp_IL2IT05um_3",3206265
+"1366","Methionine Sulfoxide","171023_Smp_IL2Control5um_1",23286.06
+"1367","Methionine Sulfoxide","171023_Smp_IL2Control5um_2",53813.71
+"1368","Methionine Sulfoxide","171023_Smp_IL2Control5um_3",462212.3
+"1369","Methionine Sulfoxide","171023_Smp_IL2DMB5um_1",477543
+"1370","Methionine Sulfoxide","171023_Smp_IL2DMB5um_2",36466.1
+"1371","Methionine Sulfoxide","171023_Smp_IL2DMB5um_3",147613.7
+"1372","Methionine Sulfoxide","171023_Smp_IL2DMBnoBT5um_1",43586.06
+"1373","Methionine Sulfoxide","171023_Smp_IL2DMBnoBT5um_2",140424.5
+"1374","Methionine Sulfoxide","171023_Smp_IL2DMBnoBT5um_3",59660.48
+"1375","Methionine Sulfoxide","171023_Smp_IL2DSW5um_1",NA
+"1376","Methionine Sulfoxide","171023_Smp_IL2DSW5um_2",77766.77
+"1377","Methionine Sulfoxide","171023_Smp_IL2DSW5um_3",116576.3
+"1378","Methionine Sulfoxide","171023_Smp_IL2noBT5um_1",323352.8
+"1379","Methionine Sulfoxide","171023_Smp_IL2noBT5um_2",269730.9
+"1380","Methionine Sulfoxide","171023_Smp_IL2noBT5um_3",211516.6
+"1381","Methionine Sulfoxide","171023_Smp_IL2WBT5um_1",21814.55
+"1382","Methionine Sulfoxide","171023_Smp_IL2WBT5um_2",53013.87
+"1383","Methionine Sulfoxide","171023_Smp_IL2WBT5um_3",20119.45
+"1384","Methionine Sulfoxide","171023_Smp_IL2IT05um_1",29203
+"1385","Methionine Sulfoxide","171023_Smp_IL2IT05um_2",NA
+"1386","Methionine Sulfoxide","171023_Smp_IL2IT05um_3",32275.13
+"1387","Methylphosphonic Acid","171023_Smp_IL2Control5um_1",97482269
+"1388","Methylphosphonic Acid","171023_Smp_IL2Control5um_2",98742066
+"1389","Methylphosphonic Acid","171023_Smp_IL2Control5um_3",80390612
+"1390","Methylphosphonic Acid","171023_Smp_IL2DMB5um_1",103125759
+"1391","Methylphosphonic Acid","171023_Smp_IL2DMB5um_2",112222202
+"1392","Methylphosphonic Acid","171023_Smp_IL2DMB5um_3",95972218
+"1393","Methylphosphonic Acid","171023_Smp_IL2DMBnoBT5um_1",101652596
+"1394","Methylphosphonic Acid","171023_Smp_IL2DMBnoBT5um_2",100833748
+"1395","Methylphosphonic Acid","171023_Smp_IL2DMBnoBT5um_3",93467591
+"1396","Methylphosphonic Acid","171023_Smp_IL2DSW5um_1",84477486
+"1397","Methylphosphonic Acid","171023_Smp_IL2DSW5um_2",75518432
+"1398","Methylphosphonic Acid","171023_Smp_IL2DSW5um_3",106128497
+"1399","Methylphosphonic Acid","171023_Smp_IL2noBT5um_1",122134364
+"1400","Methylphosphonic Acid","171023_Smp_IL2noBT5um_2",105087027
+"1401","Methylphosphonic Acid","171023_Smp_IL2noBT5um_3",89908614
+"1402","Methylphosphonic Acid","171023_Smp_IL2WBT5um_1",83664252
+"1403","Methylphosphonic Acid","171023_Smp_IL2WBT5um_2",79929867
+"1404","Methylphosphonic Acid","171023_Smp_IL2WBT5um_3",132455685
+"1405","Methylphosphonic Acid","171023_Smp_IL2IT05um_1",107786474
+"1406","Methylphosphonic Acid","171023_Smp_IL2IT05um_2",87445156
+"1407","Methylphosphonic Acid","171023_Smp_IL2IT05um_3",89396859
+"1408","N-acetyltaurine","171023_Smp_IL2Control5um_1",158776.9
+"1409","N-acetyltaurine","171023_Smp_IL2Control5um_2",99505.55
+"1410","N-acetyltaurine","171023_Smp_IL2Control5um_3",313549.9
+"1411","N-acetyltaurine","171023_Smp_IL2DMB5um_1",274086.5
+"1412","N-acetyltaurine","171023_Smp_IL2DMB5um_2",187485.9
+"1413","N-acetyltaurine","171023_Smp_IL2DMB5um_3",393290.5
+"1414","N-acetyltaurine","171023_Smp_IL2DMBnoBT5um_1",222396.3
+"1415","N-acetyltaurine","171023_Smp_IL2DMBnoBT5um_2",411780.4
+"1416","N-acetyltaurine","171023_Smp_IL2DMBnoBT5um_3",985749.3
+"1417","N-acetyltaurine","171023_Smp_IL2DSW5um_1",625603
+"1418","N-acetyltaurine","171023_Smp_IL2DSW5um_2",768516.8
+"1419","N-acetyltaurine","171023_Smp_IL2DSW5um_3",200318
+"1420","N-acetyltaurine","171023_Smp_IL2noBT5um_1",823015.3
+"1421","N-acetyltaurine","171023_Smp_IL2noBT5um_2",1985381
+"1422","N-acetyltaurine","171023_Smp_IL2noBT5um_3",684609.5
+"1423","N-acetyltaurine","171023_Smp_IL2WBT5um_1",286965.3
+"1424","N-acetyltaurine","171023_Smp_IL2WBT5um_2",308516
+"1425","N-acetyltaurine","171023_Smp_IL2WBT5um_3",187939.6
+"1426","N-acetyltaurine","171023_Smp_IL2IT05um_1",187687.1
+"1427","N-acetyltaurine","171023_Smp_IL2IT05um_2",448094
+"1428","N-acetyltaurine","171023_Smp_IL2IT05um_3",284805.3
+"1429","N-methyltaurine","171023_Smp_IL2Control5um_1",284190.6
+"1430","N-methyltaurine","171023_Smp_IL2Control5um_2",610541.7
+"1431","N-methyltaurine","171023_Smp_IL2Control5um_3",941016.3
+"1432","N-methyltaurine","171023_Smp_IL2DMB5um_1",448987.4
+"1433","N-methyltaurine","171023_Smp_IL2DMB5um_2",638862.5
+"1434","N-methyltaurine","171023_Smp_IL2DMB5um_3",666164.6
+"1435","N-methyltaurine","171023_Smp_IL2DMBnoBT5um_1",214963.9
+"1436","N-methyltaurine","171023_Smp_IL2DMBnoBT5um_2",686142.8
+"1437","N-methyltaurine","171023_Smp_IL2DMBnoBT5um_3",377404.1
+"1438","N-methyltaurine","171023_Smp_IL2DSW5um_1",434739.9
+"1439","N-methyltaurine","171023_Smp_IL2DSW5um_2",476447.5
+"1440","N-methyltaurine","171023_Smp_IL2DSW5um_3",792609.3
+"1441","N-methyltaurine","171023_Smp_IL2noBT5um_1",659546.1
+"1442","N-methyltaurine","171023_Smp_IL2noBT5um_2",1270773
+"1443","N-methyltaurine","171023_Smp_IL2noBT5um_3",427034.4
+"1444","N-methyltaurine","171023_Smp_IL2WBT5um_1",247199.7
+"1445","N-methyltaurine","171023_Smp_IL2WBT5um_2",438213.4
+"1446","N-methyltaurine","171023_Smp_IL2WBT5um_3",628119.4
+"1447","N-methyltaurine","171023_Smp_IL2IT05um_1",508326
+"1448","N-methyltaurine","171023_Smp_IL2IT05um_2",353339.7
+"1449","N-methyltaurine","171023_Smp_IL2IT05um_3",575263.6
+"1450","N(e)-Acetyl-Lysine","171023_Smp_IL2Control5um_1",679838311
+"1451","N(e)-Acetyl-Lysine","171023_Smp_IL2Control5um_2",669017053
+"1452","N(e)-Acetyl-Lysine","171023_Smp_IL2Control5um_3",788615777
+"1453","N(e)-Acetyl-Lysine","171023_Smp_IL2DMB5um_1",504347584
+"1454","N(e)-Acetyl-Lysine","171023_Smp_IL2DMB5um_2",398024079
+"1455","N(e)-Acetyl-Lysine","171023_Smp_IL2DMB5um_3",360259269
+"1456","N(e)-Acetyl-Lysine","171023_Smp_IL2DMBnoBT5um_1",217443572
+"1457","N(e)-Acetyl-Lysine","171023_Smp_IL2DMBnoBT5um_2",265798598
+"1458","N(e)-Acetyl-Lysine","171023_Smp_IL2DMBnoBT5um_3",220816762
+"1459","N(e)-Acetyl-Lysine","171023_Smp_IL2DSW5um_1",296582214
+"1460","N(e)-Acetyl-Lysine","171023_Smp_IL2DSW5um_2",283065385
+"1461","N(e)-Acetyl-Lysine","171023_Smp_IL2DSW5um_3",225952793
+"1462","N(e)-Acetyl-Lysine","171023_Smp_IL2noBT5um_1",236531918
+"1463","N(e)-Acetyl-Lysine","171023_Smp_IL2noBT5um_2",378973587
+"1464","N(e)-Acetyl-Lysine","171023_Smp_IL2noBT5um_3",385002773
+"1465","N(e)-Acetyl-Lysine","171023_Smp_IL2WBT5um_1",329417399
+"1466","N(e)-Acetyl-Lysine","171023_Smp_IL2WBT5um_2",283918187
+"1467","N(e)-Acetyl-Lysine","171023_Smp_IL2WBT5um_3",323457304
+"1468","N(e)-Acetyl-Lysine","171023_Smp_IL2IT05um_1",582543079
+"1469","N(e)-Acetyl-Lysine","171023_Smp_IL2IT05um_2",784187900
+"1470","N(e)-Acetyl-Lysine","171023_Smp_IL2IT05um_3",838448659
+"1471","NAD","171023_Smp_IL2Control5um_1",409762.5
+"1472","NAD","171023_Smp_IL2Control5um_2",296126.5
+"1473","NAD","171023_Smp_IL2Control5um_3",542180.3
+"1474","NAD","171023_Smp_IL2DMB5um_1",382014.2
+"1475","NAD","171023_Smp_IL2DMB5um_2",333205.3
+"1476","NAD","171023_Smp_IL2DMB5um_3",176523.9
+"1477","NAD","171023_Smp_IL2DMBnoBT5um_1",319379.8
+"1478","NAD","171023_Smp_IL2DMBnoBT5um_2",441222.8
+"1479","NAD","171023_Smp_IL2DMBnoBT5um_3",302385.8
+"1480","NAD","171023_Smp_IL2DSW5um_1",257297.4
+"1481","NAD","171023_Smp_IL2DSW5um_2",166350.5
+"1482","NAD","171023_Smp_IL2DSW5um_3",254430.1
+"1483","NAD","171023_Smp_IL2noBT5um_1",361375.5
+"1484","NAD","171023_Smp_IL2noBT5um_2",406555.7
+"1485","NAD","171023_Smp_IL2noBT5um_3",373636.9
+"1486","NAD","171023_Smp_IL2WBT5um_1",318219.8
+"1487","NAD","171023_Smp_IL2WBT5um_2",272818.9
+"1488","NAD","171023_Smp_IL2WBT5um_3",321247
+"1489","NAD","171023_Smp_IL2IT05um_1",173525.7
+"1490","NAD","171023_Smp_IL2IT05um_2",131518.7
+"1491","NAD","171023_Smp_IL2IT05um_3",208962.8
+"1492","Ornithine","171023_Smp_IL2Control5um_1",190310.3
+"1493","Ornithine","171023_Smp_IL2Control5um_2",708761.2
+"1494","Ornithine","171023_Smp_IL2Control5um_3",1253106
+"1495","Ornithine","171023_Smp_IL2DMB5um_1",768134.4
+"1496","Ornithine","171023_Smp_IL2DMB5um_2",279337
+"1497","Ornithine","171023_Smp_IL2DMB5um_3",215907.3
+"1498","Ornithine","171023_Smp_IL2DMBnoBT5um_1",326905.8
+"1499","Ornithine","171023_Smp_IL2DMBnoBT5um_2",1258099
+"1500","Ornithine","171023_Smp_IL2DMBnoBT5um_3",975620.6
+"1501","Ornithine","171023_Smp_IL2DSW5um_1",646950.4
+"1502","Ornithine","171023_Smp_IL2DSW5um_2",1097958
+"1503","Ornithine","171023_Smp_IL2DSW5um_3",1807936
+"1504","Ornithine","171023_Smp_IL2noBT5um_1",849681.6
+"1505","Ornithine","171023_Smp_IL2noBT5um_2",1382449
+"1506","Ornithine","171023_Smp_IL2noBT5um_3",759690.7
+"1507","Ornithine","171023_Smp_IL2WBT5um_1",194018.7
+"1508","Ornithine","171023_Smp_IL2WBT5um_2",855534.4
+"1509","Ornithine","171023_Smp_IL2WBT5um_3",478247.3
+"1510","Ornithine","171023_Smp_IL2IT05um_1",432895.3
+"1511","Ornithine","171023_Smp_IL2IT05um_2",97045.82
+"1512","Ornithine","171023_Smp_IL2IT05um_3",359917.2
+"1513","Orotic Acid","171023_Smp_IL2Control5um_1",44464
+"1514","Orotic Acid","171023_Smp_IL2Control5um_2",27947.98
+"1515","Orotic Acid","171023_Smp_IL2Control5um_3",64418.05
+"1516","Orotic Acid","171023_Smp_IL2DMB5um_1",67528.59
+"1517","Orotic Acid","171023_Smp_IL2DMB5um_2",56902.91
+"1518","Orotic Acid","171023_Smp_IL2DMB5um_3",9101.777
+"1519","Orotic Acid","171023_Smp_IL2DMBnoBT5um_1",35392.33
+"1520","Orotic Acid","171023_Smp_IL2DMBnoBT5um_2",81749.38
+"1521","Orotic Acid","171023_Smp_IL2DMBnoBT5um_3",86448.82
+"1522","Orotic Acid","171023_Smp_IL2DSW5um_1",73866.08
+"1523","Orotic Acid","171023_Smp_IL2DSW5um_2",121821.4
+"1524","Orotic Acid","171023_Smp_IL2DSW5um_3",159866.5
+"1525","Orotic Acid","171023_Smp_IL2noBT5um_1",81641.81
+"1526","Orotic Acid","171023_Smp_IL2noBT5um_2",102291.1
+"1527","Orotic Acid","171023_Smp_IL2noBT5um_3",39434.44
+"1528","Orotic Acid","171023_Smp_IL2WBT5um_1",39150.19
+"1529","Orotic Acid","171023_Smp_IL2WBT5um_2",22817.04
+"1530","Orotic Acid","171023_Smp_IL2WBT5um_3",15975.9
+"1531","Orotic Acid","171023_Smp_IL2IT05um_1",53186.19
+"1532","Orotic Acid","171023_Smp_IL2IT05um_2",63928.29
+"1533","Orotic Acid","171023_Smp_IL2IT05um_3",39519.99
+"1534","Oxalic Acid","171023_Smp_IL2Control5um_1",3276155
+"1535","Oxalic Acid","171023_Smp_IL2Control5um_2",4999805
+"1536","Oxalic Acid","171023_Smp_IL2Control5um_3",3030670
+"1537","Oxalic Acid","171023_Smp_IL2DMB5um_1",14619661
+"1538","Oxalic Acid","171023_Smp_IL2DMB5um_2",3350547
+"1539","Oxalic Acid","171023_Smp_IL2DMB5um_3",2757595
+"1540","Oxalic Acid","171023_Smp_IL2DMBnoBT5um_1",3745072
+"1541","Oxalic Acid","171023_Smp_IL2DMBnoBT5um_2",13074054
+"1542","Oxalic Acid","171023_Smp_IL2DMBnoBT5um_3",3347837
+"1543","Oxalic Acid","171023_Smp_IL2DSW5um_1",4715498
+"1544","Oxalic Acid","171023_Smp_IL2DSW5um_2",4271245
+"1545","Oxalic Acid","171023_Smp_IL2DSW5um_3",5162200
+"1546","Oxalic Acid","171023_Smp_IL2noBT5um_1",4757277
+"1547","Oxalic Acid","171023_Smp_IL2noBT5um_2",10557843
+"1548","Oxalic Acid","171023_Smp_IL2noBT5um_3",3223095
+"1549","Oxalic Acid","171023_Smp_IL2WBT5um_1",2713888
+"1550","Oxalic Acid","171023_Smp_IL2WBT5um_2",2965780
+"1551","Oxalic Acid","171023_Smp_IL2WBT5um_3",5168782
+"1552","Oxalic Acid","171023_Smp_IL2IT05um_1",2924715
+"1553","Oxalic Acid","171023_Smp_IL2IT05um_2",3074390
+"1554","Oxalic Acid","171023_Smp_IL2IT05um_3",3594550
+"1555","Proline","171023_Smp_IL2Control5um_1",186209527
+"1556","Proline","171023_Smp_IL2Control5um_2",175509901
+"1557","Proline","171023_Smp_IL2Control5um_3",203924267
+"1558","Proline","171023_Smp_IL2DMB5um_1",114571804
+"1559","Proline","171023_Smp_IL2DMB5um_2",81681431
+"1560","Proline","171023_Smp_IL2DMB5um_3",81406445
+"1561","Proline","171023_Smp_IL2DMBnoBT5um_1",64567420
+"1562","Proline","171023_Smp_IL2DMBnoBT5um_2",78970336
+"1563","Proline","171023_Smp_IL2DMBnoBT5um_3",93083714
+"1564","Proline","171023_Smp_IL2DSW5um_1",160880499
+"1565","Proline","171023_Smp_IL2DSW5um_2",143627380
+"1566","Proline","171023_Smp_IL2DSW5um_3",171109587
+"1567","Proline","171023_Smp_IL2noBT5um_1",124997655
+"1568","Proline","171023_Smp_IL2noBT5um_2",122798252
+"1569","Proline","171023_Smp_IL2noBT5um_3",176674814
+"1570","Proline","171023_Smp_IL2WBT5um_1",56157189
+"1571","Proline","171023_Smp_IL2WBT5um_2",52749869
+"1572","Proline","171023_Smp_IL2WBT5um_3",91222451
+"1573","Proline","171023_Smp_IL2IT05um_1",32542328
+"1574","Proline","171023_Smp_IL2IT05um_2",44690044
+"1575","Proline","171023_Smp_IL2IT05um_3",40545946
+"1576","Propanesulfonate","171023_Smp_IL2Control5um_1",1105245
+"1577","Propanesulfonate","171023_Smp_IL2Control5um_2",1105860
+"1578","Propanesulfonate","171023_Smp_IL2Control5um_3",1156073
+"1579","Propanesulfonate","171023_Smp_IL2DMB5um_1",1213021
+"1580","Propanesulfonate","171023_Smp_IL2DMB5um_2",1205105
+"1581","Propanesulfonate","171023_Smp_IL2DMB5um_3",931027.2
+"1582","Propanesulfonate","171023_Smp_IL2DMBnoBT5um_1",968242.6
+"1583","Propanesulfonate","171023_Smp_IL2DMBnoBT5um_2",1112975
+"1584","Propanesulfonate","171023_Smp_IL2DMBnoBT5um_3",862026.9
+"1585","Propanesulfonate","171023_Smp_IL2DSW5um_1",913949
+"1586","Propanesulfonate","171023_Smp_IL2DSW5um_2",1025335
+"1587","Propanesulfonate","171023_Smp_IL2DSW5um_3",1056651
+"1588","Propanesulfonate","171023_Smp_IL2noBT5um_1",1119131
+"1589","Propanesulfonate","171023_Smp_IL2noBT5um_2",1093877
+"1590","Propanesulfonate","171023_Smp_IL2noBT5um_3",1307594
+"1591","Propanesulfonate","171023_Smp_IL2WBT5um_1",1177399
+"1592","Propanesulfonate","171023_Smp_IL2WBT5um_2",997342.7
+"1593","Propanesulfonate","171023_Smp_IL2WBT5um_3",1355409
+"1594","Propanesulfonate","171023_Smp_IL2IT05um_1",1273739
+"1595","Propanesulfonate","171023_Smp_IL2IT05um_2",1076521
+"1596","Propanesulfonate","171023_Smp_IL2IT05um_3",1169273
+"1597","Propionyl-L-carnitine","171023_Smp_IL2Control5um_1",4900963
+"1598","Propionyl-L-carnitine","171023_Smp_IL2Control5um_2",4307025
+"1599","Propionyl-L-carnitine","171023_Smp_IL2Control5um_3",20908643
+"1600","Propionyl-L-carnitine","171023_Smp_IL2DMB5um_1",8070751
+"1601","Propionyl-L-carnitine","171023_Smp_IL2DMB5um_2",6630407
+"1602","Propionyl-L-carnitine","171023_Smp_IL2DMB5um_3",16738342
+"1603","Propionyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_1",5567558
+"1604","Propionyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_2",5724799
+"1605","Propionyl-L-carnitine","171023_Smp_IL2DMBnoBT5um_3",5863667
+"1606","Propionyl-L-carnitine","171023_Smp_IL2DSW5um_1",7034041
+"1607","Propionyl-L-carnitine","171023_Smp_IL2DSW5um_2",8367618
+"1608","Propionyl-L-carnitine","171023_Smp_IL2DSW5um_3",7984889
+"1609","Propionyl-L-carnitine","171023_Smp_IL2noBT5um_1",7031699
+"1610","Propionyl-L-carnitine","171023_Smp_IL2noBT5um_2",9794319
+"1611","Propionyl-L-carnitine","171023_Smp_IL2noBT5um_3",7243907
+"1612","Propionyl-L-carnitine","171023_Smp_IL2WBT5um_1",4347626
+"1613","Propionyl-L-carnitine","171023_Smp_IL2WBT5um_2",9533408
+"1614","Propionyl-L-carnitine","171023_Smp_IL2WBT5um_3",5467438
+"1615","Propionyl-L-carnitine","171023_Smp_IL2IT05um_1",2637224
+"1616","Propionyl-L-carnitine","171023_Smp_IL2IT05um_2",4592080
+"1617","Propionyl-L-carnitine","171023_Smp_IL2IT05um_3",4843730
+"1618","Resorcylic Acid","171023_Smp_IL2Control5um_1",267681.2
+"1619","Resorcylic Acid","171023_Smp_IL2Control5um_2",74791.94
+"1620","Resorcylic Acid","171023_Smp_IL2Control5um_3",10964.81
+"1621","Resorcylic Acid","171023_Smp_IL2DMB5um_1",194371.1
+"1622","Resorcylic Acid","171023_Smp_IL2DMB5um_2",79427.26
+"1623","Resorcylic Acid","171023_Smp_IL2DMB5um_3",86715.61
+"1624","Resorcylic Acid","171023_Smp_IL2DMBnoBT5um_1",42065.9
+"1625","Resorcylic Acid","171023_Smp_IL2DMBnoBT5um_2",80065.26
+"1626","Resorcylic Acid","171023_Smp_IL2DMBnoBT5um_3",58076.71
+"1627","Resorcylic Acid","171023_Smp_IL2DSW5um_1",54928.81
+"1628","Resorcylic Acid","171023_Smp_IL2DSW5um_2",59676.39
+"1629","Resorcylic Acid","171023_Smp_IL2DSW5um_3",129282.9
+"1630","Resorcylic Acid","171023_Smp_IL2noBT5um_1",78921.16
+"1631","Resorcylic Acid","171023_Smp_IL2noBT5um_2",506375.5
+"1632","Resorcylic Acid","171023_Smp_IL2noBT5um_3",36037.65
+"1633","Resorcylic Acid","171023_Smp_IL2WBT5um_1",80881.94
+"1634","Resorcylic Acid","171023_Smp_IL2WBT5um_2",154688.8
+"1635","Resorcylic Acid","171023_Smp_IL2WBT5um_3",142088.8
+"1636","Resorcylic Acid","171023_Smp_IL2IT05um_1",1696422
+"1637","Resorcylic Acid","171023_Smp_IL2IT05um_2",147588.5
+"1638","Resorcylic Acid","171023_Smp_IL2IT05um_3",106678.8
+"1639","Ribose 5 phosphate","171023_Smp_IL2Control5um_1",33373.69
+"1640","Ribose 5 phosphate","171023_Smp_IL2Control5um_2",32162.27
+"1641","Ribose 5 phosphate","171023_Smp_IL2Control5um_3",31688.35
+"1642","Ribose 5 phosphate","171023_Smp_IL2DMB5um_1",12706.51
+"1643","Ribose 5 phosphate","171023_Smp_IL2DMB5um_2",25696.59
+"1644","Ribose 5 phosphate","171023_Smp_IL2DMB5um_3",16985.99
+"1645","Ribose 5 phosphate","171023_Smp_IL2DMBnoBT5um_1",27413.48
+"1646","Ribose 5 phosphate","171023_Smp_IL2DMBnoBT5um_2",93413.92
+"1647","Ribose 5 phosphate","171023_Smp_IL2DMBnoBT5um_3",330154.8
+"1648","Ribose 5 phosphate","171023_Smp_IL2DSW5um_1",207393.3
+"1649","Ribose 5 phosphate","171023_Smp_IL2DSW5um_2",328914.6
+"1650","Ribose 5 phosphate","171023_Smp_IL2DSW5um_3",723425.8
+"1651","Ribose 5 phosphate","171023_Smp_IL2noBT5um_1",140506.6
+"1652","Ribose 5 phosphate","171023_Smp_IL2noBT5um_2",335699.5
+"1653","Ribose 5 phosphate","171023_Smp_IL2noBT5um_3",249524.6
+"1654","Ribose 5 phosphate","171023_Smp_IL2WBT5um_1",8426.937
+"1655","Ribose 5 phosphate","171023_Smp_IL2WBT5um_2",NA
+"1656","Ribose 5 phosphate","171023_Smp_IL2WBT5um_3",18854.77
+"1657","Ribose 5 phosphate","171023_Smp_IL2IT05um_1",20712.94
+"1658","Ribose 5 phosphate","171023_Smp_IL2IT05um_2",25852.69
+"1659","Ribose 5 phosphate","171023_Smp_IL2IT05um_3",27856.55
+"1660","Salicylic Acid","171023_Smp_IL2Control5um_1",1725867
+"1661","Salicylic Acid","171023_Smp_IL2Control5um_2",1788591
+"1662","Salicylic Acid","171023_Smp_IL2Control5um_3",2843815
+"1663","Salicylic Acid","171023_Smp_IL2DMB5um_1",2262382
+"1664","Salicylic Acid","171023_Smp_IL2DMB5um_2",1158467
+"1665","Salicylic Acid","171023_Smp_IL2DMB5um_3",1377227
+"1666","Salicylic Acid","171023_Smp_IL2DMBnoBT5um_1",1166433
+"1667","Salicylic Acid","171023_Smp_IL2DMBnoBT5um_2",1198639
+"1668","Salicylic Acid","171023_Smp_IL2DMBnoBT5um_3",812086.1
+"1669","Salicylic Acid","171023_Smp_IL2DSW5um_1",1605058
+"1670","Salicylic Acid","171023_Smp_IL2DSW5um_2",1290155
+"1671","Salicylic Acid","171023_Smp_IL2DSW5um_3",1361802
+"1672","Salicylic Acid","171023_Smp_IL2noBT5um_1",1173332
+"1673","Salicylic Acid","171023_Smp_IL2noBT5um_2",866622.6
+"1674","Salicylic Acid","171023_Smp_IL2noBT5um_3",1574717
+"1675","Salicylic Acid","171023_Smp_IL2WBT5um_1",1057900
+"1676","Salicylic Acid","171023_Smp_IL2WBT5um_2",1392416
+"1677","Salicylic Acid","171023_Smp_IL2WBT5um_3",1190574
+"1678","Salicylic Acid","171023_Smp_IL2IT05um_1",1225424
+"1679","Salicylic Acid","171023_Smp_IL2IT05um_2",2673365
+"1680","Salicylic Acid","171023_Smp_IL2IT05um_3",1452659
+"1681","Serine","171023_Smp_IL2Control5um_1",672227.5
+"1682","Serine","171023_Smp_IL2Control5um_2",841068.3
+"1683","Serine","171023_Smp_IL2Control5um_3",3465278
+"1684","Serine","171023_Smp_IL2DMB5um_1",1740171
+"1685","Serine","171023_Smp_IL2DMB5um_2",733796.4
+"1686","Serine","171023_Smp_IL2DMB5um_3",590870.3
+"1687","Serine","171023_Smp_IL2DMBnoBT5um_1",1000030
+"1688","Serine","171023_Smp_IL2DMBnoBT5um_2",2630927
+"1689","Serine","171023_Smp_IL2DMBnoBT5um_3",1500652
+"1690","Serine","171023_Smp_IL2DSW5um_1",1558772
+"1691","Serine","171023_Smp_IL2DSW5um_2",2072069
+"1692","Serine","171023_Smp_IL2DSW5um_3",2754021
+"1693","Serine","171023_Smp_IL2noBT5um_1",1385282
+"1694","Serine","171023_Smp_IL2noBT5um_2",3897729
+"1695","Serine","171023_Smp_IL2noBT5um_3",2041937
+"1696","Serine","171023_Smp_IL2WBT5um_1",527546.5
+"1697","Serine","171023_Smp_IL2WBT5um_2",1166819
+"1698","Serine","171023_Smp_IL2WBT5um_3",466683
+"1699","Serine","171023_Smp_IL2IT05um_1",629720
+"1700","Serine","171023_Smp_IL2IT05um_2",355503.5
+"1701","Serine","171023_Smp_IL2IT05um_3",571593.7
+"1702","Shikimic Acid","171023_Smp_IL2Control5um_1",1606455
+"1703","Shikimic Acid","171023_Smp_IL2Control5um_2",2001631
+"1704","Shikimic Acid","171023_Smp_IL2Control5um_3",1946569
+"1705","Shikimic Acid","171023_Smp_IL2DMB5um_1",2682133
+"1706","Shikimic Acid","171023_Smp_IL2DMB5um_2",2006097
+"1707","Shikimic Acid","171023_Smp_IL2DMB5um_3",2445395
+"1708","Shikimic Acid","171023_Smp_IL2DMBnoBT5um_1",1307047
+"1709","Shikimic Acid","171023_Smp_IL2DMBnoBT5um_2",2816638
+"1710","Shikimic Acid","171023_Smp_IL2DMBnoBT5um_3",1666746
+"1711","Shikimic Acid","171023_Smp_IL2DSW5um_1",1241460
+"1712","Shikimic Acid","171023_Smp_IL2DSW5um_2",1026404
+"1713","Shikimic Acid","171023_Smp_IL2DSW5um_3",2549638
+"1714","Shikimic Acid","171023_Smp_IL2noBT5um_1",1816500
+"1715","Shikimic Acid","171023_Smp_IL2noBT5um_2",1772183
+"1716","Shikimic Acid","171023_Smp_IL2noBT5um_3",1435744
+"1717","Shikimic Acid","171023_Smp_IL2WBT5um_1",2926449
+"1718","Shikimic Acid","171023_Smp_IL2WBT5um_2",1463566
+"1719","Shikimic Acid","171023_Smp_IL2WBT5um_3",2743823
+"1720","Shikimic Acid","171023_Smp_IL2IT05um_1",2113179
+"1721","Shikimic Acid","171023_Smp_IL2IT05um_2",2983597
+"1722","Shikimic Acid","171023_Smp_IL2IT05um_3",2000152
+"1723","Stachydrine hydrochloride","171023_Smp_IL2Control5um_1",100674596
+"1724","Stachydrine hydrochloride","171023_Smp_IL2Control5um_2",97998035
+"1725","Stachydrine hydrochloride","171023_Smp_IL2Control5um_3",166627654
+"1726","Stachydrine hydrochloride","171023_Smp_IL2DMB5um_1",103571176
+"1727","Stachydrine hydrochloride","171023_Smp_IL2DMB5um_2",109993295
+"1728","Stachydrine hydrochloride","171023_Smp_IL2DMB5um_3",212885161
+"1729","Stachydrine hydrochloride","171023_Smp_IL2DMBnoBT5um_1",79404365
+"1730","Stachydrine hydrochloride","171023_Smp_IL2DMBnoBT5um_2",89928035
+"1731","Stachydrine hydrochloride","171023_Smp_IL2DMBnoBT5um_3",96662942
+"1732","Stachydrine hydrochloride","171023_Smp_IL2DSW5um_1",138667118
+"1733","Stachydrine hydrochloride","171023_Smp_IL2DSW5um_2",124150789
+"1734","Stachydrine hydrochloride","171023_Smp_IL2DSW5um_3",115918598
+"1735","Stachydrine hydrochloride","171023_Smp_IL2noBT5um_1",88978646
+"1736","Stachydrine hydrochloride","171023_Smp_IL2noBT5um_2",160995472
+"1737","Stachydrine hydrochloride","171023_Smp_IL2noBT5um_3",126656538
+"1738","Stachydrine hydrochloride","171023_Smp_IL2WBT5um_1",80991926
+"1739","Stachydrine hydrochloride","171023_Smp_IL2WBT5um_2",423939557
+"1740","Stachydrine hydrochloride","171023_Smp_IL2WBT5um_3",64634811
+"1741","Stachydrine hydrochloride","171023_Smp_IL2IT05um_1",69998119
+"1742","Stachydrine hydrochloride","171023_Smp_IL2IT05um_2",98355689
+"1743","Stachydrine hydrochloride","171023_Smp_IL2IT05um_3",124422753
+"1744","Succinic Acid","171023_Smp_IL2Control5um_1",9436725
+"1745","Succinic Acid","171023_Smp_IL2Control5um_2",8610636
+"1746","Succinic Acid","171023_Smp_IL2Control5um_3",13151447
+"1747","Succinic Acid","171023_Smp_IL2DMB5um_1",14742938
+"1748","Succinic Acid","171023_Smp_IL2DMB5um_2",8734166
+"1749","Succinic Acid","171023_Smp_IL2DMB5um_3",10533710
+"1750","Succinic Acid","171023_Smp_IL2DMBnoBT5um_1",10686372
+"1751","Succinic Acid","171023_Smp_IL2DMBnoBT5um_2",12032894
+"1752","Succinic Acid","171023_Smp_IL2DMBnoBT5um_3",9610151
+"1753","Succinic Acid","171023_Smp_IL2DSW5um_1",17434014
+"1754","Succinic Acid","171023_Smp_IL2DSW5um_2",16010623
+"1755","Succinic Acid","171023_Smp_IL2DSW5um_3",12521243
+"1756","Succinic Acid","171023_Smp_IL2noBT5um_1",9616405
+"1757","Succinic Acid","171023_Smp_IL2noBT5um_2",12766777
+"1758","Succinic Acid","171023_Smp_IL2noBT5um_3",16357731
+"1759","Succinic Acid","171023_Smp_IL2WBT5um_1",9499030
+"1760","Succinic Acid","171023_Smp_IL2WBT5um_2",10387633
+"1761","Succinic Acid","171023_Smp_IL2WBT5um_3",8178178
+"1762","Succinic Acid","171023_Smp_IL2IT05um_1",5953758
+"1763","Succinic Acid","171023_Smp_IL2IT05um_2",10109529
+"1764","Succinic Acid","171023_Smp_IL2IT05um_3",9108947
+"1765","Succinic semialdehyde","171023_Smp_IL2Control5um_1",2375824
+"1766","Succinic semialdehyde","171023_Smp_IL2Control5um_2",2321165
+"1767","Succinic semialdehyde","171023_Smp_IL2Control5um_3",2789150
+"1768","Succinic semialdehyde","171023_Smp_IL2DMB5um_1",2367274
+"1769","Succinic semialdehyde","171023_Smp_IL2DMB5um_2",2312509
+"1770","Succinic semialdehyde","171023_Smp_IL2DMB5um_3",2149963
+"1771","Succinic semialdehyde","171023_Smp_IL2DMBnoBT5um_1",1945793
+"1772","Succinic semialdehyde","171023_Smp_IL2DMBnoBT5um_2",2669764
+"1773","Succinic semialdehyde","171023_Smp_IL2DMBnoBT5um_3",2930637
+"1774","Succinic semialdehyde","171023_Smp_IL2DSW5um_1",2690350
+"1775","Succinic semialdehyde","171023_Smp_IL2DSW5um_2",2661401
+"1776","Succinic semialdehyde","171023_Smp_IL2DSW5um_3",2801757
+"1777","Succinic semialdehyde","171023_Smp_IL2noBT5um_1",2292994
+"1778","Succinic semialdehyde","171023_Smp_IL2noBT5um_2",3278534
+"1779","Succinic semialdehyde","171023_Smp_IL2noBT5um_3",2802862
+"1780","Succinic semialdehyde","171023_Smp_IL2WBT5um_1",2205124
+"1781","Succinic semialdehyde","171023_Smp_IL2WBT5um_2",2492099
+"1782","Succinic semialdehyde","171023_Smp_IL2WBT5um_3",1904479
+"1783","Succinic semialdehyde","171023_Smp_IL2IT05um_1",1732135
+"1784","Succinic semialdehyde","171023_Smp_IL2IT05um_2",2034850
+"1785","Succinic semialdehyde","171023_Smp_IL2IT05um_3",2314172
+"1786","Sulfanilic Acid","171023_Smp_IL2Control5um_1",8733619
+"1787","Sulfanilic Acid","171023_Smp_IL2Control5um_2",10542995
+"1788","Sulfanilic Acid","171023_Smp_IL2Control5um_3",12654824
+"1789","Sulfanilic Acid","171023_Smp_IL2DMB5um_1",10107990
+"1790","Sulfanilic Acid","171023_Smp_IL2DMB5um_2",10319212
+"1791","Sulfanilic Acid","171023_Smp_IL2DMB5um_3",12833013
+"1792","Sulfanilic Acid","171023_Smp_IL2DMBnoBT5um_1",13178594
+"1793","Sulfanilic Acid","171023_Smp_IL2DMBnoBT5um_2",16326222
+"1794","Sulfanilic Acid","171023_Smp_IL2DMBnoBT5um_3",16516276
+"1795","Sulfanilic Acid","171023_Smp_IL2DSW5um_1",19675989
+"1796","Sulfanilic Acid","171023_Smp_IL2DSW5um_2",20512432
+"1797","Sulfanilic Acid","171023_Smp_IL2DSW5um_3",19866903
+"1798","Sulfanilic Acid","171023_Smp_IL2noBT5um_1",15444584
+"1799","Sulfanilic Acid","171023_Smp_IL2noBT5um_2",23681348
+"1800","Sulfanilic Acid","171023_Smp_IL2noBT5um_3",16764945
+"1801","Sulfanilic Acid","171023_Smp_IL2WBT5um_1",7643792
+"1802","Sulfanilic Acid","171023_Smp_IL2WBT5um_2",12384810
+"1803","Sulfanilic Acid","171023_Smp_IL2WBT5um_3",7884597
+"1804","Sulfanilic Acid","171023_Smp_IL2IT05um_1",6765904
+"1805","Sulfanilic Acid","171023_Smp_IL2IT05um_2",9469325
+"1806","Sulfanilic Acid","171023_Smp_IL2IT05um_3",10131323
+"1807","Taurine","171023_Smp_IL2Control5um_1",10529617
+"1808","Taurine","171023_Smp_IL2Control5um_2",6518976
+"1809","Taurine","171023_Smp_IL2Control5um_3",15943031
+"1810","Taurine","171023_Smp_IL2DMB5um_1",11537503
+"1811","Taurine","171023_Smp_IL2DMB5um_2",6062460
+"1812","Taurine","171023_Smp_IL2DMB5um_3",21177625
+"1813","Taurine","171023_Smp_IL2DMBnoBT5um_1",11321878
+"1814","Taurine","171023_Smp_IL2DMBnoBT5um_2",17948416
+"1815","Taurine","171023_Smp_IL2DMBnoBT5um_3",15606051
+"1816","Taurine","171023_Smp_IL2DSW5um_1",29346974
+"1817","Taurine","171023_Smp_IL2DSW5um_2",24929454
+"1818","Taurine","171023_Smp_IL2DSW5um_3",17129069
+"1819","Taurine","171023_Smp_IL2noBT5um_1",11850599
+"1820","Taurine","171023_Smp_IL2noBT5um_2",23926245
+"1821","Taurine","171023_Smp_IL2noBT5um_3",28425560
+"1822","Taurine","171023_Smp_IL2WBT5um_1",9861362
+"1823","Taurine","171023_Smp_IL2WBT5um_2",32407383
+"1824","Taurine","171023_Smp_IL2WBT5um_3",6927847
+"1825","Taurine","171023_Smp_IL2IT05um_1",5185014
+"1826","Taurine","171023_Smp_IL2IT05um_2",15019831
+"1827","Taurine","171023_Smp_IL2IT05um_3",23044581
+"1828","Threonine","171023_Smp_IL2Control5um_1",537906.9
+"1829","Threonine","171023_Smp_IL2Control5um_2",846429.7
+"1830","Threonine","171023_Smp_IL2Control5um_3",1122388
+"1831","Threonine","171023_Smp_IL2DMB5um_1",720799
+"1832","Threonine","171023_Smp_IL2DMB5um_2",868922.3
+"1833","Threonine","171023_Smp_IL2DMB5um_3",406483
+"1834","Threonine","171023_Smp_IL2DMBnoBT5um_1",1366850
+"1835","Threonine","171023_Smp_IL2DMBnoBT5um_2",2423097
+"1836","Threonine","171023_Smp_IL2DMBnoBT5um_3",3569289
+"1837","Threonine","171023_Smp_IL2DSW5um_1",2048935
+"1838","Threonine","171023_Smp_IL2DSW5um_2",3018535
+"1839","Threonine","171023_Smp_IL2DSW5um_3",4730205
+"1840","Threonine","171023_Smp_IL2noBT5um_1",3166069
+"1841","Threonine","171023_Smp_IL2noBT5um_2",4088520
+"1842","Threonine","171023_Smp_IL2noBT5um_3",2947294
+"1843","Threonine","171023_Smp_IL2WBT5um_1",361208.9
+"1844","Threonine","171023_Smp_IL2WBT5um_2",335689.7
+"1845","Threonine","171023_Smp_IL2WBT5um_3",827420.9
+"1846","Threonine","171023_Smp_IL2IT05um_1",55380.19
+"1847","Threonine","171023_Smp_IL2IT05um_2",156436.2
+"1848","Threonine","171023_Smp_IL2IT05um_3",235510.7
+"1849","Thymidine","171023_Smp_IL2Control5um_1",1423965
+"1850","Thymidine","171023_Smp_IL2Control5um_2",1298217
+"1851","Thymidine","171023_Smp_IL2Control5um_3",1397811
+"1852","Thymidine","171023_Smp_IL2DMB5um_1",1428916
+"1853","Thymidine","171023_Smp_IL2DMB5um_2",1498874
+"1854","Thymidine","171023_Smp_IL2DMB5um_3",1606865
+"1855","Thymidine","171023_Smp_IL2DMBnoBT5um_1",1060674
+"1856","Thymidine","171023_Smp_IL2DMBnoBT5um_2",1602734
+"1857","Thymidine","171023_Smp_IL2DMBnoBT5um_3",1324382
+"1858","Thymidine","171023_Smp_IL2DSW5um_1",2930196
+"1859","Thymidine","171023_Smp_IL2DSW5um_2",3535296
+"1860","Thymidine","171023_Smp_IL2DSW5um_3",2824980
+"1861","Thymidine","171023_Smp_IL2noBT5um_1",1383873
+"1862","Thymidine","171023_Smp_IL2noBT5um_2",2798036
+"1863","Thymidine","171023_Smp_IL2noBT5um_3",1779469
+"1864","Thymidine","171023_Smp_IL2WBT5um_1",1271512
+"1865","Thymidine","171023_Smp_IL2WBT5um_2",1853949
+"1866","Thymidine","171023_Smp_IL2WBT5um_3",1250742
+"1867","Thymidine","171023_Smp_IL2IT05um_1",801389.7
+"1868","Thymidine","171023_Smp_IL2IT05um_2",1315710
+"1869","Thymidine","171023_Smp_IL2IT05um_3",1648467
+"1870","Thymine","171023_Smp_IL2Control5um_1",11382320
+"1871","Thymine","171023_Smp_IL2Control5um_2",10075154
+"1872","Thymine","171023_Smp_IL2Control5um_3",9828544
+"1873","Thymine","171023_Smp_IL2DMB5um_1",9956716
+"1874","Thymine","171023_Smp_IL2DMB5um_2",11286329
+"1875","Thymine","171023_Smp_IL2DMB5um_3",12211172
+"1876","Thymine","171023_Smp_IL2DMBnoBT5um_1",9299802
+"1877","Thymine","171023_Smp_IL2DMBnoBT5um_2",11789163
+"1878","Thymine","171023_Smp_IL2DMBnoBT5um_3",10116745
+"1879","Thymine","171023_Smp_IL2DSW5um_1",20362290
+"1880","Thymine","171023_Smp_IL2DSW5um_2",21564928
+"1881","Thymine","171023_Smp_IL2DSW5um_3",18556731
+"1882","Thymine","171023_Smp_IL2noBT5um_1",9840051
+"1883","Thymine","171023_Smp_IL2noBT5um_2",17833477
+"1884","Thymine","171023_Smp_IL2noBT5um_3",13723336
+"1885","Thymine","171023_Smp_IL2WBT5um_1",10906400
+"1886","Thymine","171023_Smp_IL2WBT5um_2",13208235
+"1887","Thymine","171023_Smp_IL2WBT5um_3",10145619
+"1888","Thymine","171023_Smp_IL2IT05um_1",6937773
+"1889","Thymine","171023_Smp_IL2IT05um_2",10474702
+"1890","Thymine","171023_Smp_IL2IT05um_3",11924901
+"1891","Trehalose","171023_Smp_IL2Control5um_1",31736261
+"1892","Trehalose","171023_Smp_IL2Control5um_2",30166719
+"1893","Trehalose","171023_Smp_IL2Control5um_3",42294743
+"1894","Trehalose","171023_Smp_IL2DMB5um_1",32459467
+"1895","Trehalose","171023_Smp_IL2DMB5um_2",28627326
+"1896","Trehalose","171023_Smp_IL2DMB5um_3",29571759
+"1897","Trehalose","171023_Smp_IL2DMBnoBT5um_1",13516492
+"1898","Trehalose","171023_Smp_IL2DMBnoBT5um_2",13982720
+"1899","Trehalose","171023_Smp_IL2DMBnoBT5um_3",24924863
+"1900","Trehalose","171023_Smp_IL2DSW5um_1",18685498
+"1901","Trehalose","171023_Smp_IL2DSW5um_2",39212562
+"1902","Trehalose","171023_Smp_IL2DSW5um_3",19131343
+"1903","Trehalose","171023_Smp_IL2noBT5um_1",9811804
+"1904","Trehalose","171023_Smp_IL2noBT5um_2",17035413
+"1905","Trehalose","171023_Smp_IL2noBT5um_3",37930694
+"1906","Trehalose","171023_Smp_IL2WBT5um_1",21326990
+"1907","Trehalose","171023_Smp_IL2WBT5um_2",25117587
+"1908","Trehalose","171023_Smp_IL2WBT5um_3",31942576
+"1909","Trehalose","171023_Smp_IL2IT05um_1",10527704
+"1910","Trehalose","171023_Smp_IL2IT05um_2",13937524
+"1911","Trehalose","171023_Smp_IL2IT05um_3",14204057
+"1912","Trigonelline","171023_Smp_IL2Control5um_1",135599480
+"1913","Trigonelline","171023_Smp_IL2Control5um_2",116624522
+"1914","Trigonelline","171023_Smp_IL2Control5um_3",188870556
+"1915","Trigonelline","171023_Smp_IL2DMB5um_1",135042201
+"1916","Trigonelline","171023_Smp_IL2DMB5um_2",143069386
+"1917","Trigonelline","171023_Smp_IL2DMB5um_3",198362365
+"1918","Trigonelline","171023_Smp_IL2DMBnoBT5um_1",160173848
+"1919","Trigonelline","171023_Smp_IL2DMBnoBT5um_2",189850479
+"1920","Trigonelline","171023_Smp_IL2DMBnoBT5um_3",210452514
+"1921","Trigonelline","171023_Smp_IL2DSW5um_1",232197499
+"1922","Trigonelline","171023_Smp_IL2DSW5um_2",233404962
+"1923","Trigonelline","171023_Smp_IL2DSW5um_3",221086660
+"1924","Trigonelline","171023_Smp_IL2noBT5um_1",183028841
+"1925","Trigonelline","171023_Smp_IL2noBT5um_2",310388789
+"1926","Trigonelline","171023_Smp_IL2noBT5um_3",253823776
+"1927","Trigonelline","171023_Smp_IL2WBT5um_1",109951775
+"1928","Trigonelline","171023_Smp_IL2WBT5um_2",226133199
+"1929","Trigonelline","171023_Smp_IL2WBT5um_3",94346175
+"1930","Trigonelline","171023_Smp_IL2IT05um_1",89436980
+"1931","Trigonelline","171023_Smp_IL2IT05um_2",123736047
+"1932","Trigonelline","171023_Smp_IL2IT05um_3",169731739
+"1933","Turicine","171023_Smp_IL2Control5um_1",100370452
+"1934","Turicine","171023_Smp_IL2Control5um_2",75730615
+"1935","Turicine","171023_Smp_IL2Control5um_3",148288997
+"1936","Turicine","171023_Smp_IL2DMB5um_1",98736581
+"1937","Turicine","171023_Smp_IL2DMB5um_2",104714712
+"1938","Turicine","171023_Smp_IL2DMB5um_3",142162520
+"1939","Turicine","171023_Smp_IL2DMBnoBT5um_1",76460345
+"1940","Turicine","171023_Smp_IL2DMBnoBT5um_2",77626250
+"1941","Turicine","171023_Smp_IL2DMBnoBT5um_3",84023500
+"1942","Turicine","171023_Smp_IL2DSW5um_1",146436245
+"1943","Turicine","171023_Smp_IL2DSW5um_2",119840154
+"1944","Turicine","171023_Smp_IL2DSW5um_3",129154849
+"1945","Turicine","171023_Smp_IL2noBT5um_1",83896850
+"1946","Turicine","171023_Smp_IL2noBT5um_2",148123483
+"1947","Turicine","171023_Smp_IL2noBT5um_3",130758897
+"1948","Turicine","171023_Smp_IL2WBT5um_1",89586486
+"1949","Turicine","171023_Smp_IL2WBT5um_2",131043913
+"1950","Turicine","171023_Smp_IL2WBT5um_3",65684514
+"1951","Turicine","171023_Smp_IL2IT05um_1",74881413
+"1952","Turicine","171023_Smp_IL2IT05um_2",104207911
+"1953","Turicine","171023_Smp_IL2IT05um_3",106329327
+"1954","Tyrosine","171023_Smp_IL2Control5um_1",9845713
+"1955","Tyrosine","171023_Smp_IL2Control5um_2",7494086
+"1956","Tyrosine","171023_Smp_IL2Control5um_3",13006540
+"1957","Tyrosine","171023_Smp_IL2DMB5um_1",7096003
+"1958","Tyrosine","171023_Smp_IL2DMB5um_2",8585173
+"1959","Tyrosine","171023_Smp_IL2DMB5um_3",13028664
+"1960","Tyrosine","171023_Smp_IL2DMBnoBT5um_1",9319135
+"1961","Tyrosine","171023_Smp_IL2DMBnoBT5um_2",11039972
+"1962","Tyrosine","171023_Smp_IL2DMBnoBT5um_3",13007617
+"1963","Tyrosine","171023_Smp_IL2DSW5um_1",16304150
+"1964","Tyrosine","171023_Smp_IL2DSW5um_2",16573936
+"1965","Tyrosine","171023_Smp_IL2DSW5um_3",19340949
+"1966","Tyrosine","171023_Smp_IL2noBT5um_1",9452818
+"1967","Tyrosine","171023_Smp_IL2noBT5um_2",18065909
+"1968","Tyrosine","171023_Smp_IL2noBT5um_3",15516147
+"1969","Tyrosine","171023_Smp_IL2WBT5um_1",7056570
+"1970","Tyrosine","171023_Smp_IL2WBT5um_2",12401582
+"1971","Tyrosine","171023_Smp_IL2WBT5um_3",7693750
+"1972","Tyrosine","171023_Smp_IL2IT05um_1",6389739
+"1973","Tyrosine","171023_Smp_IL2IT05um_2",10280788
+"1974","Tyrosine","171023_Smp_IL2IT05um_3",11456173
+"1975","UDP-glucosamine","171023_Smp_IL2Control5um_1",506543.9
+"1976","UDP-glucosamine","171023_Smp_IL2Control5um_2",365732.1
+"1977","UDP-glucosamine","171023_Smp_IL2Control5um_3",945563.7
+"1978","UDP-glucosamine","171023_Smp_IL2DMB5um_1",680115.5
+"1979","UDP-glucosamine","171023_Smp_IL2DMB5um_2",528599.8
+"1980","UDP-glucosamine","171023_Smp_IL2DMB5um_3",530381.9
+"1981","UDP-glucosamine","171023_Smp_IL2DMBnoBT5um_1",511102.5
+"1982","UDP-glucosamine","171023_Smp_IL2DMBnoBT5um_2",869570.6
+"1983","UDP-glucosamine","171023_Smp_IL2DMBnoBT5um_3",851989.1
+"1984","UDP-glucosamine","171023_Smp_IL2DSW5um_1",836388.1
+"1985","UDP-glucosamine","171023_Smp_IL2DSW5um_2",1073374
+"1986","UDP-glucosamine","171023_Smp_IL2DSW5um_3",969372.7
+"1987","UDP-glucosamine","171023_Smp_IL2noBT5um_1",562552.3
+"1988","UDP-glucosamine","171023_Smp_IL2noBT5um_2",1217165
+"1989","UDP-glucosamine","171023_Smp_IL2noBT5um_3",1127298
+"1990","UDP-glucosamine","171023_Smp_IL2WBT5um_1",424691
+"1991","UDP-glucosamine","171023_Smp_IL2WBT5um_2",390222.1
+"1992","UDP-glucosamine","171023_Smp_IL2WBT5um_3",470719.6
+"1993","UDP-glucosamine","171023_Smp_IL2IT05um_1",192900.5
+"1994","UDP-glucosamine","171023_Smp_IL2IT05um_2",295440.8
+"1995","UDP-glucosamine","171023_Smp_IL2IT05um_3",361047.2
+"1996","UDP-glucose","171023_Smp_IL2Control5um_1",52974.13
+"1997","UDP-glucose","171023_Smp_IL2Control5um_2",59199.36
+"1998","UDP-glucose","171023_Smp_IL2Control5um_3",1021277
+"1999","UDP-glucose","171023_Smp_IL2DMB5um_1",NA
+"2000","UDP-glucose","171023_Smp_IL2DMB5um_2",58459.75
+"2001","UDP-glucose","171023_Smp_IL2DMB5um_3",23364.73
+"2002","UDP-glucose","171023_Smp_IL2DMBnoBT5um_1",71166.31
+"2003","UDP-glucose","171023_Smp_IL2DMBnoBT5um_2",14298.63
+"2004","UDP-glucose","171023_Smp_IL2DMBnoBT5um_3",267448.3
+"2005","UDP-glucose","171023_Smp_IL2DSW5um_1",NA
+"2006","UDP-glucose","171023_Smp_IL2DSW5um_2",17902.8
+"2007","UDP-glucose","171023_Smp_IL2DSW5um_3",606555.4
+"2008","UDP-glucose","171023_Smp_IL2noBT5um_1",384600
+"2009","UDP-glucose","171023_Smp_IL2noBT5um_2",19543.23
+"2010","UDP-glucose","171023_Smp_IL2noBT5um_3",11671.57
+"2011","UDP-glucose","171023_Smp_IL2WBT5um_1",15007.13
+"2012","UDP-glucose","171023_Smp_IL2WBT5um_2",62092.31
+"2013","UDP-glucose","171023_Smp_IL2WBT5um_3",331530.7
+"2014","UDP-glucose","171023_Smp_IL2IT05um_1",40731.88
+"2015","UDP-glucose","171023_Smp_IL2IT05um_2",NA
+"2016","UDP-glucose","171023_Smp_IL2IT05um_3",NA
+"2017","Uridine","171023_Smp_IL2Control5um_1",6096529
+"2018","Uridine","171023_Smp_IL2Control5um_2",8433601
+"2019","Uridine","171023_Smp_IL2Control5um_3",8510799
+"2020","Uridine","171023_Smp_IL2DMB5um_1",7100093
+"2021","Uridine","171023_Smp_IL2DMB5um_2",7200932
+"2022","Uridine","171023_Smp_IL2DMB5um_3",8576153
+"2023","Uridine","171023_Smp_IL2DMBnoBT5um_1",13737901
+"2024","Uridine","171023_Smp_IL2DMBnoBT5um_2",20877377
+"2025","Uridine","171023_Smp_IL2DMBnoBT5um_3",22077348
+"2026","Uridine","171023_Smp_IL2DSW5um_1",34314918
+"2027","Uridine","171023_Smp_IL2DSW5um_2",46346734
+"2028","Uridine","171023_Smp_IL2DSW5um_3",50403414
+"2029","Uridine","171023_Smp_IL2noBT5um_1",17358154
+"2030","Uridine","171023_Smp_IL2noBT5um_2",30501317
+"2031","Uridine","171023_Smp_IL2noBT5um_3",22923821
+"2032","Uridine","171023_Smp_IL2WBT5um_1",5347501
+"2033","Uridine","171023_Smp_IL2WBT5um_2",6855844
+"2034","Uridine","171023_Smp_IL2WBT5um_3",5279451
+"2035","Uridine","171023_Smp_IL2IT05um_1",2877386
+"2036","Uridine","171023_Smp_IL2IT05um_2",4551363
+"2037","Uridine","171023_Smp_IL2IT05um_3",4380366

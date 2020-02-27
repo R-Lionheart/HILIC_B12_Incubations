@@ -116,6 +116,9 @@ write.csv(IsoLagran2_5, "data_processed/IsoLagran2_5_notnormd.csv")
 rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
 
 # Treatment data info --------------------------------------------------------------------------
+Dataset <- IsoLagran1_0.2
+Dataset <- IsoLagran1_5
+Dataset <- IsoLagran2_0.2
 Dataset <- IsoLagran2_5
 
 Treatment <- Dataset %>%
@@ -141,7 +144,7 @@ Iso_wideT <- t(Iso_wide)
 
 # KRH transformations --------------------------------------------------------------
 Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
-write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran2_5_normd.csv")
+write.csv(Iso_wide_normalizedT, "data_processed/IsoLagran2_0.2_normd.csv")
 
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", k = 2, autotransform = FALSE, trymax = 100)
 

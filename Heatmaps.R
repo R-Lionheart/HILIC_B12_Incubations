@@ -1,21 +1,21 @@
 library(tidyverse)
 
-BMISd_1_0.2 <- read.csv("data_processed/IsoLagran1_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd_1_0.2 <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
-BMISd_1_5 <- read.csv("data_processed/IsoLagran1_5_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd_1_5 <- read.csv("data_processed/IsoLagran1_5_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
-BMISd_2_0.2 <- read.csv("data_processed/IsoLagran2_0.2_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd_2_0.2 <- read.csv("data_processed/IsoLagran2_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
-BMISd_2_5 <- read.csv("data_processed/IsoLagran2_5_notnormed.csv", stringsAsFactors = FALSE) %>%
+BMISd_2_5 <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
 
-data_1_0.2 <- read.csv("data_processed/IsoLagran1_0.2_normed.csv", check.names = FALSE, stringsAsFactors = FALSE)
-data_1_5 <- read.csv("data_processed/IsoLagran1_5_normed.csv", check.names = FALSE, stringsAsFactors = FALSE)
-data_2_0.2 <- read.csv("data_processed/IsoLagran2_0.2_normed.csv", check.names = FALSE, stringsAsFactors = FALSE)
-data_2_5 <- read.csv("data_processed/IsoLagran2_5_normed.csv", check.names = FALSE, stringsAsFactors = FALSE)
+data_1_0.2 <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", check.names = FALSE, stringsAsFactors = FALSE)
+data_1_5 <- read.csv("data_processed/IsoLagran1_5_normd.csv", check.names = FALSE, stringsAsFactors = FALSE)
+data_2_0.2 <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", check.names = FALSE, stringsAsFactors = FALSE)
+data_2_5 <- read.csv("data_processed/IsoLagran2_5_normd.csv", check.names = FALSE, stringsAsFactors = FALSE)
 
 # HEATMAPS -------------------------------------------------------------------
-data <- data_2_5
+data <- data_1_0.2
 colnames(data)[1] <- "Replicate.Name"
 data2t <- t(data)
 colnames(data2t) <- as.character(unlist(data2t[1,]))
@@ -51,7 +51,6 @@ heatmap.data <- data4 %>%
 heatmap.data$SampID <- factor(heatmap.data$SampID,
                               levels = c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW",
                                          "IL1DMBnoBT", "IL1noBT"))
-
 # 1_5
 heatmap.data$SampID <- factor(heatmap.data$SampID,
                               levels = c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um",
@@ -71,7 +70,7 @@ test.heatmap_2_5 <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID
         axis.text.y = element_text(size = 10),
         strip.text = element_text(size = 10)) +
   scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
-  ggtitle("B12 HILIC Incubation: IsoLagran 2 5um") 
+  ggtitle("B12 HILIC Incubation: IsoLagran 1 0.2um") 
 print(test.heatmap_2_5)
 
 require(gridExtra)

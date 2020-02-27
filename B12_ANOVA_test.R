@@ -1,6 +1,8 @@
 library(tidyverse)
 options(scipen = 999)
 
+# Setup -------------------------------------------------------------------
+
 # Set treatment filters
 myTreatments <- c("IL2WBT|IL2noBT|IL2Control")
 myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
@@ -31,8 +33,12 @@ full.BMISd <- BMISd.long.normd %>%
   filter(str_detect(Replicate.Name, myTreatments)) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>% 
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
-  unique()
+  unique() %>%
+  arrange(Mass.Feature)
 full.BMISd <- full.BMISd[complete.cases(full.BMISd), ]
+
+
+# Start analysis ----------------------------------------------------------
 
 # Calculate fold changes between treatments
 Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
@@ -59,19 +65,42 @@ AnovaB12 <- full.BMISd %>%
   mutate(Count = n()) %>%
   filter(!Count < 9 ) %>% # 3 replicates of each treatment, total of 9. Filter those groups missing replicates.
   arrange(Mass.Feature) %>%
-  select(-Count)
+  select(-Count) 
+  #
+  # ungroup() %>%
+  # group_by(Mass.Feature, SampID) %>%
+  # mutate(min = min(Adjusted.Area)) %>%
+  # mutate(max = max(Adjusted.Area)) %>%
+  # mutate(Range = max - min)
+  #
 glimpse(AnovaB12) #Use for the future
 levels(AnovaB12$SampID)
+
+# Find replicate outliers
+# Outliers <- AnovaB12 %>%
+#   select(Mass.Feature, SampID, Adjusted.Area) %>%
+#   filter(Mass.Feature == "Adenine") %>%
+#   arrange(Adjusted.Area)
+# ggplot(Outliers, aes(x = SampID, y = Adjusted.Area, fill = SampID)) +
+#   geom_boxplot()
+# 
+# myvalues <- sort(Outliers$Adjusted.Area)
+# mymedian <- median(myvalues)
+# myQ1 <- myvalues[1:2]
+# myQ1 <- median(myQ1)
+# myQ3 <- myvalues[2:3]
+# myQ3 <- median(myQ3)
+# myIQR <- range(myQ1, myQ3)
 
 # Graph normalized areas for reference
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  theme(axis.text.x = element_blank()) +
   geom_jitter(shape = 15,
               color = "steelblue",
               position = position_jitter(0.21))
-Normd.Areas
+#Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
@@ -81,18 +110,21 @@ AnovaListSummary <- lapply(AnovaList, function(i) {
   summary(i)
 })
 
+
 # Apply Tukey to dataframe and check significance
 TukeyList <- lapply(AnovaList, function(x) TukeyHSD(x))
 
 # Summarize ANOVA and create dataframe of significance
 AnovaDF <- as.data.frame(do.call(rbind, lapply(AnovaListSummary, function(x) {temp <- unlist(x)})))
 colnames(AnovaDF)[9] <- "AnovaP"
+AnovaDF$AnovaQ <- p.adjust(AnovaDF$AnovaP, method = "fdr")
 
 AnovaDF <- AnovaDF %>%
   rownames_to_column(var = "Mass.Feature") %>%
-  mutate(AnovaSig = ifelse(AnovaP < 0.1, TRUE, FALSE)) %>%
-  select(Mass.Feature, AnovaP, AnovaSig) %>%
+  mutate(AnovaSig = ifelse(AnovaQ < 0.1, TRUE, FALSE)) %>%
+  select(Mass.Feature, AnovaP, AnovaQ, AnovaSig) %>%
   arrange(Mass.Feature)
+
 
 # Summarize Tukey HSD and create dataframe of significance
 TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- unlist(x)}))) %>%
@@ -101,10 +133,45 @@ TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- u
   rename(noB12vControl = SampID10,
          WB12vControl = SampID11,
          WB12vnoB12 = SampID12) %>%
-  mutate(noB12vControl_Sig = ifelse(noB12vControl < 0.1, TRUE, FALSE),
-          WB12vControl_Sig = ifelse(WB12vControl < 0.1, TRUE, FALSE),
-          WB12vnoB12_Sig = ifelse(WB12vnoB12 < 0.1, TRUE, FALSE)) %>%
+  mutate(noB12vControl_Q = p.adjust(noB12vControl, method = "fdr"),
+         WB12vControl_Q = p.adjust(WB12vControl, method = "fdr"),
+         WB12vnoB12_Q = p.adjust(WB12vnoB12, method = "fdr")) %>%
+  mutate(noB12vControl_Sig = ifelse(noB12vControl_Q < 0.1, TRUE, FALSE),
+          WB12vControl_Sig = ifelse(WB12vControl_Q < 0.1, TRUE, FALSE),
+          WB12vnoB12_Sig = ifelse(WB12vnoB12_Q < 0.1, TRUE, FALSE)) %>%
   arrange(Mass.Feature)
+
+
+
+n <- length(TukeyDF$WB12vControl)
+p <- TukeyDF$WB12vControl
+adjusted.p <- p.adjust(p, "fdr") #same as p.adjust(p, "BH")
+
+
+## Sort the p-values and keep track of the order
+id <- order(p)
+tmp <- p[id]
+q <- (tmp*n)/(1:n)
+
+new.q <- rev(cummin(rev(q)))
+
+## Put it back in the original order
+new.q[order(id)]
+# [1] 0.6289974 0.9668636 0.6289974 0.6289974 0.6289974 0.9707149 0.9707149
+# [8] 0.8600234 0.9668636 0.6289974 0.9707149 0.9668636 0.9668636 0.9813367
+#[15] 0.9668636 0.9668636 0.9668636 0.9707149 0.9668636 0.9668636 0.6289974
+#[22] 0.9942353 0.8600234 0.6289974 0.9668636 0.6289974 0.6289974 0.8680704
+#[29] 0.9668636 0.9668636 0.9668636 0.9942353 0.9707149 0.9813367 0.9668636
+#[36] 0.8600234 0.6289974 0.9668636 0.9668636 0.9747723
+
+## This should match the adjustment
+adjusted.p
+# [1] 0.6289974 0.9668636 0.6289974 0.6289974 0.6289974 0.9707149 0.9707149
+# [8] 0.8600234 0.9668636 0.6289974 0.9707149 0.9668636 0.9668636 0.9813367
+#[15] 0.9668636 0.9668636 0.9668636 0.9707149 0.9668636 0.9668636 0.6289974
+#[22] 0.9942353 0.8600234 0.6289974 0.9668636 0.6289974 0.6289974 0.8680704
+#[29] 0.9668636 0.9668636 0.9668636 0.9942353 0.9707149 0.9813367 0.9668636
+#[36] 0.8600234 0.6289974 0.9668636 0.9668636 0.9747723
 
 
 # Join with original data to plot
