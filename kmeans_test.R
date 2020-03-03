@@ -91,15 +91,17 @@ college_clean[
         arr.ind = TRUE)[1, ], ]
 
 # mine
+#similar (can this be expanded to include more grouping?)
 metab_clean[
   which(mygower_mat == min(mygower_mat[mygower_mat != min(mygower_mat)]),
         arr.ind = TRUE)[1, ], ]
-
+# dissimilar
 metab_clean[
   which(mygower_mat == max(mygower_mat[mygower_mat != max(mygower_mat)]),
         arr.ind = TRUE)[1, ], ]
 
-# Calculate silhouette width for many k using PAM
+# Calculate silhouette width for many k using PAM, and plot sihouette width (higher is better)
+# original
 sil_width <- c(NA)
 for(i in 2:10){
   pam_fit <- pam(gower_dist,
@@ -107,13 +109,26 @@ for(i in 2:10){
                  k = i)
   sil_width[i] <- pam_fit$silinfo$avg.width
 }
-
-# Plot sihouette width (higher is better)
 plot(1:10, sil_width,
      xlab = "Number of clusters",
      ylab = "Silhouette Width")
 lines(1:10, sil_width)
 
+# mine
+mysil_width <- c(NA)
+for(i in 2:10){
+  mypam_fit <- pam(mygower_dist,
+                 diss = TRUE,
+                 k = i)
+  mysil_width[i] <- mypam_fit$silinfo$avg.width
+}
+plot(1:10, mysil_width,
+     xlab = "My Number of clusters",
+     ylab = "My Silhouette Width")
+lines(1:10, mysil_width)
+
+
+# original
 pam_fit <- pam(gower_dist, diss = TRUE, k = 3)
 pam_results <- college_clean %>%
   dplyr::select(-name) %>%
@@ -123,7 +138,17 @@ pam_results <- college_clean %>%
 pam_results$the_summary
 college_clean[pam_fit$medoids, ]
 
+# mine
+mypam_fit <- pam(mygower_dist, diss = TRUE, k = 4)
+mypam_results <- metab_clean %>%
+  dplyr::select(-Mass.Feature) %>%
+  mutate(cluster = mypam_fit$clustering) %>%
+  group_by(cluster) %>%
+  do(the_summary = summary(.))
+mypam_results$the_summary
+metab_clean[mypam_fit$medoids, ]
 
+# original
 tsne_obj <- Rtsne(gower_dist, is_distance = TRUE)
 tsne_data <- tsne_obj$Y %>%
   data.frame() %>%
@@ -132,6 +157,17 @@ tsne_data <- tsne_obj$Y %>%
          name = college_clean$name)
 
 ggplot(aes(x = X, y = Y), data = tsne_data) +
+  geom_point(aes(color = cluster))
+
+# mine
+mytsne_obj <- Rtsne(mygower_dist, is_distance = TRUE)
+mytsne_data <- mytsne_obj$Y %>%
+  data.frame() %>%
+  setNames(c("X", "Y")) %>%
+  mutate(cluster = factor(mypam_fit$clustering),
+         name = metab_clean$Mass.Feature)
+
+ggplot(aes(x = X, y = Y), data = mytsne_data) +
   geom_point(aes(color = cluster))
 
 
