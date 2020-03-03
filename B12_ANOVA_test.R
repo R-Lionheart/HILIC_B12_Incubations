@@ -30,7 +30,7 @@ BMISd.wide.normd <- BMISd.long.normd %>%
 # Combine all data and rearrange
 full.BMISd <- BMISd.long.normd %>%
   left_join(BMISd.long) %>%
-  filter(str_detect(Replicate.Name, myTreatments)) %>%
+  #filter(str_detect(Replicate.Name, myTreatments)) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>% 
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
   unique() %>%
@@ -66,31 +66,9 @@ AnovaB12 <- full.BMISd %>%
   filter(!Count < 9 ) %>% # 3 replicates of each treatment, total of 9. Filter those groups missing replicates.
   arrange(Mass.Feature) %>%
   select(-Count) 
-  #
-  # ungroup() %>%
-  # group_by(Mass.Feature, SampID) %>%
-  # mutate(min = min(Adjusted.Area)) %>%
-  # mutate(max = max(Adjusted.Area)) %>%
-  # mutate(Range = max - min)
-  #
+
 glimpse(AnovaB12) #Use for the future
 levels(AnovaB12$SampID)
-
-# Find replicate outliers
-# Outliers <- AnovaB12 %>%
-#   select(Mass.Feature, SampID, Adjusted.Area) %>%
-#   filter(Mass.Feature == "Adenine") %>%
-#   arrange(Adjusted.Area)
-# ggplot(Outliers, aes(x = SampID, y = Adjusted.Area, fill = SampID)) +
-#   geom_boxplot()
-# 
-# myvalues <- sort(Outliers$Adjusted.Area)
-# mymedian <- median(myvalues)
-# myQ1 <- myvalues[1:2]
-# myQ1 <- median(myQ1)
-# myQ3 <- myvalues[2:3]
-# myQ3 <- median(myQ3)
-# myIQR <- range(myQ1, myQ3)
 
 # Graph normalized areas for reference
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
@@ -104,7 +82,7 @@ Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = Sam
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
-  aov(lm(Area.BMISd.Normd ~ SampID, data = i))
+  aov(lm(Adjusted.Area ~ SampID, data = i))
 }) 
 AnovaListSummary <- lapply(AnovaList, function(i) {
   summary(i)
@@ -143,37 +121,6 @@ TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- u
 
 
 
-n <- length(TukeyDF$WB12vControl)
-p <- TukeyDF$WB12vControl
-adjusted.p <- p.adjust(p, "fdr") #same as p.adjust(p, "BH")
-
-
-## Sort the p-values and keep track of the order
-id <- order(p)
-tmp <- p[id]
-q <- (tmp*n)/(1:n)
-
-new.q <- rev(cummin(rev(q)))
-
-## Put it back in the original order
-new.q[order(id)]
-# [1] 0.6289974 0.9668636 0.6289974 0.6289974 0.6289974 0.9707149 0.9707149
-# [8] 0.8600234 0.9668636 0.6289974 0.9707149 0.9668636 0.9668636 0.9813367
-#[15] 0.9668636 0.9668636 0.9668636 0.9707149 0.9668636 0.9668636 0.6289974
-#[22] 0.9942353 0.8600234 0.6289974 0.9668636 0.6289974 0.6289974 0.8680704
-#[29] 0.9668636 0.9668636 0.9668636 0.9942353 0.9707149 0.9813367 0.9668636
-#[36] 0.8600234 0.6289974 0.9668636 0.9668636 0.9747723
-
-## This should match the adjustment
-adjusted.p
-# [1] 0.6289974 0.9668636 0.6289974 0.6289974 0.6289974 0.9707149 0.9707149
-# [8] 0.8600234 0.9668636 0.6289974 0.9707149 0.9668636 0.9668636 0.9813367
-#[15] 0.9668636 0.9668636 0.9668636 0.9707149 0.9668636 0.9668636 0.6289974
-#[22] 0.9942353 0.8600234 0.6289974 0.9668636 0.6289974 0.6289974 0.8680704
-#[29] 0.9668636 0.9668636 0.9668636 0.9942353 0.9707149 0.9813367 0.9668636
-#[36] 0.8600234 0.6289974 0.9668636 0.9668636 0.9747723
-
-
 # Join with original data to plot
 toPlot <- full.BMISd %>%
   left_join(AnovaDF) %>%
@@ -187,6 +134,7 @@ toPlot <- full.BMISd %>%
   drop_na() %>%
   group_by(Mass.Feature) %>%
   mutate(TotalAve = mean(AveSmp))
+
 
 #mutate(WvnoB12_FC = log2(rowMeans(TukeyDF[, myTreat1]) / rowMeans(WBMISd[, myTreat2])))
 

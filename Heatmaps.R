@@ -42,8 +42,8 @@ heatmap.data <- data4 %>%
   separate(Replicate.Name, into = c("Date", "runtype", "SampID", "replicate")) %>%
   select(Mass.Feature, SampID, Area.BMISd.Normd) %>%
   group_by(Mass.Feature, SampID) %>%
-  mutate(Average.Area.Normed = mean(Area.BMISd.Normd)) %>%
-  select(Mass.Feature, SampID, Average.Area.Normed) %>%
+  mutate(Average.Area.Normd = mean(Area.BMISd.Normd)) %>%
+  select(Mass.Feature, SampID, Average.Area.Normd) %>%
   unique()
 
 # Select appropriate heatmap factor levels
@@ -64,7 +64,7 @@ heatmap.data$SampID <- factor(heatmap.data$SampID,
                               levels = c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", 
                                          "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um")) 
 
-test.heatmap_2_5 <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID, fill = Average.Area.Normed)) + 
+test.heatmap_2_5 <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID, fill = Average.Area.Normd)) + 
   geom_tile(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
         axis.text.y = element_text(size = 10),

@@ -1,99 +1,205 @@
-# Retention Time Table ----------------------------------------------------
-RT.Table <- size.fraction_0.2 %>%
-  filter(str_detect(Replicate.Name, "_Std_")) %>%
-  filter(str_detect(Metabolite.Name, "_Std")) %>%
-  group_by(Metabolite.Name) %>%
-  mutate(Mean.RT.Value = mean(RT.Value, na.rm = TRUE),
-         Min.RT.Value = min(RT.Value, na.rm = TRUE),
-         Max.RT.Value = max(RT.Value, na.rm = TRUE)) %>%
-  mutate(RT.Diff = RT.Value - RT.Expected) %>% 
-  mutate(RT.Diff.abs = abs(RT.Value - RT.Expected)) %>%
-  select(Replicate.Name, Metabolite.Name, RT.Expected, RT.Value, Mean.RT.Value:RT.Diff.abs)
-# mutate(Midrange.RT.Diff = (min(RT.Diff) + max(RT.Diff)) / 2) %>%
-# mutate(High.Low = ifelse(RT.Diff > Midrange.RT.Diff, "High", "Low")) %>%
-# select(Replicate.Name, Metabolite.Name, RT.Expected, RT.Value, Mean.RT.Value:High.Low)
+library(cluster)
+library(ISLR) # for college dataset
+library(progress)
+library(readr)
+library(Rtsne)
+library(tidyverse)
+options(scipen = 999)
+
+BMISd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsAsFactors = FALSE) %>%
+  select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
+  filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
+  separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%
+  mutate(Replicate.Name = recode(Replicate.Name, 
+                                 "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
+                                 "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
+                                 "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
+                                 "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
+                                 "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
+                                 "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
+                                 "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
+                                 "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
+                                 "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
+                                 "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
+                                 "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
+                                 "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
+  select(Mass.Feature, SampID, Adjusted.Area) %>%
+  drop_na()
+standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors = FALSE) %>%
+  rename(Mass.Feature = Compound.Name) 
+
+cluster.test <- BMISd %>%
+  left_join(standards) %>%
+  replace(is.na(.), "Unknown") %>%
+  select(Mass.Feature:Column, m.z) %>%
+  mutate(Mass.Feature = as.factor(Mass.Feature),
+         SampID = as.factor(SampID),
+         Compound.Type = as.factor(Compound.Type),
+         Column = as.factor(Column)) %>%
+  select(-m.z)
+
+# Second attempt ----------------------------------------------------------
+# original
+college_clean <- College %>%
+  mutate(name = row.names(.),
+         accept_rate = Accept/Apps,
+         isElite = cut(Top10perc,
+                       breaks = c(0, 50, 100),
+                       labels = c("Not Elite", "Elite"),
+                       include.lowest = TRUE)) %>%
+  mutate(isElite = factor(isElite)) %>%
+  select(name, accept_rate, Outstate, Enroll,
+         Grad.Rate, Private, isElite)
+glimpse(college_clean)
+
+# mine
+metab_clean <- cluster.test %>%
+  mutate(isControl = as.factor(ifelse(str_detect(SampID, "Control"), "Control", "NonControl")),
+         eddy = as.factor(ifelse(str_detect(SampID, "IL1"), "Cyclonic", "Anticyclonic"))) 
+glimpse(metab_clean)
+
+# original
+gower_dist <- daisy(college_clean[, -1], # Remove college name
+                    metric = "gower",
+                    type = list(logratio = 3))
+
+mygower_dist <- daisy(metab_clean[, -1], # Remove mass.feature
+                    metric = "gower",
+                    type = list(logratio = 3))
+
+# Check attributes to ensure the correct methods are being used
+# (I = interval, N = nominal)
+# Note that despite logratio being called, 
+# the type remains coded as "I"
+# original
+summary(gower_dist)
+gower_mat <- as.matrix(gower_dist)
+
+# mine
+summary(mygower_dist)
+mygower_mat <- as.matrix(mygower_dist)
+
+# Output most similar pair
+# original
+college_clean[
+  which(gower_mat == min(gower_mat[gower_mat != min(gower_mat)]),
+        arr.ind = TRUE)[1, ], ]
+# Most dissimilar pair
+college_clean[
+  which(gower_mat == max(gower_mat[gower_mat != max(gower_mat)]),
+        arr.ind = TRUE)[1, ], ]
+
+# mine
+metab_clean[
+  which(mygower_mat == min(mygower_mat[mygower_mat != min(mygower_mat)]),
+        arr.ind = TRUE)[1, ], ]
+
+metab_clean[
+  which(mygower_mat == max(mygower_mat[mygower_mat != max(mygower_mat)]),
+        arr.ind = TRUE)[1, ], ]
+
+# Calculate silhouette width for many k using PAM
+sil_width <- c(NA)
+for(i in 2:10){
+  pam_fit <- pam(gower_dist,
+                 diss = TRUE,
+                 k = i)
+  sil_width[i] <- pam_fit$silinfo$avg.width
+}
+
+# Plot sihouette width (higher is better)
+plot(1:10, sil_width,
+     xlab = "Number of clusters",
+     ylab = "Silhouette Width")
+lines(1:10, sil_width)
+
+pam_fit <- pam(gower_dist, diss = TRUE, k = 3)
+pam_results <- college_clean %>%
+  dplyr::select(-name) %>%
+  mutate(cluster = pam_fit$clustering) %>%
+  group_by(cluster) %>%
+  do(the_summary = summary(.))
+pam_results$the_summary
+college_clean[pam_fit$medoids, ]
+
+
+tsne_obj <- Rtsne(gower_dist, is_distance = TRUE)
+tsne_data <- tsne_obj$Y %>%
+  data.frame() %>%
+  setNames(c("X", "Y")) %>%
+  mutate(cluster = factor(pam_fit$clustering),
+         name = college_clean$name)
+
+ggplot(aes(x = X, y = Y), data = tsne_data) +
+  geom_point(aes(color = cluster))
+
+
+
+
+# First attempt -----------------------------------------------------------
+# # Compute Gower distance
+# gower_dist <- daisy(cluster.test, metric = "gower")
+# gower_mat <- as.matrix(gower_dist)
+# # Print most similar clients
+# cluster.test[which(gower_mat == min(gower_mat[gower_mat != min(gower_mat)]), arr.ind = TRUE)[1, ], ]
+# 
+# # Print most dissimilar clients
+# cluster.test[which(gower_mat == max(gower_mat[gower_mat != max(gower_mat)]), arr.ind = TRUE)[1, ], ]
+# 
+# sil_width <- c(NA)
+# for(i in 2:13) {  
+#   pam_fit <- pam(gower_dist, diss = TRUE, k = i)  
+# sil_width[i] <- pam_fit$silinfo$avg.width  
+# }
+# 
+# plot(1:13, sil_width,
+#      xlab = "Number of clusters",
+#      ylab = "Silhouette Width")
+# lines(1:13, sil_width)
+# 
+# k <- 13
+# pam_fit <- pam(gower_dist, diss = TRUE, k)
+# pam_results <- cluster.test %>%
+#   mutate(cluster = pam_fit$clustering) %>%
+#   group_by(cluster) %>%
+#   do(the_summary = summary(.))
+# pam_results$the_summary
+# 
+# 
+# tsne_obj <- Rtsne(gower_dist, is_distance = TRUE)
+# tsne_data <- tsne_obj$Y %>%
+#   data.frame() %>%
+#   setNames(c("X", "Y")) %>%
+#   mutate(cluster = factor(pam_fit$clustering))
+# ggplot(aes(x = X, y = Y), data = tsne_data) +
+#   geom_point(aes(color = cluster))
 
 
 ## K means clustering test 
-ggplot(RT.Table, aes(RT.Value, Replicate.Name, color = Metabolite.Name)) + 
+ggplot(cluster.test, aes(x = Mass.Feature, y = Adjusted.Area)) +
   geom_point() +
-  ggtitle("Standard Retention Time Differences")
-ggplot(RT.Table, aes(RT.Diff, Replicate.Name, color = Metabolite.Name)) + 
-  geom_point() +
-  ggtitle("Expected vs Real Retention Time Differences")
-
-cluster.test <- RT.Table %>%
-  arrange(Metabolite.Name)
+  theme(axis.text.x = element_text(angle = 90))
 
 set.seed(20)
-RTCluster <- kmeans(cluster.test[, 8], 2, nstart = 20)
-RTCluster 
+myCluster <- kmeans(cluster.test[, 4], centers = 4)
+myCluster 
 
-RTCluster$cluster <- as.factor(RTCluster$cluster)
-ggplot(cluster.test, aes(RT.Diff, Replicate.Name, color = RTCluster$cluster)) + 
-  geom_point() +
-  ggtitle("K-means clustering: RT Value Differences")
+myCluster$cluster <- as.factor(myCluster$cluster)
 
-cluster.test$cluster <- RTCluster$cluster
-
-# RT differences plot
-RT.Table.clustered <- cluster.test %>%
-  group_by(Metabolite.Name) %>%
-  mutate(High.Low = as.character(ifelse(cluster == 1, "Low", "High"))) %>%
-  select(-cluster) %>%
-  # TESTING AREA #
-  unique() 
-
-RT.Plot <- ggplot(RT.Table.clustered, aes(x = Replicate.Name, y = RT.Diff, fill = High.Low)) +
-  geom_bar(stat = "identity") +
-  facet_wrap( ~Metabolite.Name, scales = "fixed") +
-  theme(axis.text.x = element_text(angle = 90, size = 10),
-        axis.text.y = element_text(size = 5),
-        legend.position = "top",
-        strip.text = element_text(size = 10)) +
-  ggtitle("Retention Time Differences")
-print(RT.Plot)
-
-################################################################################
-## Constructing Tolerances
-
-Tolerance.Table.High <- RT.Table.clustered %>%
-  filter(High.Low == "High") %>%
-  unique() %>%
-  ## TESTING
-  select(Metabolite.Name, RT.Expected, RT.Value) %>%
-  #filter(Metabolite.Name == "FA 16:0_Std") %>%
-  group_by(Metabolite.Name) %>%
-  mutate(Ave.High = mean(RT.Value)) %>%
-  mutate(Ave.High.Diff = abs(RT.Expected - Ave.High)) %>%
-  select(-RT.Value) %>%
-  unique()
-
-Tolerance.Table.Low <- RT.Table.clustered %>%
-  filter(High.Low == "Low") %>%
-  unique() %>%
-  ## TESTING
-  select(Metabolite.Name, RT.Expected, RT.Value) %>%
-  #filter(Metabolite.Name == "FA 16:0_Std") %>%
-  group_by(Metabolite.Name) %>%
-  mutate(Ave.Low= mean(RT.Value)) %>%
-  mutate(Ave.Low.Diff = abs(RT.Expected - Ave.Low)) %>%
-  select(-RT.Value) %>%
-  unique()
+ggplot(cluster.test, aes(x = Mass.Feature, y = Adjusted.Area, color = myCluster$cluster)) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  geom_point()
 
 
+ggplot(cluster.test, aes(x = Mass.Feature, y = SampID, color = myCluster$cluster)) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  geom_jitter(shape = 15,
+              position = position_jitter(0.21))
 
-# Tolerance production ----------------------------------------------------
-## in progress
-Full.Tolerance.Table <- size.fraction_0.2 %>%
-  select(Metabolite.Name, Replicate.Name, RT.Expected, RT.Value) %>%
-  #filter(Metabolite.Name == "FA 16:0_Std") %>% 
-  filter(str_detect(Metabolite.Name, "_Std")) %>%
-  # TESTING AREA #
-  left_join(Tolerance.Table.High) %>%
-  left_join(Tolerance.Table.Low) %>%
-  select(Metabolite.Name, RT.Expected, Ave.High:Ave.Low.Diff) %>%
-  unique()
 
-FA16_HighTolerance = unique(Full.Tolerance.Table$Ave.High.Diff)
-FA16_LowTolerance = unique(Full.Tolerance.Table$Ave.Low.Diff)
+ggplot(data = cluster.test, aes(x = Adjusted.Area, y = myCluster$cluster, fill = SampID)) +
+  scale_y_discrete(breaks = seq(1, 7, by = 1)) +
+  geom_tile() +
+  coord_equal() +
+  theme_classic()
