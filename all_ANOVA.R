@@ -61,7 +61,7 @@ AnovaDF <- AnovaDF %>%
 
 
 toPlot <- grouped.BMISd %>%
-  left_join(AnovaDF) %>%
+  left_join(AnovaDF) 
   # group_by(Mass.Feature, SampID) %>%
   # mutate(AveSmp = mean(Area.BMISd.Normd, na.rm = TRUE)) %>%
   # select(Mass.Feature, SampID, AveSmp, AnovaSig) %>%
@@ -80,8 +80,8 @@ a <- ggplot(toPlot, aes(x = Mass.Feature, y = Avg.Area, fill = AnovaSig)) +
   ggtitle("TEST") +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
-        axis.title.y=element_text(size=9, angle = 90),
+        axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
-        axis.text=element_text(size=9)) +
+        axis.text=element_text(size=9, angle = 90)) +
   theme(legend.position="right") 
 a
