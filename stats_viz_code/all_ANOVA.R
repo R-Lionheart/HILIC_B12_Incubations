@@ -1,7 +1,36 @@
 library(tidyverse)
 options(scipen = 999)
 
-complete.BMISd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsAsFactors = FALSE) %>%
+makeLong <- function(df) {
+  colnames(df)[1] <- "Replicate.Name"
+  df.long <- pivot_longer(df, -Replicate.Name,
+               names_to = "Mass.Feature",
+               values_to = "Area.BMISd.Normd") %>%
+    select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
+  return(df.long)
+} 
+
+# BMISd normd
+BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+
+BMISd_1_0.2_long <- makeLong(BMISd_1_0.2_wide)
+BMISd_1_5_long <- makeLong(BMISd_1_5_wide)
+BMISd_2_0.2_long <- makeLong(BMISd_2_0.2_wide)
+BMISd_2_5_long <- makeLong(BMISd_2_5_wide)
+
+BMISD.normd <- BMISd_1_0.2_long %>%
+  rbind(BMISd_1_5_long) %>%
+  rbind(BMISd_2_0.2_long) %>%
+  rbind(BMISd_2_5_long)
+
+rm(list=ls(pattern="long|wide"))
+
+
+# Complete BMISd not normd
+BMISd.notnormd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = TRUE) %>%
@@ -23,7 +52,8 @@ complete.BMISd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsA
   drop_na()
 
 
-grouped.BMISd <- complete.BMISd %>%
+grouped.BMISd <- BMISd.notnormd %>%
+  left_join(BMISD.normd) %>%
   select(-Replicate.Name) %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(Avg.Area = mean(Adjusted.Area)) %>%
@@ -35,19 +65,18 @@ grouped.BMISd <- complete.BMISd %>%
 glimpse(grouped.BMISd)
 levels(grouped.BMISd$SampID)
 
+ggplot(grouped.BMISd, aes(x = Mass.Feature, y = Avg.Area, fill = SampID)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_blank())
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(grouped.BMISd, grouped.BMISd$Mass.Feature), function(i) {
   aov(lm(Adjusted.Area ~ SampID, data = i))
-}) 
+})
 AnovaListSummary <- lapply(AnovaList, function(i) {
   summary(i)
 })
-
-
-# Apply Tukey to dataframe and check significance
-#TukeyList <- lapply(AnovaList, function(x) TukeyHSD(x))
-
+  
 # Summarize ANOVA and create dataframe of significance
 AnovaDF <- as.data.frame(do.call(rbind, lapply(AnovaListSummary, function(x) {temp <- unlist(x)})))
 colnames(AnovaDF)[9] <- "AnovaP"
@@ -59,23 +88,20 @@ AnovaDF <- AnovaDF %>%
   select(Mass.Feature, AnovaP, AnovaQ, AnovaSig) %>%
   arrange(Mass.Feature)
 
-
 toPlot <- grouped.BMISd %>%
-  left_join(AnovaDF) 
-  # group_by(Mass.Feature, SampID) %>%
-  # mutate(AveSmp = mean(Area.BMISd.Normd, na.rm = TRUE)) %>%
-  # select(Mass.Feature, SampID, AveSmp, AnovaSig) %>%
-  # unique() %>%
-  # left_join(TukeyDF) %>%
-  # left_join(Analysis) %>%
-  # arrange(Mass.Feature) %>%
-  # drop_na() %>%
-  # group_by(Mass.Feature) %>%
-  # mutate(TotalAve = mean(AveSmp))
+  left_join(AnovaDF) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(AveSmp = mean(Area.BMISd.Normd, na.rm = TRUE)) %>%
+  select(Mass.Feature, SampID, AveSmp, AnovaSig) %>%
+  unique() %>%
+  arrange(Mass.Feature) %>%
+  drop_na() %>%
+  group_by(Mass.Feature) %>%
+  mutate(TotalAve = mean(AveSmp))
 
 
-a <- ggplot(toPlot, aes(x = Mass.Feature, y = Avg.Area, fill = AnovaSig)) +
-  geom_point(size = 3, shape = 21) +  
+a <- ggplot(toPlot, aes(x = Mass.Feature, y = AveSmp, fill = AnovaSig)) +
+  geom_point(size = 2, shape = 21) +  
   scale_fill_manual(values = c("grey", "royalblue4")) +
   ggtitle("TEST") +
   theme(plot.title = element_text(size = 15),

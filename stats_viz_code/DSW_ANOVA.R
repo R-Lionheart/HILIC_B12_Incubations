@@ -5,8 +5,9 @@ options(scipen = 999)
 # Specific size/eddy
 
 # Set treatment filters
-myTreatments <- c("IL2WBT|IL2noBT|IL2Control")
-myTitle <- "Anticyclonic Eddy (#2), 5um size fraction"
+myTreatments <- c("IL1DSW|IL1noBT|IL1Control")
+myTitle <- "Anticyclonic Eddy (#1), 5um size fraction"
+myTreatmentTitle <- "Deep Sea Water v no B12"
 myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
 
 BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
@@ -24,9 +25,9 @@ BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsA
 BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
 
 # Assign names
-BMISd.long <- BMISd_2_5_notnormd
-  
-BMISd.wide <- BMISd_2_5_wide
+BMISd.long <- BMISd_1_5_notnormd
+
+BMISd.wide <- BMISd_1_5_wide
 colnames(BMISd.wide)[1] <- "Replicate.Name"
 BMISd.wide.notnormd <- BMISd.long %>%
   pivot_wider(names_from = Replicate.Name, 
@@ -35,8 +36,8 @@ BMISd.wide.notnormd <- BMISd.long %>%
 # Change all sets to long format
 BMISd.long.normd <- BMISd.wide %>%
   pivot_longer(-Replicate.Name,
-    names_to = "Mass.Feature",
-    values_to = "Area.BMISd.Normd") %>%
+               names_to = "Mass.Feature",
+               values_to = "Area.BMISd.Normd") %>%
   select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
 
 BMISd.wide.normd <- BMISd.long.normd %>%
@@ -57,13 +58,14 @@ FC.test <- full.BMISd %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(Average.Area = mean(Adjusted.Area, na.rm = TRUE)) %>%
   select(Mass.Feature, SampID, Average.Area) %>%
+  filter(Average.Area > 10000000) %>% # Filter out small peaks for visibility
   unique()
 
 FC.plot <- ggplot(FC.test, aes(x = Mass.Feature, y = Average.Area)) +
   geom_bar(position = "dodge", stat="identity", aes(fill = SampID)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   ggtitle(paste("Areas between samples:", myTitle))
-FC.plot 
+#FC.plot 
 
 # Start analysis ----------------------------------------------------------
 
@@ -76,18 +78,18 @@ myTreat2 <- mySamps[grepl(myTreatmentsSplit[2], mySamps)] # Treat2 = noB12
 myTreat3 <- mySamps[grepl(myTreatmentsSplit[3], mySamps)] # Treat3 = Control
 myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
 
-#col1 <- paste(myTreatmentsSplit[1], "_", myTreatmentsSplit[2], "_FC", sep = "") 
-
 Analysis <- Analysis %>%
   mutate(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[2], "_FC", sep = "") := 
-           log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% #Wbt/nobt
+           log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% 
   mutate(!!paste(myTreatmentsSplit[2], "v", myTreatmentsSplit[3], "_FC", sep = "") := 
-           log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% #nobt/control
+           log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% 
   mutate(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[3], "_FC", sep = "") :=
-           log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>% #Wbt/Control
-  select(matches("Mass|FC"))
-  
-  
+           log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>%
+  select(matches("Mass|FC")) %>%
+  mutate(PlotA_Yaxis = .[[2]] * -1,
+         PlotB_Yaxis = .[[3]] * -1,
+         PlotC_Yaxis = .[[4]] * -1)
+
 # Set up data for ANOVA
 AnovaB12 <- full.BMISd %>%
   select(-Replicate.Name) %>%
@@ -105,10 +107,7 @@ AnovaB12 <- full.BMISd %>%
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
-  theme(axis.text.x = element_blank()) +
-  geom_jitter(shape = 15,
-              color = "steelblue",
-              position = position_jitter(0.21))
+  theme(axis.text.x = element_blank()) 
 #Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
@@ -171,24 +170,23 @@ toPlot <- full.BMISd %>%
   group_by(Mass.Feature) %>%
   mutate(TotalAve = mean(AveSmp))
 
-
-a <- ggplot(toPlot, aes(x = TotalAve, y = -1*(IL1WBTvIL1noBT_FC), fill = IL1WBTvIL1noBT_Sig,
-                          label = Mass.Feature)) +
+a <- ggplot(toPlot, aes_string(x = names(toPlot)[18], y = (names(toPlot)[14]), fill = names(toPlot)[9],
+                        label = names(toPlot)[1])) +
   geom_point(size = 3, shape = 21, stroke=0) +  
   scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
   scale_alpha_manual(values = c(1, 0.7, 0.5)) +
-  ggtitle(paste("With and Without B12:", myTitle)) +
+  ggtitle(paste(myTreatmentTitle, myTitle)) +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
         axis.text=element_text(size=9)) +
-  labs(x="Average normalized peak size", y=expression(paste(Log[2], "WithB12/noB12", sep = ""))) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], myTreatmentTitle, sep = ""))) +
   theme(legend.position="right") +
-  geom_text(data = subset(toPlot, IL1WBTvIL1noBT_Sig == "Significant"), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE)
+  geom_text(data = subset(toPlot, toPlot[9] == "Significant"), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE)
 a
 
-b <- ggplot(toPlot, aes(x = TotalAve, y = -1*(IL1noBTvIL1Control_FC), fill = IL1noBTvIL1Control_Sig,
+b <- ggplot(toPlot, aes(x = TotalAve, y = -1*(as.numeric(names(toPlot)[12])), fill = IL1noBTvIL1Control_Sig,
                         label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +  
   scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
