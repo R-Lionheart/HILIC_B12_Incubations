@@ -1,6 +1,7 @@
 library(tidyverse)
 options(scipen = 999)
 
+
 # Upload all required files
 BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature:Adjusted.Area)
@@ -12,11 +13,11 @@ BMISd_2_5_notnormd <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", strin
   select(Mass.Feature:Adjusted.Area)
 
 # Set user conditions
-Condition1 <- "IL2noBT"
+Condition1 <- "IL1WBT"
 Condition2 <- "IL2Control"
 SigValue <- "pvalue" # alternative is "qvalue"
-file.pattern <- "Eddy2_5um"
-BMISd <- BMISd_2_5_notnormd
+file.pattern <- "Cyclonic_5um"
+BMISd <- BMISd_2_0.2_notnormd
 
 currentDate <- Sys.Date()
 
@@ -45,18 +46,29 @@ WBMISd <- WBMISd %>%
 
 FC_Yaxis <- WBMISd %>%
   select(Mass.Feature, contains("FC")) %>%
-  mutate(FC_Yaxis_mod = .[[2]] * -1)
+  mutate(FC_Yaxis = .[[2]])
 
 dataToPlot <- WBMISd %>%
   left_join(FC_Yaxis) %>%
   select(Mass.Feature, Significance, AveSmp, contains(Condition1), contains(Condition2), contains("FC"))
 
 
+## Sanity Check
+sanitycheck <- BMISd_1_0.2_notnormd %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
+  filter(str_detect(SampID, "DSW|Control")) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(myave = mean(Adjusted.Area, na.rm = TRUE))
+  
+# ggplot(sanitycheck, aes(Mass.Feature, myave, fill = SampID)) +
+#   geom_bar(stat = "identity", position = "dodge")
+
+
 # Condition1 v Condition 2 Significance
-a <- ggplot(dataToPlot, aes(x = AveSmp, y = FC_Yaxis_mod, fill = Significance, 
+a <- ggplot(dataToPlot, aes(x = AveSmp, y = FC_Yaxis, fill = Significance, 
                           label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +
-  scale_fill_manual(values = c("grey", "royalblue4", "lightskyblue3")) +
+  scale_fill_manual(values = c("lightskyblue3", "grey", "royalblue")) +
   scale_alpha_manual(values = c(1, 0.5, 0.7)) +
   scale_x_log10() +
   ggtitle(paste(file.pattern, Condition1, "v", Condition2)) +
