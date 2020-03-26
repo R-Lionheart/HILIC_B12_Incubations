@@ -2,6 +2,7 @@ source("src/B12_Functions.R")
 source("src/biostats.R")
 options(scipen = 999)
 
+library(goeveg)
 library(tidyverse) 
 library(vegan)
 
@@ -78,7 +79,7 @@ all.hilics <- ggplot(all.hilics.data, aes(x = reorder(Mass.Feature, -Total.Avera
                                           y = Total.Average)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-print(all.hilics)
+#print(all.hilics)
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_fixed %>%
@@ -141,13 +142,12 @@ write.csv(Iso_wide_normalizedT, paste("data_processed/IsoLagran", EddySize, "_no
 # Visualize scree plot of potential ordination axes
 dimcheckMDS(Iso_wide_normalizedT, distance="euclidean", k=10, autotransform=FALSE, trymax=20)
 
-
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", 
-                                k = 3, autotransform = FALSE, trymax = 100)
+                                k = 2, autotransform = FALSE, trymax = 100)
+stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
 
 # Check stressplots, scree diagrams --------------------------------------------------------------
 
-#stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
 Iso_wide_nmds$stress # Add a flag if this is high?
 #nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
 
@@ -183,10 +183,10 @@ myvec.sp.df$species<-rownames(myvec.sp.df)
 
 ggplot(data = myNMDS, aes(MDS1, MDS2)) + 
   #geom_point(aes(data = MyMeta, color = MyMeta$amt)) +
-  geom_segment(data=myvec.sp.df,aes(x=0,xend=MDS1,y=0,yend=MDS2),
+  geom_segment(data=myvec.sp.df, aes(x=0, xend=MDS1, y=0, yend=MDS2),
                arrow = arrow(length = unit(0.5, "cm")),
                colour="grey", inherit_aes=FALSE) + 
-  geom_text(data=myvec.sp.df,aes(x=MDS1,y=MDS2,label=species),size=3) + 
+  geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) + 
   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
   
 ordiplot(mysol, choices = c(1, 2), type="text", display="sites",

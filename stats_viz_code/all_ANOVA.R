@@ -30,7 +30,7 @@ rm(list=ls(pattern="long|wide"))
 
 
 # Complete BMISd not normd
-BMISd.notnormd <- read.csv("data_processed/BMIS_Output_2020-03-25.csv", stringsAsFactors = FALSE) %>%
+BMISd.notnormd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = TRUE) %>%
