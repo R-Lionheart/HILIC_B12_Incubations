@@ -1,5 +1,5 @@
 # Things to Return --------------------------------------------------------
-source("B12_Functions.R")
+source("src/B12_Functions.R")
 
 
 # IS_inspectPlot (plot to make sure there aren't any internal standards we should kick out)
@@ -38,12 +38,13 @@ HILIC.QC <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
   mutate(Replicate.Name = Replicate.Name %>%
            str_replace("-",".")) 
 
-## 10/9/2019 edit of duplicate removal here: specifically for making figures. Maybe keep?
-HILICS.duplicates <- IdentifyDuplicates(HILIC.QC)
+## 03/24/20 edit of duplicate removal here: specifically for making figures. Maybe keep?
+HILICS.duplicates <- IdentifyDuplicates(HILIC.QC) %>%
+  filter(!Metabolite.name == "Inosine")
 
 HILIC.QC <- HILIC.QC %>%
-  filter(!(Metabolite.name %in% HILICS.duplicates$Metabolite.name & Column == "HILICNeg"))
-
+  filter(!(Metabolite.name %in% HILICS.duplicates$Metabolite.name & Column == "HILICNeg")) %>%
+  filter(!(Metabolite.name == "Inosine" & Column == "HILICPos"))
 
 
 # Match QC'd HILIC data with Internal Standards list -----------------------------------------------------------------
@@ -75,7 +76,6 @@ HILIC.IS.data <- rbind(HILIC.IS.data, SampKey) %>%
 # HILIC.IS.data[] <- lapply(HILIC.IS.data, gsub, pattern = 'Neg|Pos', replacement = '')
 
 # Here is where we would hypothetically remove troublesome compounds.
-
 
 # Identify internal standards without an Area, i.e. any NA values.
 IS.Issues <- HILIC.IS.data[is.na(HILIC.IS.data$Area.with.QC), ]
@@ -232,9 +232,3 @@ csvFileName <- paste("data_processed/BMIS_Output_", currentDate, ".csv", sep = "
 write.csv(HILIC.BMIS_normalizedData, csvFileName, row.names = FALSE)
 
 rm(list = ls())
-
-
-
-
-
-

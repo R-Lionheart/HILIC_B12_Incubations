@@ -1,4 +1,4 @@
-source("B12_Functions.R")
+source("src/B12_Functions.R")
 
 # Import all MSDial files --------------------------------------------------
 

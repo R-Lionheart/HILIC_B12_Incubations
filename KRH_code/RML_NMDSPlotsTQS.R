@@ -4,14 +4,14 @@ library("vegan")
 
 # Get wide data with stats
 
-TPTQSdatAll <- read.csv("KRH_info/Filtered_Wide_Combined_wStats.csv")
+TPTQSdatAll <- read.csv("KRH_version/Filtered_Wide_Combined_wStats.csv")
 TPTQSdat <- TPTQSdatAll %>% 
   select(LB12HL_AB:RB12LL_EF) %>% 
   as.data.frame()
 
 row.names(TPTQSdat) <- TPTQSdatAll$Compound.Name
 TPTQSdat <- t(TPTQSdat)
-TPTreatDat <- read.csv("KRH_info/Treatment_data.csv", header=TRUE, row.names=1)
+TPTreatDat <- read.csv("KRH_version/Treatment_data.csv", header=TRUE, row.names=1)
 
 
 #Standarize the data
