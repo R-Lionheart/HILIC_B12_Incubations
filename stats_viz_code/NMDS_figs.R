@@ -109,10 +109,9 @@ write.csv(IsoLagran2_5, "data_processed/IsoLagran2_5_notnormd.csv")
 
 rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
 
-# Treatment data info --------------------------------------------------------------------------
-# Set eddy and size fraction
-Dataset <- IsoLagran2_5
-EddySize <- "2, Anticyclonic_5um"
+# Set data, assign treatment info ------------------------------------------------------------------------
+Dataset <- IsoLagran1_5
+EddySize <- "1, Cyclonic_5um"
 
 Treatment <- Dataset %>%
   ungroup() %>%
@@ -130,77 +129,83 @@ Treatment <- Dataset %>%
                                                                ifelse(str_detect(Supergroup, "DMB"), "DMB", "noB12"))))))) %>%
   select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
 
+
 # Transform to wide for analysis -----------------------------------------------------------------
 Iso_wide <- makeWide(Dataset)
 Iso_wide[is.na(Iso_wide)] <- 1000
 Iso_wideT <- t(Iso_wide)
 
-# Standardize + NMDS transformations --------------------------------------------------------------
+# Standardize + NMDS --------------------------------------------------------------
 Iso_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
 write.csv(Iso_wide_normalizedT, paste("data_processed/IsoLagran", EddySize, "_normd.csv", sep = ""))
 
 # Visualize scree plot of potential ordination axes
-dimcheckMDS(Iso_wide_normalizedT, distance="euclidean", k=10, autotransform=FALSE, trymax=20)
+#dimcheckMDS(Iso_wide_normalizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
 
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", 
-                                k = 2, autotransform = FALSE, trymax = 100)
-stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
+                                k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
+#vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
 
-# Check stressplots, scree diagrams --------------------------------------------------------------
-
+# Check stressplots, scree diagrams
 Iso_wide_nmds$stress # Add a flag if this is high?
 #nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
 
-# Experiments with species scores
-envfit(Iso_wide_nmds, Iso_wide_normalizedT) 
-scores(Iso_wide_nmds)
-
-
-
-plot(Iso_wide_nmds$points,type="n")
-text(Iso_wide_nmds,labels=row.names(Iso_wideT))
-
-# isodf <- as.data.frame(Iso_wideT)
-# plot(Iso_wide_nmds$points,type="n")
-# points(Iso_wide_nmds,cex=Iso_wide$`171023_Smp_IL2Control5um_1`)
-
-Iso_pointlocation <- Iso_wide_nmds[['points']] %>% as.data.frame() %>% cbind(Treatment)
-
+# Assign treatment to points ----------------------------------------------
+Iso_pointlocation <- Iso_wide_nmds$points %>% as.data.frame() %>% cbind(Treatment)
 Iso_pointlocation$Treatment.Status <- factor(Iso_pointlocation$Treatment.Status,
-                              levels = c("TimeZero", "Control", "DMB", "B12", "DeepSeaWater",
-                                         "DMBnoB12", "noB12"))
+                                             levels = c("TimeZero", "Control", "DMB", "B12", "DeepSeaWater",
+                                                        "DMBnoB12", "noB12"))
+
+# Samples in ordinate space -----------------------------------------------
+# Plot 2 dimensional NMDS configuration.
+plot(Iso_wide_nmds$points, type="n") # plotting the scores(iso_wide_nmds)
+text(Iso_wide_nmds,labels=row.names(Iso_wideT), cex = 1)
+title(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+
+# See how particular compound changes with location
+iso_df <- as.data.frame(Iso_wide_normalizedT)
+plot(scores(Iso_wide_nmds), type = "p")
+points(Iso_wide_nmds, cex = iso_df$Ectoine, col = "red")
+title(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+
+
+# Experiments with species scores, not very useful
+envfit(Iso_wide_nmds, Iso_wide_normalizedT) 
+test <- envfit(Iso_wide_normalizedT ~ Iso_pointlocation$Supergroup, data = iso_df, perm=1000) #???
+
+scores(Iso_wide_nmds) # this is the same as the $points call, species scores do not appear to exist
 
 ##############################
 # Quick vectors
-mysol <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", 
-                        k = 2, autotransform = FALSE, trymax = 100)
+myNMDS = data.frame(MDS1 = Iso_wide_nmds$points[,1], MDS2 = Iso_wide_nmds$points[,2], 
+                    MDS3 = Iso_wide_nmds$points[,3]) #originally had just 2
 
-myNMDS = data.frame(MDS1 = mysol$points[,1], MDS2 = mysol$points[,2])
-
-myvec.sp<-envfit(mysol$points, Iso_wide_normalizedT, perm=1000)
-myvec.sp.df<-as.data.frame(myvec.sp$vectors$arrows*sqrt(myvec.sp$vectors$r))
+myvec.sp <- envfit(Iso_wide_nmds$points, Iso_wide_normalizedT, perm=1000)
+myvec.sp.df <- as.data.frame(myvec.sp$vectors$arrows*sqrt(myvec.sp$vectors$r))
 myvec.sp.df$species<-rownames(myvec.sp.df)
 
+myNMDS2 <- myNMDS %>%
+  rownames_to_column()
+# Vectors and ordiplots - messy due to scale differences
 ggplot(data = myNMDS, aes(MDS1, MDS2)) + 
-  #geom_point(aes(data = MyMeta, color = MyMeta$amt)) +
+  geom_point() + # comment out for neatness
   geom_segment(data=myvec.sp.df, aes(x=0, xend=MDS1, y=0, yend=MDS2),
-               arrow = arrow(length = unit(0.5, "cm")),
-               colour="grey", inherit_aes=FALSE) + 
-  geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) + 
+               #arrow = arrow(),
+               colour="grey") +
+  geom_text(data=myNMDS2, aes(x=MDS1, y=MDS2, label=rowname), size=3) +
+  #geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) +
   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
-  
-ordiplot(mysol, choices = c(1, 2), type="text", display="sites",
-         xlab="Axis1", ylab="Axis2")
-plot(myvec.sp, p.max=.01, col="blue")
 
 
+# NMDS combined with clustering
 mysol.d <- vegdist(Iso_wide_normalizedT, "euclidean")
-mysitecl.ward<-hclust(mysol.d,method='ward.D')
-mysitecl.class<-cutree(mysitecl.ward, k=4)
-groups<-levels(factor(mysitecl.class))
-mysite.sc <- scores(mysol)
+mysitecl.ward <- hclust(mysol.d,method='ward.D')
+mysitecl.class <- cutree(mysitecl.ward, k=3)
+groups <- levels(factor(mysitecl.class))
+mysite.sc <- scores(myNMDS)
 
-my.p <- ordiplot(mysite.sc, type="n", main="NMDS combined with clustering")
+my.p <- ordiplot(mysite.sc, type="n", 
+                 main=paste("Incubation Experiments: Eddy", EddySize, sep = " "))
 for (i in 1:length(groups))
 {
   points(mysite.sc[mysitecl.class==i,], pch=(14+i), cex=2, col=i+1)
@@ -211,43 +216,67 @@ ordicluster(my.p, mysitecl.ward, col="dark grey")
 legend("bottomleft", paste("Group", c(1:length(groups))),
        pch=14+c(1:length(groups)), col=1+c(1:length(groups)), pt.cex=2)
 
-
+# Ordiplot with hulls CURRENTLY NOT WORKING
 ordiplot(Iso_wide_nmds, type="n")
-ordihull(Iso_wide_nmds, groups=Treatment$Treatment.Status, draw="polygon",col="grey90",label=F)
+ordihull(Iso_wide_nmds, groups=Treatment$Treatment.Status, draw="polygon",col="grey90",label=T)
 orditorp(Iso_wide_nmds, display="sites",
-         col=c(rep("red",3), rep("orange",3), rep("green"), 3),
-         air=0.01,cex=1.25)
+         air=0.01, cex=0.5)
 
-
-colors=c(rep("red",5),rep("blue",5))
-ordiplot(Iso_wide_nmds,type="n")
-#Plot convex hulls with colors based on treatment
+# Plot convex hulls with colors based on treatment NOT WORKING FOR SAME REASON as above
+colors=c(rep("red",5), rep("blue",5))
+ordiplot(Iso_wide_nmds, type="n")
 for(i in unique(Treatment$Treatment.Status)) {
-  ordihull(Iso_wide_nmds$point[grep(i,Treatment$Treatment.Status),],draw="polygon",
-           groups=Treatment$Treatment.Status[Treatment$Treatment.Status==i],col=colors[grep(i,Treatment$Treatment.Status)],label=F) } 
-orditorp(Iso_wide_nmds,display="species",col="red",air=0.01)
-orditorp(Iso_wide_nmds,display="sites",col=c(rep("green",5),
-                                            rep("blue",5)),air=0.01,cex=1.25)
+  ordihull(Iso_wide_nmds$point[grep(i,Treatment$Treatment.Status),], draw="polygon",
+           groups=Treatment$Treatment.Status[Treatment$Treatment.Status==i],
+           col=colors[grep(i, Treatment$Treatment.Status)], label=T)} 
+#orditorp(Iso_wide_nmds, display="species", col="red", air=0.01)
+orditorp(Iso_wide_nmds, display="sites", air=0.01, cex=1.25)
+
+
 ##############################
-
-
 # NMDS graph --------------------------------------------------------------
 Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
                                                   shape = Treatment.Status, group = Supergroup)) +
   geom_polygon(fill = NA, color = "black") +
   geom_point(size = 3) + 
   scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
-   geom_text(aes(label = Treatment.Status), 
-             vjust=-0.25, size = 2.5) +
+  geom_text(aes(label = Treatment.Status), 
+             vjust=-0.25, size = 3) +
   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
   theme(plot.title = element_text(size = 15),
         axis.title.x = element_text(size = 8),
         axis.title.y = element_text(size = 8),
-        axis.text = element_text(size = 8))+
+        axis.text = element_text(size = 8),
+        legend.text=element_text(size = 20)) +
   labs(y = "Axis 2") +
   theme(legend.position = "left")
 Isograph
 
+##############################
 
-# require(gridExtra)
-# grid.arrange(Isograph_1_0.2, Isograph_1_5, Isograph_2_0.2, Isograph_2_5, ncol=2)
+test <- Iso_pointlocation %>%
+  cbind(c(rep("gray58",3), 
+          rep("mediumorchid1", 3), 
+          rep("darkorchid4", 3), 
+          rep("darkblue", 3),
+          rep("springgreen3", 3),
+          rep("darkgreen", 3),
+          rep("gray40", 3))) %>%
+  rename(mycolors = 8)
+
+Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
+                                                 shape = Treatment.Status, group = Supergroup)) +
+  geom_polygon(fill = factor(test$mycolors)) +
+  geom_point(size = 3) + 
+  scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
+  ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
+  geom_text(aes(label = Treatment.Status), 
+            vjust=-0.25, size = 5) +
+  theme(plot.title = element_text(size = 15),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        axis.text = element_text(size = 8),
+        legend.text=element_text(size = 20)) +
+  labs(y = "Axis 2") +
+  theme(legend.position = "left")
+Isograph

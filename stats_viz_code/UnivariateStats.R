@@ -18,12 +18,12 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL1WBT" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL1Control"
+Condition1 <- "IL2WBT5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL2Control5um"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Cyclonic_0.2um" # will be used as a search ID and title for graphs 
+file.pattern <- "Anticyclonic_5um" # will be used as a search ID and title for graphs 
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- BMISd_1_0.2_notnormd # Assign correct dataframe for analysis
+BMISd <- BMISd_2_5_notnormd # Assign correct dataframe for analysis
 
 currentDate <- Sys.Date()
 
@@ -54,8 +54,9 @@ WBMISd$AveSmp <- rowMeans(WBMISd[, c(myTreat1, myTreat2)])
 # Organize columns and assign significance
 WBMISd <- WBMISd %>%
   select(Mass.Feature, contains(SigValue), everything()) %>%
-  mutate(Significance = ifelse(.[[2]] < SigNumber, "Significant",
-                        ifelse(between(.[[2]], SigNumber, 0.5), "CloseSig", "NotSig")))
+  # mutate(Significance = ifelse(.[[2]] < SigNumber, "Significant",
+  #                       ifelse(between(.[[2]], SigNumber, 0.5), "CloseSig", "NotSig")))
+  mutate(Significance = ifelse(.[[2]] < SigNumber, "Significant", "NotSig"))
 
 # Adjust fold change axis
 FC_Yaxis <- WBMISd %>%
@@ -76,31 +77,32 @@ sanitycheck <- BMISd %>%
   mutate(myave = mean(Adjusted.Area, na.rm = TRUE))
   
 ggplot(sanitycheck, aes(Mass.Feature, myave, fill = SampID)) +
-  geom_bar(stat = "identity", position = "dodge") + 
-  theme(axis.text.x = element_text(angle = 90))
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, size = 11)) +
+  ggtitle(paste(file.pattern, Condition1, "v", Condition2))
 
 
 # Condition1 v Condition 2 Significance
 SignificancePlot <- ggplot(dataToPlot, aes(x = AveSmp, y = FC_Yaxis, fill = Significance, 
                           label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +
-  scale_fill_manual(values = c("lightskyblue3", "grey", "royalblue")) +
-  scale_alpha_manual(values = c(1, 0.5, 0.7)) +
+  scale_fill_manual(values = c("grey", "royalblue")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
   scale_x_log10() +
   ggtitle(paste(file.pattern, Condition1, "v", Condition2)) +
-  theme(plot.title = element_text(size = 15),
+  theme(plot.title = element_text(size = 25),
         legend.position="left",
-        axis.title.x=element_text(size=8),
-        axis.title.y=element_text(size=8),
-        axis.text=element_text(size=8)) +
+        axis.title.x=element_text(size=10),
+        axis.title.y=element_text(size=10),
+        axis.text=element_text(size=10)) +
   labs(x="Average peak size", y=paste("Log2", Condition1, "/", Condition2, sep = "")) +
   theme(legend.position="right") +
   scale_y_continuous(limits=c(-3, 3)) +
   geom_text(data = subset(dataToPlot, Significance == "Significant"),
-            hjust = "inward", nudge_x = 0.05, check_overlap = TRUE) +
-  geom_text(data = subset(dataToPlot, Significance == "CloseSig"),
-            hjust = "inward", nudge_x = 0.05, check_overlap = TRUE,
-            color = "lightskyblue3" )
+            hjust = "inward", nudge_x = 0.05, check_overlap = TRUE, size = 6) 
+  # geom_text(data = subset(dataToPlot, Significance == "CloseSig"),
+  #           hjust = "inward", nudge_x = 0.05, check_overlap = TRUE,
+  #           color = "lightskyblue3" )
 SignificancePlot
 
 figureFileName <- paste("Figure_", file.pattern, "_", 

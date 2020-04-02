@@ -103,7 +103,7 @@ toPlot <- grouped.BMISd %>%
 a <- ggplot(toPlot, aes(x = Mass.Feature, y = AveSmp, fill = AnovaSig)) +
   geom_point(size = 2, shape = 21) +  
   scale_fill_manual(values = c("grey", "royalblue4")) +
-  ggtitle("TEST") +
+  ggtitle("oops") +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),

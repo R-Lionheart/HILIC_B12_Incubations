@@ -98,9 +98,6 @@ AnovaB12 <- full.BMISd %>%
   arrange(Mass.Feature) %>%
   select(-Count) 
 
-#glimpse(AnovaB12) #Use for the future
-#levels(AnovaB12$SampID)
-
 # Graph normalized areas for reference
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
@@ -108,8 +105,9 @@ Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = Sam
   theme(axis.text.x = element_blank()) +
   geom_jitter(shape = 15,
               color = "steelblue",
-              position = position_jitter(0.21))
-#Normd.Areas
+              position = position_jitter(0.21)) +
+  ggtitle(myTitle) 
+Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
@@ -140,9 +138,12 @@ AnovaDF <- AnovaDF %>%
 TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- unlist(x)}))) %>%
   select(SampID10:12) %>%
   rownames_to_column("Mass.Feature") %>%
-  mutate(Sig_1 = ifelse(SampID10 < 0.1, "Significant", ifelse(between(SampID10, 0.1, 0.5), "CloseSig", "NotSig")),
-         Sig_2 = ifelse(SampID11 < 0.1, "Significant", ifelse(between(SampID11, 0.1, 0.5), "CloseSig", "NotSig")),
-         Sig_3 = ifelse(SampID12 < 0.1, "Significant", ifelse(between(SampID12, 0.1, 0.5), "CloseSig", "NotSig"))) %>%
+  # mutate(Sig_1 = ifelse(SampID10 < 0.1, "Significant", ifelse(between(SampID10, 0.1, 0.5), "CloseSig", "NotSig")),
+  #        Sig_2 = ifelse(SampID11 < 0.1, "Significant", ifelse(between(SampID11, 0.1, 0.5), "CloseSig", "NotSig")),
+  #        Sig_3 = ifelse(SampID12 < 0.1, "Significant", ifelse(between(SampID12, 0.1, 0.5), "CloseSig", "NotSig"))) %>%
+  mutate(Sig_1 = ifelse(SampID10 < 0.1, "Significant", "NotSig"),
+         Sig_2 = ifelse(SampID11 < 0.1, "Significant", "NotSig"),
+         Sig_3 = ifelse(SampID12 < 0.1, "Significant", "NotSig")) %>%
   rename(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[2], sep = "") := SampID10,
          !!paste(myTreatmentsSplit[2], "v", myTreatmentsSplit[3], sep = "") := SampID11,
          !!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[3], sep = "") := SampID12) %>%
@@ -175,8 +176,8 @@ toPlot <- full.BMISd %>%
 a <- ggplot(toPlot, aes(x = TotalAve, y = -1*(IL1WBTvIL1noBT_FC), fill = IL1WBTvIL1noBT_Sig,
                           label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +  
-  scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
-  scale_alpha_manual(values = c(1, 0.7, 0.5)) +
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
   ggtitle(paste("With and Without B12:", myTitle)) +
   theme(plot.title = element_text(size = 15),
         legend.position="none",

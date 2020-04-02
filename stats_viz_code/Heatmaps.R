@@ -15,7 +15,7 @@ data_2_0.2 <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", check.names = 
 data_2_5 <- read.csv("data_processed/IsoLagran2_5_normd.csv", check.names = FALSE, stringsAsFactors = FALSE)
 
 # HEATMAPS -------------------------------------------------------------------
-data <- data_1_0.2
+data <- data_2_5
 colnames(data)[1] <- "Replicate.Name"
 data2t <- t(data)
 colnames(data2t) <- as.character(unlist(data2t[1,]))
@@ -70,7 +70,7 @@ test.heatmap_2_5 <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID
         axis.text.y = element_text(size = 10),
         strip.text = element_text(size = 10)) +
   scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
-  ggtitle("B12 HILIC Incubation: IsoLagran 1 0.2um") 
+  ggtitle("B12 HILIC Incubation: Antiyclonic Eddy 5um") 
 print(test.heatmap_2_5)
 
 require(gridExtra)

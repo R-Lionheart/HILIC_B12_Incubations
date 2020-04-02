@@ -100,15 +100,23 @@ AnovaB12 <- full.BMISd %>%
   arrange(Mass.Feature) %>%
   select(-Count) 
 
-#glimpse(AnovaB12) #Use for the future
-#levels(AnovaB12$SampID)
+testdf <- AnovaB12 %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(Averages = mean(Area.BMISd.Normd)) %>%
+  filter(str_detect(SampID, "noBT")) %>%
+  arrange(desc(Averages)) 
+
+mylevels <- print(unique(testdf$Mass.Feature))
+AnovaB12$Mass.Feature = factor(AnovaB12$Mass.Feature, levels = mylevels)
+
 
 # Graph normalized areas for reference
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
-  theme(axis.text.x = element_blank()) 
-#Normd.Areas
+  theme(axis.text.x = element_blank())  +
+  ggtitle(paste("Normalized Area:", myTitle))
+Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
