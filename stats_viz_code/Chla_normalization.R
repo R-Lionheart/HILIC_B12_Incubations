@@ -83,16 +83,25 @@ Chlorophyll_fixed <- Chlorophyll %>%
                                  "WBT-2_IL1" = "171009_Smp_IL1WBT5um_2",
                                  "WBT-2_IL2" = "171009_Smp_IL2WBT5um_2",
                                  "WBT-3_IL1" = "171009_Smp_IL1WBT5um_3",
-                                 "WBT-3_IL2" = "171009_Smp_IL2WBT5um_3"))
+                                 "WBT-3_IL2" = "171009_Smp_IL2WBT5um_3")) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+  select(SampID, replicate, Chla) %>%
+  unite(SampID, replicate, col = "Replicate.Name")
+
+# Fix BMISd names to match ------------------------------------------------------------
+BMISd_fixed <- BMISd %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+  select(-c("one", "two")) %>%
+  unite(SampID, replicate, col = "Replicate.Name")
 
 # Normalize to chlorophyll ------------------------------------------------------------
 BMISd$Adjusted.Area <- as.double(BMISd$Adjusted.Area )
 
 Complete.set <- Chlorophyll_fixed %>%
   select(Replicate.Name, Chla) %>%
-  left_join(BMISd) %>%
+  left_join(BMISd_fixed) %>%
   mutate(Chla = as.numeric(Chla))
-Complete.set[Complete.set==""]<-NA
+Complete.set[Complete.set==""] <- NA
 Complete.set$Chla <- as.double(Complete.set$Chla)
 Complete.set <- Complete.set %>%
   mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
@@ -139,10 +148,9 @@ dataToPlot <- WBMISd %>%
   left_join(FC_Yaxis) %>%
   select(Mass.Feature, Significance, AveSmp, contains(Condition1), contains(Condition2), contains("FC"))
 
-
 ## Sanity Check for fold change ratios
 sanitycheck <- Complete.set %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
+  separate(Replicate.Name, into = c("SampID", "replicate"), sep = ) %>%
   filter(SampID == Condition1 | SampID == Condition2) %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(myave = mean(Normalized.by.Chla, na.rm = TRUE))
