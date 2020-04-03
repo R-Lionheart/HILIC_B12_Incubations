@@ -76,8 +76,6 @@ myTreat2 <- mySamps[grepl(myTreatmentsSplit[2], mySamps)] # Treat2 = noB12
 myTreat3 <- mySamps[grepl(myTreatmentsSplit[3], mySamps)] # Treat3 = Control
 myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
 
-#col1 <- paste(myTreatmentsSplit[1], "_", myTreatmentsSplit[2], "_FC", sep = "") 
-
 Analysis <- Analysis %>%
   mutate(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[2], "_FC", sep = "") := 
            log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% #Wbt/nobt
