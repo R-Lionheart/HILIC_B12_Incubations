@@ -2,7 +2,7 @@ source("src/B12_Functions.R")
 source("src/biostats.R")
 options(scipen = 999)
 
-library(goeveg)
+#library(goeveg)
 library(tidyverse) 
 library(vegan)
 
@@ -75,11 +75,13 @@ all.hilics.data <- HILIC_fixed %>%
   mutate(Total.Average = mean(Adjusted.Area, na.rm = TRUE)) %>%
   select(Mass.Feature, Total.Average) %>%
   unique()
+
 all.hilics <- ggplot(all.hilics.data, aes(x = reorder(Mass.Feature, -Total.Average), 
                                           y = Total.Average)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 #print(all.hilics)
+
 
 # Filter out compounds that are missing too many peaks --------------------------------------------
 HILIC_filtered <- HILIC_fixed %>%
@@ -107,12 +109,47 @@ IsoLagran2_5 <- IsoLagran2 %>%
   filter(str_detect(Replicate.Name, "5um"))
 write.csv(IsoLagran2_5, "data_processed/IsoLagran2_5_notnormd.csv")
 
-rm(list = c("IsoLagran1", "IsoLagran2", "HILIC_fixed"))
+rm(list = c("IsoLagran1", "IsoLagran2"))
 
-# Set data, assign treatment info ------------------------------------------------------------------------
-Dataset <- IsoLagran1_5
-EddySize <- "1, Cyclonic_5um"
+# Set data ------------------------------------------------------------------------
+Dataset <- IsoLagran1_0.2
+EddySize <- "1, Cyclonic_0.2um"
+Treatments <- c("IL1Control", "IL1DSW")
 
+top.15 <- all.hilics.data %>%
+  arrange(desc(Total.Average)) %>%
+  head(15)
+stacked.hilics.data <- HILIC_fixed %>%
+  mutate(Full.Total = sum(Adjusted.Area, na.rm = TRUE)) %>%
+  filter(Mass.Feature %in% top.15$Mass.Feature) %>%
+  #filter(str_detect(Replicate.Name, Treatments)) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(My.Average = mean(Adjusted.Area, na.rm = TRUE)) %>%
+  mutate(Percent.Total = (My.Average / Full.Total)) %>%
+  select(Mass.Feature, SampID, My.Average, Percent.Total) %>%
+  unique()
+
+# 1_0.2
+stacked.hilics.data$SampID <- factor(stacked.hilics.data$SampID, levels = 
+        c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT", 
+         "IL2IT0", "IL2Control", "IL2DMB", "IL2WBT", "IL2DSW", "IL2DMBnoBT", "IL2noBT",
+         "IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um",
+         "IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
+
+ggplot(stacked.hilics.data, aes(fill=Mass.Feature, y=My.Average, x=SampID)) + 
+  geom_bar(position="stack", stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, size = 15, vjust = .55),
+        legend.text=element_text(size=15)) +
+  ggtitle("Top 15 Most Abundant Compounds")
+
+ggplot(stacked.hilics.data, aes(fill=Mass.Feature, y=Percent.Total, x=SampID)) + 
+  geom_bar(position="fill", stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, size = 15, vjust = .55),
+        legend.text = element_text(size = 15)) +
+  ggtitle("Top 15 Most Abundant Compounds: Percentages")
+
+# Assign treatment info ------------------------------------------------------------------------
 Treatment <- Dataset %>%
   ungroup() %>%
   select(Replicate.Name) %>%
@@ -144,11 +181,11 @@ write.csv(Iso_wide_normalizedT, paste("data_processed/IsoLagran", EddySize, "_no
 
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", 
                                 k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
-#vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
+vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
 
 # Check stressplots, scree diagrams
 Iso_wide_nmds$stress # Add a flag if this is high?
-#nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
+nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
 
 # Assign treatment to points ----------------------------------------------
 Iso_pointlocation <- Iso_wide_nmds$points %>% as.data.frame() %>% cbind(Treatment)
@@ -200,7 +237,7 @@ ggplot(data = myNMDS, aes(MDS1, MDS2)) +
 # NMDS combined with clustering
 mysol.d <- vegdist(Iso_wide_normalizedT, "euclidean")
 mysitecl.ward <- hclust(mysol.d,method='ward.D')
-mysitecl.class <- cutree(mysitecl.ward, k=3)
+mysitecl.class <- cutree(mysitecl.ward, k=7) # customize k groups here
 groups <- levels(factor(mysitecl.class))
 mysite.sc <- scores(myNMDS)
 
@@ -232,51 +269,35 @@ for(i in unique(Treatment$Treatment.Status)) {
 #orditorp(Iso_wide_nmds, display="species", col="red", air=0.01)
 orditorp(Iso_wide_nmds, display="sites", air=0.01, cex=1.25)
 
+# NMDS graphs --------------------------------------------------------------
 
 ##############################
-# NMDS graph --------------------------------------------------------------
-Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
-                                                  shape = Treatment.Status, group = Supergroup)) +
-  geom_polygon(fill = NA, color = "black") +
-  geom_point(size = 3) + 
-  scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
-  geom_text(aes(label = Treatment.Status), 
-             vjust=-0.25, size = 3) +
-  ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
-  theme(plot.title = element_text(size = 15),
-        axis.title.x = element_text(size = 8),
-        axis.title.y = element_text(size = 8),
-        axis.text = element_text(size = 8),
-        legend.text=element_text(size = 20)) +
-  labs(y = "Axis 2") +
-  theme(legend.position = "left")
-Isograph
+# Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
+#                                                   shape = Treatment.Status, group = Supergroup)) +
+#   geom_polygon(fill = NA, color = "black") +
+#   geom_point(size = 3) + 
+#   scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
+#   geom_text(aes(label = Treatment.Status), 
+#              vjust=-0.25, size = 3) +
+#   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
+#   theme(plot.title = element_text(size = 15),
+#         axis.title.x = element_text(size = 8),
+#         axis.title.y = element_text(size = 8),
+#         axis.text = element_text(size = 8),
+#         legend.text=element_text(size = 20)) +
+#   labs(y = "Axis 2") +
+#   theme(legend.position = "left")
+# Isograph
 
 ##############################
 
-test <- Iso_pointlocation %>%
-  cbind(c(rep("gray58",3), 
-          rep("mediumorchid1", 3), 
-          rep("darkorchid4", 3), 
-          rep("darkblue", 3),
-          rep("springgreen3", 3),
-          rep("darkgreen", 3),
-          rep("gray40", 3))) %>%
-  rename(mycolors = 8)
-
-Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
-                                                 shape = Treatment.Status, group = Supergroup)) +
-  geom_polygon(fill = factor(test$mycolors)) +
-  geom_point(size = 3) + 
-  scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
-  ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
-  geom_text(aes(label = Treatment.Status), 
-            vjust=-0.25, size = 5) +
-  theme(plot.title = element_text(size = 15),
-        axis.title.x = element_text(size = 8),
-        axis.title.y = element_text(size = 8),
-        axis.text = element_text(size = 8),
-        legend.text=element_text(size = 20)) +
-  labs(y = "Axis 2") +
-  theme(legend.position = "left")
+Isograph <- ggplot() + 
+  geom_polygon(data=Iso_pointlocation, aes(x=MDS1, y=MDS2, fill=Treatment.Status, group=Treatment.Status), alpha=0.30) +
+  geom_text(data=Iso_pointlocation,aes(x=MDS1,y=MDS2,label=Treatment.Status), size=4) +  # add the species labels
+  #geom_point(data=Iso_pointlocation, aes(x=MDS1,y=MDS2,colour=Treatment.Status),size=4) + 
+  #coord_equal() +
+  #theme_bw() +
+  xlim(-20, 10) +
+  ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) 
 Isograph
+  

@@ -1,4 +1,3 @@
-# NOT RUN {
 require(graphics)
 
 # a 2-dimensional example

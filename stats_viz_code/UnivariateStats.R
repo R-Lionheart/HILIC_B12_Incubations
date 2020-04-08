@@ -18,7 +18,7 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL2WBT5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition1 <- "IL2DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
 Condition2 <- "IL2Control5um"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
 file.pattern <- "Anticyclonic_5um" # will be used as a search ID and title for graphs 
@@ -121,3 +121,9 @@ csvFileName <- paste("data_processed/UniVarSig_", file.pattern, "_",
 write.csv(toDownload, csvFileName, row.names = FALSE)
 
 
+# Get value table for lab presentation
+small.table <- dataToPlot %>%
+  select(1:3) %>%
+  filter(Significance == "Significant") %>%
+  arrange(AveSmp)
+  

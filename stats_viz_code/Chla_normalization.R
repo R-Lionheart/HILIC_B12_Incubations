@@ -1,6 +1,7 @@
 ## Data normalized to Chlorphyll-a
 
 library(tidyverse)
+library(vegan)
 options(scipen = 999)
 
 # Upload all required files
@@ -20,24 +21,25 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL2DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL2Control5um"
-ChlaEddy <- "IL2"
+Condition1 <- "IL1DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL1Control5um"
+ChlaEddy <- "IL1"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
 file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs 
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- BMISd_2_5_notnormd # Assign correct dataframe for analysis
+BMISd <- BMISd_1_5_notnormd # Assign correct dataframe for analysis.
 
 ## Upload and recode chlorophyll data
 Chlorophyll <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
   select(1:6) %>%
   rename(Filter.size = Filter..µm.,
          Chla = Chl.a..µg.L.) %>%
-  mutate(Date = as.character(Date)) %>%
-  mutate(Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
+  mutate(Date = as.character(Date),
+         Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
   filter(str_detect(Eddy, ChlaEddy)) %>%
   unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
-  filter(Filter.size == 5.0) 
+  filter(Filter.size == 5.0) %>%
+  mutate(Chla = as.numeric(Chla))
 
 # Fix Replicate Name labels -----------------------------------------------
 Chlorophyll_fixed <- Chlorophyll %>%
@@ -88,6 +90,7 @@ Chlorophyll_fixed <- Chlorophyll %>%
   select(SampID, replicate, Chla) %>%
   unite(SampID, replicate, col = "Replicate.Name")
 
+
 # Fix BMISd names to match ------------------------------------------------------------
 BMISd_fixed <- BMISd %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
@@ -95,22 +98,108 @@ BMISd_fixed <- BMISd %>%
   unite(SampID, replicate, col = "Replicate.Name")
 
 # Normalize to chlorophyll ------------------------------------------------------------
-BMISd$Adjusted.Area <- as.double(BMISd$Adjusted.Area )
-
-Complete.set <- Chlorophyll_fixed %>%
+complete.set <- Chlorophyll_fixed %>%
   select(Replicate.Name, Chla) %>%
   left_join(BMISd_fixed) %>%
   mutate(Chla = as.numeric(Chla))
-Complete.set[Complete.set==""] <- NA
-Complete.set$Chla <- as.double(Complete.set$Chla)
-Complete.set <- Complete.set %>%
+complete.set[complete.set==""] <- NA
+complete.set <- complete.set %>%
   mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
+  #####
+  filter(!Chla < 0) %>%
+  ##### 
   select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
   na.omit()
 
+#############################################################################################
+# Log normalize the chlorophyll-normalized data
+complete.set.wide <- complete.set %>%
+  tidyr::spread(Replicate.Name, Normalized.by.Chla) 
+complete.set.wide <- column_to_rownames(complete.set.wide, "Mass.Feature")
+complete.set.normalized <- decostand(complete.set.wide, method = "log", na.rm = TRUE)
 
-# KRH analysis ------------------------------------------------------------
-WBMISd <- Complete.set %>%
+final.set <- complete.set.normalized[complete.cases(complete.set.normalized), ]
+mySamps.normd <- colnames(complete.set.normalized)
+
+# Add Condition1 vs Condition2 stats
+myTreat1 <- mySamps.normd[grepl(Condition1, mySamps.normd)]
+myTreat2 <- mySamps.normd[grepl(Condition2, mySamps.normd)]
+myTreatsdf <- final.set[, c(myTreat1, myTreat2)]
+
+# Add a Pvalue for between the two treatments for QC
+final.set[, paste(Condition1, "v", Condition2, "_pvalue", sep = "")] <- apply(myTreatsdf, 1, function(x) 
+{t.test(x[myTreat1], x[myTreat2])$p.value}) 
+# Add a false-discovery-rate-corrected q value
+final.set[, paste(Condition1, "v", Condition2, "_qvalue", sep = "")] <- p.adjust(final.set[, ncol(final.set)], method = "fdr") 
+# Calculate fold change: Condition 1 / Condition 2
+final.set[, paste(Condition1, "v", Condition2, "_FC", sep = "")] <- log2(rowMeans(final.set[, myTreat1]) / rowMeans(final.set[, myTreat2]))
+# Calculate Condition 1 Average
+final.set[, paste(Condition1, "_Ave", sep = "")] <- rowMeans(final.set[, myTreat1])  
+# Calculate Condition 2 Average
+final.set[, paste(Condition2, "_Ave", sep = "")] <- rowMeans(final.set[, myTreat2])
+# Calculate complete row means
+final.set$AveSmp <- rowMeans(final.set[, c(myTreat1, myTreat2)])
+# Organize columns and assign significance
+final.set <- final.set %>%
+  rownames_to_column(var = "Mass.Feature") %>%
+  select(Mass.Feature, contains(SigValue), everything()) %>%
+  mutate(Significance = ifelse(.[[2]] < SigNumber, "Significant", "NotSig"))
+
+# Adjust fold change axis
+FC_Yaxis.normd <- final.set %>%
+  select(Mass.Feature, contains("FC")) %>%
+  mutate(FC_Yaxis = .[[2]]) # Multiply by -1 here to reverse y axis
+
+# Combine for plot.
+dataToPlot.normed <- final.set %>%
+  left_join(FC_Yaxis.normd) %>%
+  select(Mass.Feature, Significance, AveSmp, contains(Condition1), contains(Condition2), contains("FC"))
+
+# Normalized Sanity Check
+sanitycheck.normd <- myTreatsdf %>%
+  rownames_to_column(var = "Mass.Feature")
+sanitycheck.normd <- sanitycheck.normd %>%
+  pivot_longer(cols = starts_with("IL"),
+               names_to = "SampID",
+               values_to = "Area.BMISd.Normd") %>%
+  separate(SampID, into = c("SampID", "drop")) %>%
+  group_by(Mass.Feature, SampID) %>%
+  mutate(Normalized.Average = mean(Area.BMISd.Normd)) %>%
+  select(-c("drop", "Area.BMISd.Normd")) %>%
+  unique()
+
+sanitycheck.normd.plot <- ggplot(sanitycheck.normd, aes(x = reorder(Mass.Feature, -Normalized.Average), y = Normalized.Average,
+                                  fill = SampID)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, size = 11)) +
+  xlab("Log-normalized Area") +
+  ggtitle(paste(file.pattern, "Log Normalized", Condition1, "v", Condition2))
+sanitycheck.normd.plot
+
+# Log normalized Condition1 v Condition 2 Significance
+normdPlot <- ggplot(dataToPlot.normed, aes(x = AveSmp, y = FC_Yaxis, fill = Significance, 
+                               label = Mass.Feature)) +
+  geom_point(size = 3, shape = 21, stroke=0) +
+  scale_fill_manual(values = c("grey", "royalblue")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  scale_x_log10() +
+  ggtitle(paste("Chl-A Log Normalized", Condition1, "v", Condition2)) +
+  theme(plot.title = element_text(size = 25),
+        legend.position="left",
+        axis.title.x=element_text(size=10),
+        axis.title.y=element_text(size=10),
+        axis.text=element_text(size=10)) +
+  labs(x="Average peak size", y=paste("Log2", Condition1, "/", Condition2, sep = "")) +
+  theme(legend.position="right") +
+  scale_y_continuous(limits=c(-7, 7)) +
+  geom_text(data = subset(dataToPlot.normed, Significance == "Significant"),
+            hjust = "inward", nudge_x = 0.05, check_overlap = TRUE, size = 6) 
+normdPlot
+
+#############################################################################################
+
+# Univariate analysis NO NORMED ------------------------------------------------------------
+WBMISd <- complete.set %>%
   spread(key = "Replicate.Name", value = "Normalized.by.Chla")
 WBMISd <- WBMISd[complete.cases(WBMISd), ]
 mySamps <- colnames(WBMISd)
@@ -149,7 +238,7 @@ dataToPlot <- WBMISd %>%
   select(Mass.Feature, Significance, AveSmp, contains(Condition1), contains(Condition2), contains("FC"))
 
 ## Sanity Check for fold change ratios
-sanitycheck <- Complete.set %>%
+sanitycheck <- complete.set %>%
   separate(Replicate.Name, into = c("SampID", "replicate"), sep = ) %>%
   filter(SampID == Condition1 | SampID == Condition2) %>%
   group_by(Mass.Feature, SampID) %>%
@@ -160,6 +249,7 @@ ggplot(sanitycheck, aes(Mass.Feature, myave, fill = SampID)) +
   theme(axis.text.x = element_text(angle = 90, size = 11)) +
   ggtitle(paste(file.pattern, Condition1, "v", Condition2))
 
+
 # Condition1 v Condition 2 Significance
 SignificancePlot <- ggplot(dataToPlot, aes(x = AveSmp, y = FC_Yaxis, fill = Significance, 
                                            label = Mass.Feature)) +
@@ -167,7 +257,7 @@ SignificancePlot <- ggplot(dataToPlot, aes(x = AveSmp, y = FC_Yaxis, fill = Sign
   scale_fill_manual(values = c("grey", "royalblue")) +
   scale_alpha_manual(values = c(1, 0.5)) +
   scale_x_log10() +
-  ggtitle(paste(file.pattern, Condition1, "v", Condition2)) +
+  ggtitle(paste("Chl-A", Condition1, "v", Condition2)) +
   theme(plot.title = element_text(size = 25),
         legend.position="left",
         axis.title.x=element_text(size=10),

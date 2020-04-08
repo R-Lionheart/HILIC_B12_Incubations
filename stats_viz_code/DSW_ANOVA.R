@@ -7,7 +7,7 @@ options(scipen = 999)
 # Set treatment filters
 myTreatments <- c("IL1DSW|IL1noBT|IL1Control")
 myTitle <- "Anticyclonic Eddy (#1), 5um size fraction"
-myTreatmentTitle <- "Deep Sea Water v no B12"
+myTreatmentTitle <- "Deep Sea Water v no B12 v Control"
 myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
 
 BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
@@ -73,22 +73,22 @@ FC.plot <- ggplot(FC.test, aes(x = Mass.Feature, y = Average.Area)) +
 Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
 mySamps <- colnames(Analysis)
 
-myTreat1 <- mySamps[grepl(myTreatmentsSplit[1], mySamps)] # Treat1 = WBT
+myTreat1 <- mySamps[grepl(myTreatmentsSplit[1], mySamps)] # Treat1 = DSW
 myTreat2 <- mySamps[grepl(myTreatmentsSplit[2], mySamps)] # Treat2 = noB12
 myTreat3 <- mySamps[grepl(myTreatmentsSplit[3], mySamps)] # Treat3 = Control
 myTreatsdf <- Analysis[, c(myTreat1, myTreat2, myTreat3)]
 
 Analysis <- Analysis %>%
   mutate(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[2], "_FC", sep = "") := 
-           log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% 
+           log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat2]))) %>% 
   mutate(!!paste(myTreatmentsSplit[2], "v", myTreatmentsSplit[3], "_FC", sep = "") := 
            log2(rowMeans(Analysis[, myTreat2]) / rowMeans(Analysis[, myTreat3]))) %>% 
   mutate(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[3], "_FC", sep = "") :=
            log2(rowMeans(Analysis[, myTreat1]) / rowMeans(Analysis[, myTreat3]))) %>%
   select(matches("Mass|FC")) %>%
-  mutate(PlotA_Yaxis = .[[2]] * -1,
-         PlotB_Yaxis = .[[3]] * -1,
-         PlotC_Yaxis = .[[4]] * -1)
+  mutate(PlotA_Yaxis = .[[2]],
+         PlotB_Yaxis = .[[3]],
+         PlotC_Yaxis = .[[4]])
 
 # Set up data for ANOVA
 AnovaB12 <- full.BMISd %>%
@@ -100,23 +100,23 @@ AnovaB12 <- full.BMISd %>%
   arrange(Mass.Feature) %>%
   select(-Count) 
 
-testdf <- AnovaB12 %>%
-  group_by(Mass.Feature, SampID) %>%
-  mutate(Averages = mean(Area.BMISd.Normd)) %>%
-  filter(str_detect(SampID, "noBT")) %>%
-  arrange(desc(Averages)) 
-
-mylevels <- print(unique(testdf$Mass.Feature))
-AnovaB12$Mass.Feature = factor(AnovaB12$Mass.Feature, levels = mylevels)
-
+# testdf <- AnovaB12 %>%
+#   group_by(Mass.Feature, SampID) %>%
+#   mutate(Averages = mean(Area.BMISd.Normd)) %>%
+#   filter(str_detect(SampID, "noBT")) %>%
+#   arrange(desc(Averages)) 
+# 
+# mylevels <- print(unique(testdf$Mass.Feature))
+# AnovaB12$Mass.Feature = factor(AnovaB12$Mass.Feature, levels = mylevels)
 
 # Graph normalized areas for reference
 Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
-  theme(axis.text.x = element_blank())  +
-  ggtitle(paste("Normalized Area:", myTitle))
-Normd.Areas
+  theme(axis.text.x = element_blank()) +
+  labs(y="Normalized Area Distribution Boxplots") +
+  ggtitle(paste("Normalized Area Boxplots:", myTitle))
+#Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
 AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
@@ -143,13 +143,12 @@ AnovaDF <- AnovaDF %>%
   arrange(Mass.Feature)
 
 # Summarize Tukey HSD and create dataframe of significance
-
 TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- unlist(x)}))) %>%
   select(SampID10:12) %>%
   rownames_to_column("Mass.Feature") %>%
-  mutate(Sig_1 = ifelse(SampID10 < 0.1, "Significant", ifelse(between(SampID10, 0.1, 0.5), "CloseSig", "NotSig")),
-         Sig_2 = ifelse(SampID11 < 0.1, "Significant", ifelse(between(SampID11, 0.1, 0.5), "CloseSig", "NotSig")),
-         Sig_3 = ifelse(SampID12 < 0.1, "Significant", ifelse(between(SampID12, 0.1, 0.5), "CloseSig", "NotSig"))) %>%
+  mutate(Sig_1 = ifelse(SampID10 < 0.1, "Significant", "NotSig"),
+         Sig_2 = ifelse(SampID11 < 0.1, "Significant", "NotSig"),
+         Sig_3 = ifelse(SampID12 < 0.1, "Significant", "NotSig")) %>%
   rename(!!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[2], sep = "") := SampID10,
          !!paste(myTreatmentsSplit[2], "v", myTreatmentsSplit[3], sep = "") := SampID11,
          !!paste(myTreatmentsSplit[1], "v", myTreatmentsSplit[3], sep = "") := SampID12) %>%
@@ -178,53 +177,56 @@ toPlot <- full.BMISd %>%
   group_by(Mass.Feature) %>%
   mutate(TotalAve = mean(AveSmp))
 
-a <- ggplot(toPlot, aes_string(x = names(toPlot)[18], y = (names(toPlot)[14]), fill = names(toPlot)[9],
+# DSW v noB12
+a <- ggplot(toPlot, aes_string(x = names(toPlot)[18], y = (names(toPlot)[12]), fill = names(toPlot)[5],
                         label = names(toPlot)[1])) +
   geom_point(size = 3, shape = 21, stroke=0) +  
-  scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
-  scale_alpha_manual(values = c(1, 0.7, 0.5)) +
-  ggtitle(paste(myTreatmentTitle, myTitle)) +
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  ggtitle(paste("DSW v noB12", myTitle)) +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
         axis.text=element_text(size=9)) +
-  labs(x="Average normalized peak size", y=expression(paste(Log[2], myTreatmentTitle, sep = ""))) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "DSW v Control", sep = ""))) +
   theme(legend.position="right") +
-  geom_text(data = subset(toPlot, toPlot[9] == "Significant"), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE)
+  geom_text(data = subset(toPlot, toPlot[5] == TRUE),
+            nudge_y = -0.06, nudge_x = 0.02, check_overlap = FALSE)
 a
 
-b <- ggplot(toPlot, aes(x = TotalAve, y = -1*(as.numeric(names(toPlot)[12])), fill = IL1noBTvIL1Control_Sig,
-                        label = Mass.Feature)) +
+# noB12 v Control
+b <- ggplot(toPlot, aes_string(x = names(toPlot)[18], y = (names(toPlot)[13]), fill = names(toPlot)[5],
+                               label = names(toPlot)[1])) +
   geom_point(size = 3, shape = 21, stroke=0) +  
-  scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
-  scale_alpha_manual(values = c(1, 0.7, 0.5)) +
-  ggtitle(paste("No B12 v Control:", myTitle)) +
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  ggtitle(paste("noB12 v Control", myTitle)) +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
         axis.text=element_text(size=9)) +
-  labs(x="Average normalized peak size", y=expression(paste(Log[2], "NoB12/Control", sep = ""))) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "DSW v Control", sep = ""))) +
   theme(legend.position="right") +
-  geom_text(data = subset(toPlot, IL1noBTvIL1Control_Sig == "Significant"), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) 
+  geom_text(data = subset(toPlot, toPlot[5] == TRUE), 
+            nudge_y = -0.06, nudge_x = 0.02, check_overlap = FALSE)
 b
 
-c <- ggplot(toPlot, aes(x = TotalAve, y = -1*(IL1WBTvIL1Control_FC), fill = IL1WBTvIL1Control_Sig,
-                        label = Mass.Feature)) +
+# DSW v Control
+c <- ggplot(toPlot, aes_string(x = names(toPlot)[18], y = (names(toPlot)[14]), fill = names(toPlot)[5],
+                               label = names(toPlot)[1])) +
   geom_point(size = 3, shape = 21, stroke=0) +  
-  scale_fill_manual(values = c("lightblue", "grey", "royalblue4")) +
-  scale_alpha_manual(values = c(1, 0.7, 0.5)) +
-  ggtitle(paste("With B12 v Control:", myTitle)) +
+  scale_fill_manual(values = c("grey", "royalblue4")) +
+  scale_alpha_manual(values = c(1, 0.5)) +
+  ggtitle(paste("DSW v Control", myTitle)) +
   theme(plot.title = element_text(size = 15),
         legend.position="none",
         axis.title.y=element_text(size=9),
         axis.title.x=element_text(size=9),
         axis.text=element_text(size=9)) +
-  labs(x="Average normalized peak size", y=expression(paste(Log[2], "With B12/Control", sep = ""))) +
+  labs(x="Average normalized peak size", y=expression(paste(Log[2], "DSW v Control", sep = ""))) +
   theme(legend.position="right") +
-  geom_text(data = subset(toPlot, IL1WBTvIL1Control_Sig == "Significant"), nudge_y = -0.06, nudge_x = 0.02, check_overlap = TRUE) 
+  geom_text(data = subset(toPlot, toPlot[5] == TRUE), 
+            nudge_y = -0.06, nudge_x = 0.02, check_overlap = FALSE)
 c
-
-
-

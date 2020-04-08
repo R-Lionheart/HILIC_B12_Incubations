@@ -7,7 +7,7 @@ library(Rtsne)
 library(tidyverse)
 options(scipen = 999)
 
-BMISd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%
@@ -51,9 +51,6 @@ metab_clean <- cluster.test %>%
 glimpse(metab_clean)
 
 # Check attributes to ensure the correct methods are being used
-# (I = interval, N = nominal)
-# Note that despite logratio being called, 
-# the type remains coded as "I"
 
 mygower_dist <- daisy(metab_clean[, -1], # Remove mass.feature
                       metric = "gower",

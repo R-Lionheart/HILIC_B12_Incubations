@@ -88,6 +88,12 @@ AnovaDF <- AnovaDF %>%
   select(Mass.Feature, AnovaP, AnovaQ, AnovaSig) %>%
   arrange(Mass.Feature)
 
+TukeyList <- lapply(AnovaList, function(x) TukeyHSD(x))
+TukeyDF <- as.data.frame(do.call(rbind, lapply(TukeyList, function(x) {temp <- unlist(x)}))) %>%
+  #select(SampID10:12) %>%
+  rownames_to_column("Mass.Feature") %>%
+  arrange(Mass.Feature)
+
 toPlot <- grouped.BMISd %>%
   left_join(AnovaDF) %>%
   group_by(Mass.Feature, SampID) %>%
