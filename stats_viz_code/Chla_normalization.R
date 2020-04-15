@@ -4,7 +4,22 @@ library(tidyverse)
 library(vegan)
 options(scipen = 999)
 
-# Upload all required files
+
+makeWide <- function(df) {
+  df.wide <- df %>%
+    ungroup() %>%
+    tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
+    as.data.frame()
+  
+  df.rownames <- df.wide[,-1]
+  rownames(df.rownames) <- df.wide[,1]
+  
+  df.rownames[is.na(df.rownames)] <- NA
+  
+  #df.noNA <- na.omit(df.rownames)
+  
+  return(df.rownames)
+}
 uploadFiles <- function(myfilepath) {
   # Function for uploading non-standardized files.
   #
@@ -15,14 +30,16 @@ uploadFiles <- function(myfilepath) {
   return(uploaded.df)
 }
 
+# Upload all required files
 BMISd_1_0.2_notnormd <- uploadFiles("data_processed/IsoLagran1_0.2_notnormd.csv")
 BMISd_1_5_notnormd <- uploadFiles("data_processed/IsoLagran1_5_notnormd.csv")
 BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv")
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL1DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL1Control5um"
+Condition1 <- "IL1DSW" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL1Control"
+FilterSize <- "5um"
 ChlaEddy <- "IL1"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
 file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs 
@@ -111,6 +128,15 @@ complete.set <- complete.set %>%
   select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
   na.omit()
 
+## Standardize
+complete.wide <- makeWide(complete.set)
+complete.wide[is.na(complete.wide)] <- 1000
+complete.wideT <- t(complete.wide)
+
+complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", na.rm = TRUE) 
+
+write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_Chla_normd_std.csv", sep = ""))
+write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
 #############################################################################################
 # Log normalize the chlorophyll-normalized data
 complete.set.wide <- complete.set %>%

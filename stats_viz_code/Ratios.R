@@ -2,7 +2,7 @@ library(ggplot2)
 library(tidyverse)
 ## Specific compound ratios
 
-BMISd <- read.csv("data_processed/BMIS_Output_2020-02-20.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%
@@ -73,17 +73,33 @@ Plot2_5 <- ggplot(SAM.SAH, aes(x = SampID, y = Averages, fill = Mass.Feature)) +
   ggtitle("Anticyclonic Eddy, 5um")
 Plot2_5
 
-require(gridExtra)
-grid.arrange(Plot1_0.2, Plot1_5, Plot2_0.2, Plot2_0.2, nrow = 2)
+# require(gridExtra)
+# grid.arrange(Plot1_0.2, Plot1_5, Plot2_0.2, Plot2_0.2, nrow = 2)
+# 
+# library(ggpubr)
+# ggarrange(Plot1_0.2, Plot1_5, Plot2_0.2, Plot2_5,
+#           ncol=2, nrow=2, common.legend = TRUE, legend="bottom")
 
-library(ggpubr)
-ggarrange(Plot1_0.2, Plot1_5, Plot2_0.2, Plot2_5,
-          ncol=2, nrow=2, common.legend = TRUE, legend="bottom")
+
+# Glutamine : Glutamic acid
+glutamine.glutamate <- Dataset %>%
+  filter(Mass.Feature %in% c("Glutamic acid", "Glutamine")) %>%
+  group_by(SampID) %>%
+  add_tally() %>%
+  filter(!n < 2) %>%
+  mutate(Ratios =
+           Averages[Mass.Feature == "Glutamic acid"] /
+           Averages[Mass.Feature == "Glutamine"])
+
+Plot2_5 <- ggplot(glutamine.glutamate, aes(x = SampID, y = Averages, fill = Mass.Feature)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_hline(yintercept = 0) +
+  coord_flip() +
+  ggtitle("Anticyclonic Eddy, 5um")
+Plot2_5
 
 
-# Glutamine : Glutamate
-glutamine.glutamate <- BMISd %>%
-  filter(Mass.Feature %in% c("Glutamine"))
+
 
 # Glutathione : GSSG
 glutathione.gssg <- Dataset %>%

@@ -181,11 +181,11 @@ write.csv(Iso_wide_normalizedT, paste("data_processed/IsoLagran", EddySize, "_no
 
 Iso_wide_nmds <- vegan::metaMDS(Iso_wide_normalizedT, distance = "euclidean", 
                                 k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
-vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
+# vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
 
 # Check stressplots, scree diagrams
-Iso_wide_nmds$stress # Add a flag if this is high?
-nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
+#Iso_wide_nmds$stress # Add a flag if this is high?
+#nmds.monte(Iso_wide_normalizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
 
 # Assign treatment to points ----------------------------------------------
 Iso_pointlocation <- Iso_wide_nmds$points %>% as.data.frame() %>% cbind(Treatment)
@@ -205,7 +205,6 @@ plot(scores(Iso_wide_nmds), type = "p")
 points(Iso_wide_nmds, cex = iso_df$Ectoine, col = "red")
 title(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
 
-
 # Experiments with species scores, not very useful
 envfit(Iso_wide_nmds, Iso_wide_normalizedT) 
 test <- envfit(Iso_wide_normalizedT ~ Iso_pointlocation$Supergroup, data = iso_df, perm=1000) #???
@@ -223,14 +222,16 @@ myvec.sp.df$species<-rownames(myvec.sp.df)
 
 myNMDS2 <- myNMDS %>%
   rownames_to_column()
+
+
 # Vectors and ordiplots - messy due to scale differences
 ggplot(data = myNMDS, aes(MDS1, MDS2)) + 
-  geom_point() + # comment out for neatness
+  #geom_point() + # comment out for neatness
   geom_segment(data=myvec.sp.df, aes(x=0, xend=MDS1, y=0, yend=MDS2),
                #arrow = arrow(),
                colour="grey") +
-  geom_text(data=myNMDS2, aes(x=MDS1, y=MDS2, label=rowname), size=3) +
-  #geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) +
+  #geom_text(data=myNMDS2, aes(x=MDS1, y=MDS2, label=rowname), size=3) +
+  geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) +
   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
 
 
@@ -293,8 +294,8 @@ orditorp(Iso_wide_nmds, display="sites", air=0.01, cex=1.25)
 
 Isograph <- ggplot() + 
   geom_polygon(data=Iso_pointlocation, aes(x=MDS1, y=MDS2, fill=Treatment.Status, group=Treatment.Status), alpha=0.30) +
+  geom_point(data=Iso_pointlocation, aes(x=MDS1,y=MDS2,colour=Treatment.Status),size=4) + 
   geom_text(data=Iso_pointlocation,aes(x=MDS1,y=MDS2,label=Treatment.Status), size=4) +  # add the species labels
-  #geom_point(data=Iso_pointlocation, aes(x=MDS1,y=MDS2,colour=Treatment.Status),size=4) + 
   #coord_equal() +
   #theme_bw() +
   xlim(-20, 10) +
