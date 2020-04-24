@@ -4,7 +4,6 @@ library(tidyverse)
 library(vegan)
 options(scipen = 999)
 
-
 makeWide <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
@@ -37,14 +36,14 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL1DSW" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL1Control"
+Condition1 <- "IL2DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL2Control5um"
 FilterSize <- "5um"
-ChlaEddy <- "IL1"
+ChlaEddy <- "IL2"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs 
+file.pattern <- "Chla Normalized Antiyclonic_5um" # will be used as a search ID and title for graphs 
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- BMISd_1_5_notnormd # Assign correct dataframe for analysis.
+BMISd <- BMISd_2_5_notnormd # Assign correct dataframe for analysis.
 
 ## Upload and recode chlorophyll data
 Chlorophyll <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
@@ -118,13 +117,9 @@ BMISd_fixed <- BMISd %>%
 complete.set <- Chlorophyll_fixed %>%
   select(Replicate.Name, Chla) %>%
   left_join(BMISd_fixed) %>%
-  mutate(Chla = as.numeric(Chla))
-complete.set[complete.set==""] <- NA
-complete.set <- complete.set %>%
+  mutate(Chla = as.numeric(Chla)) %>%
   mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
-  #####
-  filter(!Chla < 0) %>%
-  ##### 
+  filter(!Chla < 0) %>% # Remove negative sChl-A values
   select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
   na.omit()
 
@@ -137,8 +132,9 @@ complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", n
 
 write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_Chla_normd_std.csv", sep = ""))
 write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
+
 #############################################################################################
-# Log normalize the chlorophyll-normalized data
+# Log normalize the chlorophyll-normalized data ---------------------------
 complete.set.wide <- complete.set %>%
   tidyr::spread(Replicate.Name, Normalized.by.Chla) 
 complete.set.wide <- column_to_rownames(complete.set.wide, "Mass.Feature")
@@ -147,7 +143,7 @@ complete.set.normalized <- decostand(complete.set.wide, method = "log", na.rm = 
 final.set <- complete.set.normalized[complete.cases(complete.set.normalized), ]
 mySamps.normd <- colnames(complete.set.normalized)
 
-# Add Condition1 vs Condition2 stats
+# Add Condition 1 v Condition 2 stats -------------------------------------
 myTreat1 <- mySamps.normd[grepl(Condition1, mySamps.normd)]
 myTreat2 <- mySamps.normd[grepl(Condition2, mySamps.normd)]
 myTreatsdf <- final.set[, c(myTreat1, myTreat2)]
@@ -176,7 +172,7 @@ FC_Yaxis.normd <- final.set %>%
   select(Mass.Feature, contains("FC")) %>%
   mutate(FC_Yaxis = .[[2]]) # Multiply by -1 here to reverse y axis
 
-# Combine for plot.
+# Combine for plot
 dataToPlot.normed <- final.set %>%
   left_join(FC_Yaxis.normd) %>%
   select(Mass.Feature, Significance, AveSmp, contains(Condition1), contains(Condition2), contains("FC"))
@@ -202,7 +198,7 @@ sanitycheck.normd.plot <- ggplot(sanitycheck.normd, aes(x = reorder(Mass.Feature
   ggtitle(paste(file.pattern, "Log Normalized", Condition1, "v", Condition2))
 sanitycheck.normd.plot
 
-# Log normalized Condition1 v Condition 2 Significance
+# Log normalized Condition1 v Condition 2 Significance plots -------------------------------------
 normdPlot <- ggplot(dataToPlot.normed, aes(x = AveSmp, y = FC_Yaxis, fill = Significance, 
                                label = Mass.Feature)) +
   geom_point(size = 3, shape = 21, stroke=0) +
@@ -224,7 +220,7 @@ normdPlot
 
 #############################################################################################
 
-# Univariate analysis NO NORMED ------------------------------------------------------------
+# Univariate analysis NO LOG NORMED ------------------------------------------------------------
 WBMISd <- complete.set %>%
   spread(key = "Replicate.Name", value = "Normalized.by.Chla")
 WBMISd <- WBMISd[complete.cases(WBMISd), ]
@@ -265,7 +261,7 @@ dataToPlot <- WBMISd %>%
 
 ## Sanity Check for fold change ratios
 sanitycheck <- complete.set %>%
-  separate(Replicate.Name, into = c("SampID", "replicate"), sep = ) %>%
+  separate(Replicate.Name, into = c("SampID", "replicate"), sep = "_") %>%
   filter(SampID == Condition1 | SampID == Condition2) %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(myave = mean(Normalized.by.Chla, na.rm = TRUE))

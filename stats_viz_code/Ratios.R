@@ -30,7 +30,7 @@ BMISd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors 
 #####
 Dataset <- BMISd %>%
   filter(str_detect(SampID, "5um")) %>%
-  filter(str_detect(SampID, "IL2"))
+  filter(str_detect(SampID, "IL1"))
 
 # Dataset$SampID <- factor(Dataset$SampID,
 #                               levels = c("IL1IT05um","IL1Control5um", 
@@ -42,10 +42,10 @@ Dataset <- BMISd %>%
 # Dataset$SampID <- factor(Dataset$SampID,
 #                               levels = c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW",
 #                                          "IL1DMBnoBT", "IL1noBT"))
-# 1_5
-# Dataset$SampID <- factor(Dataset$SampID,
-#                               levels = c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um",
-#                                          "IL1DMBnoBT5um", "IL1noBT5um"))
+1_5
+Dataset$SampID <- factor(Dataset$SampID,
+                              levels = c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um",
+                                         "IL1DMBnoBT5um", "IL1noBT5um"))
 # 2_0.2
 # Dataset$SampID <- factor(Dataset$SampID,
 #                               levels = c("IL2IT0", "IL2Control", "IL2DMB", "IL2WBT", "IL2DSW",
@@ -95,11 +95,12 @@ Plot2_5 <- ggplot(glutamine.glutamate, aes(x = SampID, y = Averages, fill = Mass
   geom_bar(stat = "identity", position = "fill") +
   geom_hline(yintercept = 0) +
   coord_flip() +
-  ggtitle("Anticyclonic Eddy, 5um")
+  ggtitle("Cyclonic Eddy, 5um")
 Plot2_5
 
-
-
+# ketoglutaric Acid
+KGA <- Dataset %>%
+  filter(Mass.Feature == "Ketoglutaric Acid")
 
 # Glutathione : GSSG
 glutathione.gssg <- Dataset %>%

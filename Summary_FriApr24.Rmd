@@ -1,0 +1,28 @@
+---
+title: "4/24/20 Summary"
+author: "RLionheart"
+date: "4/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary of MESO-SCOPE B12 Incubations (HILIC) 
+4/24/2020
+
+### Chl-A Normalizations
+
+#### Heatmaps
+```{r cars}
+summary(cars)
+```
+
+#### NMDS 
+
+### Osmolytes
+####Heatmaps, NMDS, raw
+
+### Glutamate:Glutamine ratios
+Normalize to RF and plot those ratios and percentages.
