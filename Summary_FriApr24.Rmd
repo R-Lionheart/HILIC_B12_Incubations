@@ -13,11 +13,15 @@ knitr::opts_chunk$set(echo = TRUE)
 4/24/2020
 
 ### Chl-A Normalizations
-
 #### Heatmaps
-```{r cars}
-summary(cars)
-```
+
+Chl-A nomalizations applied to the same dataset.
+!["Cyclonic 5um"](./figures/Cyclonic_ChlvnoChl.png)
+
+And the other set:
+!["Antiyclonic 5um"](./figures/Anticyclonic_ChlvnoChl.png)
+
+While it looks like the Cyclonic Control is more abundant in the Chl-A normalized data, that pattern doesn't seem to carry over to the Anticyclonic data. Instead, the B12-enriched sample seems to be the most abundant when normalized to Chl-A in the Anticyclonic set.
 
 #### NMDS 
 

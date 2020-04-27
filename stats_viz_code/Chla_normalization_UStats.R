@@ -36,14 +36,14 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL2DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL2Control5um"
+Condition1 <- "IL1DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL1Control5um"
 FilterSize <- "5um"
-ChlaEddy <- "IL2"
+ChlaEddy <- "IL1"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Chla Normalized Antiyclonic_5um" # will be used as a search ID and title for graphs 
+file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs 
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- BMISd_2_5_notnormd # Assign correct dataframe for analysis.
+BMISd <- BMISd_1_5_notnormd # Assign correct dataframe for analysis.
 
 ## Upload and recode chlorophyll data
 Chlorophyll <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
@@ -106,6 +106,7 @@ Chlorophyll_fixed <- Chlorophyll %>%
   select(SampID, replicate, Chla) %>%
   unite(SampID, replicate, col = "Replicate.Name")
 
+write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
 
 # Fix BMISd names to match ------------------------------------------------------------
 BMISd_fixed <- BMISd %>%
@@ -130,7 +131,7 @@ complete.wideT <- t(complete.wide)
 
 complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", na.rm = TRUE) 
 
-write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_Chla_normd_std.csv", sep = ""))
+write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_std.csv", sep = ""))
 write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
 
 #############################################################################################

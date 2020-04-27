@@ -1,3 +1,4 @@
+library(patchwork)
 library(tidyverse)
 source("src/B12_Functions.R")
 
@@ -72,6 +73,7 @@ createHeatmap <- function(data, mytitle, factor_levels) {
   heatmap <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = SampID, fill = Average.Area.Normd)) + 
     geom_tile(stat = "identity") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+          #axis.text.x = element_blank(),
           axis.text.y = element_text(size = 10),
           strip.text = element_text(size = 10)) +
     scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
@@ -96,6 +98,7 @@ IL1_5_wChl <- createHeatmap(IL1_5um_Chla_normd_std, mytitle = "Cyclonic Eddy, 5u
 IL2_5_wChl <- createHeatmap(IL2_5um_Chla_normd_std, mytitle = "Anticyclonic Eddy, 5um",
                              c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 
-require(gridExtra)
-grid.arrange(test.heatmap_1_0.2, test.heatmap_1_5, test.heatmap_2_0.2, test.heatmap_2_5, ncol=2)
+IL1_5_noChl / IL1_5_wChl
+IL2_5_noChl / IL2_5_wChl
+
 
