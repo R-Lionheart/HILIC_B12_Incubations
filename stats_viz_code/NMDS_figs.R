@@ -45,11 +45,12 @@ makeNMDS <- function(mydf, hasChlorophyll) {
   Iso_wideT <- t(Iso_wide)
   
   # Standardize + distance matrix --------------------------------------------------------------
-  df_wide_normlizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE) 
+  df_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE)
+  df_dataframe <- as.data.frame(df_wide_normalizedT)
+  write.csv(df_wide_normalizedT, paste("data_processed/IsoLagran", EddyInformation, "_normd.csv", sep = ""))
   
-  Iso_wide_nmds <- vegan::metaMDS(df_wide_normlizedT, distance = "euclidean", 
+  Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
                                   k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
-  
   # Assign treatment to points ----------------------------------------------
   Iso_pointlocation <- Iso_wide_nmds$points %>% as.data.frame() %>% cbind(Treatment)
   Iso_pointlocation$Treatment.Status <- factor(Iso_pointlocation$Treatment.Status,
@@ -61,12 +62,12 @@ makeNMDS <- function(mydf, hasChlorophyll) {
     geom_point(data=Iso_pointlocation, aes(x=MDS1,y=MDS2,colour=Treatment.Status),size=4) + 
     geom_text(data=Iso_pointlocation,aes(x=MDS1,y=MDS2,label=Treatment.Status), size=4) +  # add the species labels
     xlim(-20, 10) +
-    ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) 
+    ggtitle(paste("Incubation Experiments: Eddy", EddyInformation, sep = " ")) 
   print(Isograph)
+  ggsave(path = "figures", paste("Incubation Experiments: Eddy", EddyInformation, ".png", sep = ""))
+  #ggsave("figures/", paste("Incubation Experiments: Eddy", EddyInformation, ".png", sep = ""))
   
-  
-  return(Isograph)
-  return(df_wide_normlizedT)
+  return(Iso_wide_nmds)
 }
 makeWide <- function(df) {
   df.wide <- df %>%
@@ -109,7 +110,7 @@ HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = 
   filter(!Mass.Feature == "Inj_vol") %>%
   filter(!str_detect(Mass.Feature, ","))
 
-#Adjust for ILnT0 naming issues --------------------------------------------
+# Adjust for ILnT0 naming issues --------------------------------------------
 HILIC_all <- HILIC_all %>%
   mutate(Replicate.Name = recode(Replicate.Name, 
                                  "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
@@ -141,7 +142,7 @@ HILIC_filtered <- HILIC_all %>%
   filter(!Missing > (percentMissing*MF.Count)) %>%
   select(-c("Missing", "MF.Count"))
 
-# Separate dataset into groups for analysis -------------------------------------------------------
+# Separate groups into analysis
 IsoLagran1 <- HILIC_filtered %>%
   filter(str_detect(Replicate.Name, "IL1"))
 IsoLagran2 <- HILIC_filtered %>%
@@ -169,15 +170,17 @@ IL2_5um_ChlA <- IL2_5um_ChlA_normd_nostd %>%
 rm(list = c("IsoLagran1", "IsoLagran2", "IL1_5um_ChlA_normd_nostd", "IL2_5um_ChlA_normd_nostd"))
 
 # Set data and run function ------------------------------------------------------------------------
-EddySize <- "1, Cyclonic_5um"
-Treatments <- c("IL1Control", "IL1DSW")
+EddyInformation <- "2_Anticyclonic_5um_noChl"
+df_wide_normalizedT <- makeNMDS(IsoLagran2_5, hasChlorophyll = "no")
 
-IL1_5um_ChlA_NMDS <- makeNMDS(IL1_5um_ChlA, "yes")
+# Experiment with NMDS visualizations ------------------------------------------------------------------------
+Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
+                                k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
 
-#write.csv(df_wide_normlizedT, paste("data_processed/IsoLagran", EddySize, "_normd.csv", sep = ""))
+
 # Visualize scree plot of potential ordination axes
-#dimcheckMDS(df_wide_normlizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
-# vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddySize, sep = " "))
+dimcheckMDS(df_wide_normalizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
+vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddyInformation, sep = " "))
 # Check stressplots, scree diagrams
 #Iso_wide_nmds$stress # Add a flag if this is high?
 #nmds.monte(df_wide_normlizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)
@@ -185,17 +188,15 @@ IL1_5um_ChlA_NMDS <- makeNMDS(IL1_5um_ChlA, "yes")
 # Plot 2 dimensional NMDS configuration.
 # plot(Iso_wide_nmds$points, type="n") # plotting the scores(iso_wide_nmds)
 # text(Iso_wide_nmds,labels=row.names(Iso_wideT), cex = 1)
-# title(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+# title(paste("Incubation Experiments: Eddy", EddyInformation, sep = " "))
 
 # See how particular compound changes with location
 # iso_df <- as.data.frame(df_wide_normlizedT)
 # plot(scores(Iso_wide_nmds), type = "p")
 # points(Iso_wide_nmds, cex = iso_df$Ectoine, col = "red")
-# title(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+# title(paste("Incubation Experiments: Eddy", EddyInformation, sep = " "))
 
 
-
-##############################
 # Quick vectors
 myNMDS = data.frame(MDS1 = Iso_wide_nmds$points[,1], MDS2 = Iso_wide_nmds$points[,2], 
                     MDS3 = Iso_wide_nmds$points[,3]) #originally had just 2
@@ -216,7 +217,7 @@ myNMDS2 <- myNMDS %>%
 #                colour="grey") +
 #   #geom_text(data=myNMDS2, aes(x=MDS1, y=MDS2, label=rowname), size=3) +
 #   geom_text(data=myvec.sp.df, aes(x=MDS1, y=MDS2, label=species), size=3) +
-#   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+#   ggtitle(paste("Incubation Experiments: Eddy", EddyInformation, sep = " "))
 
 
 # NMDS combined with clustering
@@ -227,7 +228,7 @@ myNMDS2 <- myNMDS %>%
 # mysite.sc <- scores(myNMDS)
 # 
 # my.p <- ordiplot(mysite.sc, type="n", 
-#                  main=paste("Incubation Experiments: Eddy", EddySize, sep = " "))
+#                  main=paste("Incubation Experiments: Eddy", EddyInformation, sep = " "))
 # for (i in 1:length(groups))
 # {
 #   points(mysite.sc[mysitecl.class==i,], pch=(14+i), cex=2, col=i+1)
@@ -253,29 +254,6 @@ myNMDS2 <- myNMDS %>%
 #            col=colors[grep(i, Treatment$Treatment.Status)], label=T)} 
 # #orditorp(Iso_wide_nmds, display="species", col="red", air=0.01)
 # orditorp(Iso_wide_nmds, display="sites", air=0.01, cex=1.25)
-
-# NMDS graphs --------------------------------------------------------------
-
-##############################
-# Isograph <- ggplot(data = Iso_pointlocation, aes(x = MDS1, y =  MDS2, 
-#                                                   shape = Treatment.Status, group = Supergroup)) +
-#   geom_polygon(fill = NA, color = "black") +
-#   geom_point(size = 3) + 
-#   scale_shape_manual(values = c(10, 8, 15, 17, 16, 0, 2)) +
-#   geom_text(aes(label = Treatment.Status), 
-#              vjust=-0.25, size = 3) +
-#   ggtitle(paste("Incubation Experiments: Eddy", EddySize, sep = " ")) +
-#   theme(plot.title = element_text(size = 15),
-#         axis.title.x = element_text(size = 8),
-#         axis.title.y = element_text(size = 8),
-#         axis.text = element_text(size = 8),
-#         legend.text=element_text(size = 20)) +
-#   labs(y = "Axis 2") +
-#   theme(legend.position = "left")
-# Isograph
-
-
-##############################
 
 
 

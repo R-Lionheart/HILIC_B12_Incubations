@@ -25,6 +25,19 @@ While it looks like the Cyclonic Control is more abundant in the Chl-A normalize
 
 #### NMDS 
 
+First, looking at the Cyclonic eddy NMDS figures with and without chlorophyll normalization. Remember that position is arbitrary, only distances are relevant.
+!["Eddy1_Cyclonic_5um_noChl"](./figures/Incubation Experiments: Eddy1_Cyclonic_5um_noChl.png)
+
+!["Eddy1_Cyclonic_5um_wChl"](./figures/Incubation Experiments: Eddy1_Cyclonic_5um_wChl.png)
+
+And the Anticyclonic eddies:
+
+!["Eddy2_Anticyclonic_5um_noChl"](./figures/Incubation Experiments: Eddy2_Anticyclonic_5um_noChl.png)
+
+
+!["Eddy2_Anticyclonic_5um_wChl"](./figures/Incubation Experiments: Eddy2_Anticyclonic_5um_wChl.png)
+
+
 ### Osmolytes
 ####Heatmaps, NMDS, raw
 
