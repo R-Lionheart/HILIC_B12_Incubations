@@ -2,19 +2,6 @@ library(patchwork)
 library(tidyverse)
 source("src/B12_Functions.R")
 
-
-# Upload files and enter user data ----------------------------------------
-file.pattern = "IL" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
-Norm.Type = "BMISd, with Chl-A" # For titles & labeling
-
-filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = file.pattern))
-filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
-
-for (i in filenames) {
-  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
-  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
-}
-
 createHeatmap <- function(data, mytitle, factor_levels) {
   
   # Rearrange to required format
@@ -81,8 +68,27 @@ createHeatmap <- function(data, mytitle, factor_levels) {
   print(heatmap)
   
 }
+filterForOsmolytes <- function(df) {
+  osmolyte.locations <- which(colnames(df) %in% osmocolumns)
+  df.with.osmolytes <- df[, c(osmolyte.locations)]
+  full.osmolyte.df <- cbind(df[1], df.with.osmolytes)
+  
+  return(full.osmolyte.df)
+}
 
-# Select appropriate factor levels for your dataset -----------------------
+# Upload files and enter user data ----------------------------------------
+file.pattern = "IsoLagran|Osmolytes" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
+Norm.Type = "BMISd, with Chl-A" # For titles & labeling
+
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = file.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+# Create heatmaps for all non-Chl datasets -----------------------
 IL1_0.2_noChl <- createHeatmap(IsoLagran1_0.2_normd, mytitle = "Cyclonic Eddy, 0.2um",
                                c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT"))
 IL1_5_noChl <- createHeatmap(IsoLagran1_5_normd, mytitle = "Cyclonic Eddy, 5um",
@@ -92,12 +98,28 @@ IL2_0.2_noChl <- createHeatmap(IsoLagran2_0.2_normd, mytitle = "Anticyclonic Edd
 IL2_5_noChl <- createHeatmap(IsoLagran2_5_normd, mytitle = "Anticyclonic Eddy, 5um",
                              c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 
-## Chl-A Normalized: Choose the standardized data
+# Create heatmaps for all Chl-normd datasets -----------------------
 IL1_5_wChl <- createHeatmap(IL1_5um_Chla_normd_std, mytitle = "Cyclonic Eddy, 5um",
                              c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um"))
 IL2_5_wChl <- createHeatmap(IL2_5um_Chla_normd_std, mytitle = "Anticyclonic Eddy, 5um",
                              c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 
+# Create heatmaps for Osmolyte-filtered datasets -----------------------
+osmocolumns <- Osmolytes_edited[[2]]
+
+## Chl-adjusted
+IL1_5um_Chla_normd_std_osmolytes <- filterForOsmolytes(IL1_5um_Chla_normd_std)
+Osmolyte_heatmap_IL1_5um_Chla_normd_std <- createHeatmap(IL1_5um_Chla_normd_std_osmolytes, 
+                                                         mytitle = "Cyclonic Eddy, 5um, Chl-Normalized, Osmolytes",
+                      c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um"))
+
+IL2_5um_Chla_normd_std_osmolytes <- filterForOsmolytes(IL2_5um_Chla_normd_std)
+Osmolyte_heatmap_IL2_5um_Chla_normd_std <- createHeatmap(IL2_5um_Chla_normd_std_osmolytes, 
+                                                         mytitle = "Anticyclonic Eddy, 5um, Chl-Normalized, Osmolytes",
+                                                         c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
+
+
+# Plots
 IL1_5_noChl / IL1_5_wChl
 IL2_5_noChl / IL2_5_wChl
 

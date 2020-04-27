@@ -37,9 +37,21 @@ And the Anticyclonic eddies:
 
 !["Eddy2_Anticyclonic_5um_wChl"](./figures/Incubation Experiments: Eddy2_Anticyclonic_5um_wChl.png)
 
+There are some challenges in absorbing these graphs, one of which is that we don't have every data point. So some of the triangles are incomplete. But what I'm taking away from it is that deep seawater and no B12 have the most distinct positions, regardless of Chl normalizations.
 
 ### Osmolytes
-####Heatmaps, NMDS, raw
+
+For now I am starting with the Chl-normalized osmolyte heatmaps. I think this is a good place to start with the osmolytes, but I can also compare the Chl-normalized to the non-normalized images too.
+
+!["Osmolytes: Eddy1_Cyclonic_5um_wChl"](./figures/Osmolytes_IL1_5um_Chl.png)
+
+And the Anticyclonic:
+
+!["Osmolytes: Eddy2_Antiyclonic_5um_wChl"](./figures/Osmolytes_IL2_5um_Chl.png)
+
+
 
 ### Glutamate:Glutamine ratios
 Normalize to RF and plot those ratios and percentages.
+
+### What I'd like to do next (and timeline)
