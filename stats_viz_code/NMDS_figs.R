@@ -167,11 +167,21 @@ IL2_5um_ChlA <- IL2_5um_ChlA_normd_nostd %>%
   select(-X) %>%
   rename(Adjusted.Area = Normalized.by.Chla)
 
+###################################
+Osmolytes <- read.csv("data_processed/Osmolytes_edited.csv", stringsAsFactors = FALSE)
+
+IL15um_osmolytes <- IL1_5um_ChlA %>%
+  filter(Mass.Feature %in% Osmolytes$Osmolytes)
+  
+IL25um_osmolytes <- IL2_5um_ChlA %>%
+  filter(Mass.Feature %in% Osmolytes$Osmolytes)
+
+###################################
 rm(list = c("IsoLagran1", "IsoLagran2", "IL1_5um_ChlA_normd_nostd", "IL2_5um_ChlA_normd_nostd"))
 
 # Set data and run function ------------------------------------------------------------------------
-EddyInformation <- "2_Anticyclonic_5um_noChl"
-df_wide_normalizedT <- makeNMDS(IsoLagran2_5, hasChlorophyll = "no")
+EddyInformation <- "2_Anticyclonic_5um_wChl, Osmolytes"
+df_wide_normalizedT <- makeNMDS(IL25um_osmolytes, hasChlorophyll = "yes")
 
 # Experiment with NMDS visualizations ------------------------------------------------------------------------
 Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
@@ -181,6 +191,7 @@ Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean",
 # Visualize scree plot of potential ordination axes
 dimcheckMDS(df_wide_normalizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
 vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddyInformation, sep = " "))
+
 # Check stressplots, scree diagrams
 #Iso_wide_nmds$stress # Add a flag if this is high?
 #nmds.monte(df_wide_normlizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)

@@ -2,15 +2,15 @@ source("src/B12_Functions.R")
 
 # Enter dilution factor, injection volume, and the filtered volume from the instrument run.
 Dilution.Factor = 2
-Injection.Volume = 400 # nanomoles, NOT SURE ABOUT THIS
+Injection.Volume = 400 # pretty sure about this...
 Volume.Filtered = 8 # liters
 
 
 # Import required files for quantification.
 
 # Import standards and filter NAs ---------------------------------------------------------------
-filename <- RemoveCsv(list.files(path = 'data_extras/', pattern = "Ingalls"))
-filepath <- file.path('data_extras', paste(filename, ".csv", sep = ""))
+filename <- RemoveCsv(list.files(path = "data_extras/", pattern = "Ingalls"))
+filepath <- file.path("data_extras", paste(filename, ".csv", sep = ""))
 
 Ingalls.Standards <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   filter(Column == "HILIC") %>%
@@ -21,13 +21,13 @@ Ingalls.Standards$Metabolite.Name <- TrimWhitespace(Ingalls.Standards$Metabolite
 
 
 # Import BMIS'd sample file ---------------------------------------------------------------
-filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = "BMIS_Output"))
-filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
+filename <- RemoveCsv(list.files(path = "data_processed/", pattern = "BMIS_Output"))
+filepath <- file.path("data_processed", paste(filename, ".csv", sep = ""))
 BMISd.data <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE))
 
 # Import QC'd files and remove parameter data ------------------------------
-filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = "QC_Output"))
-filepath <- file.path('data_processed', paste(filename, ".csv", sep = ""))
+filename <- RemoveCsv(list.files(path = "data_processed/", pattern = "QC_Output"))
+filepath <- file.path("data_processed", paste(filename, ".csv", sep = ""))
 
 QCd.data <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   slice(-1:-6) %>%
@@ -35,8 +35,8 @@ QCd.data <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
   select(Replicate.Name, Metabolite.name, Area.with.QC, Area.Value, Run.Type, everything())
 
 # Import Internal standards key ---------------------------------------------------------------
-filename <- RemoveCsv(list.files(path = 'data_extras/', pattern = "Names"))
-filepath <- file.path('data_extras', paste(filename, ".csv", sep = ""))
+filename <- RemoveCsv(list.files(path = "data_extras/", pattern = "Names"))
+filepath <- file.path("data_extras", paste(filename, ".csv", sep = ""))
 
 original.IS.key <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   rename(FinalBMIS = Internal_Standards)
