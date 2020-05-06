@@ -18,12 +18,12 @@ BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv"
 BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
-Condition1 <- "IL2DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
-Condition2 <- "IL2Control5um"
+Condition1 <- "IL1IT0" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
+Condition2 <- "IL1Control"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Anticyclonic_5um" # will be used as a search ID and title for graphs 
+file.pattern <- "Cyclonic_0.2um" # will be used as a search ID and title for graphs 
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- BMISd_2_5_notnormd # Assign correct dataframe for analysis
+BMISd <- BMISd_1_0.2_notnormd # Assign correct dataframe for analysis
 
 currentDate <- Sys.Date()
 

@@ -16,7 +16,7 @@ source("src/coldiss.R")
 ## make a dataframe where each row is a sample and each column is a MF
 
 ## read data ------------------
-all.dat.no.IS <- read_csv("2020-02-13_All_Exp_More_Filtered_MF.csv")
+all.dat.no.IS <- read_csv("data_raw/2020-02-13_All_Exp_More_Filtered_MF.csv")
 
 wide.all.data <- all.dat.no.IS %>%
   dplyr::select(MassFeature, WaterVol.Norm.Area, Sample.ID, Experiment, treatment) %>%
@@ -32,23 +32,26 @@ wide.all.data <- all.dat.no.IS %>%
 exp.wide.data <- split.data.frame(wide.all.data, wide.all.data$Experiment)
 ## z-score by column (by each metabolite)  --------------
 
-clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "test"){
+#clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "test"){
   ## (Just doing TZ experiment right now) 
   
   ## get rid of metabolites only in a few samples 
-  metabs.w.few <- exp.wide.data[[number]] %>%
+  #metabs.w.few <- exp.wide.data[[number]] %>% ORIGINAL
+  metabs.w.few <- exp.wide.data[[1]] %>%
     gather(MassFeature, WaterVol.Norm.Area, -Sample.ID, -Experiment, -treatment) %>%
     filter(!is.na(WaterVol.Norm.Area)) %>%
     group_by(MassFeature, Experiment) %>%
     summarise(n = n()) %>%
     filter(n<9) %>%
-    full_join(exp.wide.data[[number]] %>%
+    #full_join(exp.wide.data[[number]] %>% ORIGINAL
+    full_join(exp.wide.data[[1]] %>%
                 gather(MassFeature, WaterVol.Norm.Area, -Sample.ID, -Experiment, -treatment) %>%
                 filter(is.na(WaterVol.Norm.Area)) %>%
                 dplyr::select(MassFeature, Experiment) %>%
                 unique())
     
-  spread.by.sample <- exp.wide.data[[number]] %>%
+  #spread.by.sample <- exp.wide.data[[number]] %>% ORIGINAL
+  spread.by.sample <- exp.wide.data[[1]] %>%
     gather(MassFeature, WaterVol.Norm.Area, -Sample.ID, -Experiment, -treatment) %>%
     filter(!(MassFeature %in% metabs.w.few$MassFeature)) %>%
     arrange(Sample.ID) %>%
@@ -67,9 +70,9 @@ clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "tes
     k = c(k, i)
   }
   plot(k, Ave.Silh.Width, type = "p", xlab = "No. clusters")
-  jpeg(file=paste0(Sys.Date(),my.name,"_SilhouetteWidthVsNoClusters.jpeg"))
-  plot(k, Ave.Silh.Width, type = "p", xlab = "No. clusters")
-  dev.off()
+  #jpeg(file=paste0(Sys.Date(),my.name,"_SilhouetteWidthVsNoClusters.jpeg")) ORIGINAL 
+  #plot(k, Ave.Silh.Width, type = "p", xlab = "No. clusters") ORIGINAL
+  #dev.off() ORIGINAL
   
   best.number =   which(Ave.Silh.Width==(max(Ave.Silh.Width))) +1
   low.number = which(Ave.Silh.Width[1:6]==(max(Ave.Silh.Width[1:6]))) +1
@@ -101,7 +104,7 @@ clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "tes
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank())
-  ggsave(filename = paste0(Sys.Date(),my.name,"_HeatMap_all_replicates_moreGroups.pdf"))
+  #ggsave(filename = paste0(Sys.Date(),my.name,"_HeatMap_all_replicates_moreGroups.pdf"))
   
   
   ggplot() + 
@@ -113,7 +116,7 @@ clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "tes
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank())
-  ggsave(filename = paste0(Sys.Date(),my.name,"_HeatMap_all_replicates_fewerGroups.pdf"))
+  #ggsave(filename = paste0(Sys.Date(),my.name,"_HeatMap_all_replicates_fewerGroups.pdf"))
   
   heatmap.data.sum <- clust.membership %>%
     left_join(all.dat.no.IS %>%
@@ -143,7 +146,8 @@ clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "tes
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank()) 
-  ggsave(filename = paste0(Sys.Date(),my.name,"_Heatmap_averages_moreGroups.pdf"))
+  #ggsave(filename = paste0(Sys.Date(),my.name,"_Heatmap_averages_moreGroups.pdf"))
+  
   ggplot() + 
     geom_tile(data = heatmap.data.aves, aes(x = treatment, y = MassFeature, fill = meanValue)) +
     facet_grid(Cluster_3~., 
@@ -153,7 +157,7 @@ clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "tes
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank()) 
-  ggsave(filename = paste0(Sys.Date(),my.name,"_Heatmap_averages_fewerGroups.pdf"))
+  #ggsave(filename = paste0(Sys.Date(),my.name,"_Heatmap_averages_fewerGroups.pdf"))
   
   heatmap.data
 }

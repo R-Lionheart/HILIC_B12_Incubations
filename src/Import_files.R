@@ -80,6 +80,36 @@ combined$Replicate.Name <- gsub("^.{0,1}", "", combined$Replicate.Name)
 currentDate <- Sys.Date()
 csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
 
+#############################
+options(scipen = 999)
+test <- combined %>%
+  select(Metabolite.name, Replicate.Name, Area.Value) %>%
+  filter(!str_detect(Replicate.Name, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m|Process|Std")) %>%
+  mutate(Replicate.Name = recode(Replicate.Name, 
+                                 "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
+                                 "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
+                                 "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
+                                 "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
+                                 "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
+                                 "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
+                                 "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
+                                 "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
+                                 "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
+                                 "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
+                                 "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
+                                 "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
+  select(Metabolite.name, SampID, Area.Value) %>%
+  drop_na() %>%
+  group_by(Metabolite.name, SampID) %>%
+  mutate(Averages = mean(Area.Value, na.rm = TRUE)) %>%
+  select(Metabolite.name, SampID, Averages) %>%
+  unique() %>%
+  mutate(Five_um = ifelse(str_detect(SampID, "5um"), TRUE, FALSE)) 
+
+ggplot(data = test, aes(x = Metabolite.name, y = Averages, fill = Five_um)) +
+  geom_bar(stat = "identity", position = "dodge")
+#############################
 write.csv(combined, csvFileName, row.names = FALSE)
 
 rm(list = ls())
