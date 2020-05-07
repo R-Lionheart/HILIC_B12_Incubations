@@ -39,21 +39,21 @@ exp.wide.data_RML <- split.data.frame(wide.all.data_RML, wide.all.data_RML$Exper
 ## z-score by column (by each metabolite)  --------------
 #clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "test") {
   
-metabs.w.few_RML <- exp.wide.data_RML[[1]] %>%
+metabs.w.few_RML <- wide.all.data_RML %>% # exp.wide.data_RML[[1]] when split by experiment
   gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
   filter(!is.na(Area.Value)) %>%
-  group_by(Metabolite.name, Experiment) %>%
+  group_by(Metabolite.name) %>%
   summarise(n = n()) %>%
-  filter(n<50) %>% ## THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
+  filter(n<160) %>% ## THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
   #full_join(exp.wide.data[[number]] %>% ORIGINAL
-  full_join(exp.wide.data_RML[[1]] %>%
+  full_join(wide.all.data_RML %>%
               gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
               filter(is.na(Area.Value)) %>%
               dplyr::select(Metabolite.name, Experiment) %>%
               unique())
 
 #spread.by.sample <- exp.wide.data[[number]] %>% ORIGINAL
-spread.by.sample_RML <- exp.wide.data_RML[[1]] %>%
+spread.by.sample_RML <- wide.all.data_RML %>%
   rename(treatment = Sample.ID,
          Sample.ID = Replicate.Name) %>%
   gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -treatment) %>%
@@ -65,7 +65,7 @@ spread.by.sample_RML <- exp.wide.data_RML[[1]] %>%
   arrange(Metabolite.name)
 clustering.metabs.TZ_RML <- (decostand(spread.by.sample_RML[,-1], method = 'standardize', 1, na.rm = T))
 rownames(clustering.metabs.TZ_RML) <- spread.by.sample_RML$Metabolite.name
-row.names.remove <- c("cGMP", "Glutathione", "Thiamine monophosphate")
+row.names.remove <- c("Thiamine monophosphate")
 
 clustering.metabs.TZ_RML <- clustering.metabs.TZ_RML[!(row.names(clustering.metabs.TZ_RML) %in% row.names.remove), ]
 
@@ -82,8 +82,8 @@ for(i in 2:15) {
 plot(k, Ave.Silh.Width_RML, type = "p", xlab = "No. clusters")
 
 ## why is this the best number? why 6? I replaced with 17 but not sure if thats right
-best.number = which(Ave.Silh.Width_RML==(max(Ave.Silh.Width_RML))) + 1
-low.number = which(Ave.Silh.Width_RML[1:6]==(max(Ave.Silh.Width_RML[1:6]))) + 1
+best.number = which(Ave.Silh.Width_RML == (max(Ave.Silh.Width_RML))) + 1
+low.number = which(Ave.Silh.Width_RML[1:7]==(max(Ave.Silh.Width_RML[1:7]))) + 1
 if(best.number==low.number){
   best.number = which(Ave.Silh.Width_RML[1:14]==(max(Ave.Silh.Width_RML[7:14]))) + 1
 }
@@ -94,66 +94,46 @@ Metabcl.clara.low_RML <- clara(clustering.metabs.TZ_RML, k = low.number, metric 
 
 ## combine cluster membership with normalized data 
 clust.membership_RML <- data.frame(Mass.Feature = names(Metabcl.clara.low_RML$clustering), 
-                                   Cluster_3 = Metabcl.clara.low_RML$clustering) %>%
+                                   Cluster_low = Metabcl.clara.low_RML$clustering) %>%
   full_join(., data.frame(Mass.Feature = names(Metabcl.clara.high_RML$clustering), 
-                          Cluster_13 = Metabcl.clara.high_RML$clustering))
+                          Cluster_best = Metabcl.clara.high_RML$clustering))
 heatmap.data_RML = clustering.metabs.TZ_RML %>%
   mutate(Mass.Feature = rownames(clustering.metabs.TZ_RML)) %>%
   full_join(clust.membership_RML) %>%
-  gather(Sample.ID, Value, -Mass.Feature, -Cluster_3, -Cluster_13) %>%
+  gather(Sample.ID, Value, -Mass.Feature, -Cluster_low, -Cluster_best) %>%
   left_join(all.dat.no.IS_RML %>%
               rename(treatment = Sample.ID,
                      Sample.ID = Replicate.Name) %>%
               dplyr::select(Sample.ID, Experiment, treatment) %>% 
               unique())  %>%
   unique() %>%
-  arrange(Cluster_3) %>%
+  arrange(Cluster_low) %>%
   select(-Sample.ID) %>%
   rename(Sample.ID = treatment)
 
 #####
 ggplot() + 
   geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
-  facet_grid(Cluster_13~., 
+  facet_grid(Cluster_best~., 
+             scales = "free_y",
+             space = "free_y") +
+  scale_fill_viridis(option = "viridis")+
+  theme(#axis.text.y  = element_blank(),
+        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
+        strip.text = element_blank()) +
+  ggtitle("Best Cluster Number: 11")
+
+
+ggplot() + 
+  geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
+  facet_grid(Cluster_low~., 
              scales = "free_y",
              space = "free_y") +
   scale_fill_viridis(option = "viridis")+
   theme(axis.text.y  = element_blank(),
         axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-        strip.text = element_blank())
-
-###### My version: it sucks
-ggplot() + 
-  geom_tile(data = heatmap.data, aes(x = Mass.Feature, y = Replicate.Name, fill = Value)) +
-  facet_grid(Cluster_13~., 
-             scales = "free_y",
-             space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
-
-  theme(axis.text.y  = element_blank(),
-        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-        strip.text = element_blank())
-
-ggplot() + 
-  geom_tile(data = heatmap.data, aes(x = Sample.ID, y = MassFeature, fill = Value)) +
-  facet_grid(Cluster_3~., 
-             scales = "free_y",
-             space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
-  theme(axis.text.y  = element_blank(),
-        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-        strip.text = element_blank())
-ggsave(filename = paste0(Sys.Date(),my.name,"_HeatMap_all_replicates_fewerGroups.pdf"))
-
-###### My version: it sucks again
-ggplot() + 
-  geom_tile(data = heatmap.data, aes(x = Mass.Feature, y = Replicate.Name, fill = Value)) +
-  facet_grid(Cluster_3~., 
-             scales = "free_y",
-             space = "free_y") +
-  theme(axis.text.y  = element_blank(),
-        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-        strip.text = element_blank())
+        strip.text = element_blank()) +
+  ggtitle("Low Cluster Number: 2")
 
 
 heatmap.data.sum <- clust.membership %>%
