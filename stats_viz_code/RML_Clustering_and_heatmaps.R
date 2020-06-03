@@ -35,6 +35,7 @@ All.Data <- data.frame(lapply(All.Data, as.character), stringsAsFactors=FALSE)
 
 # Arrange dataframe so each row is a sample and each column is a Mass Feature.
 All.Data.Wide <- All.Data %>%
+  select(Replicate.Name:Area.Value, Metabolite.name, Experiment) %>%
   group_by(Metabolite.name) %>%
   mutate(row = row_number()) %>%
   pivot_wider(names_from = Metabolite.name, values_from = Area.Value)  %>%
@@ -49,22 +50,23 @@ Cmpds.with.duplicates <- All.Data %>%
   full_join(All.Data %>% select(Replicate.Name, Sample.ID, Experiment, Metabolite.name, Area.Value) %>%
             select(Metabolite.name, Experiment) %>%
             unique()) %>%
-  as.data.frame()
+  as.data.frame() %>%
+  filter(is.na(n)) %>%
+  select(Metabolite.name) %>%
+  unique()
 
 
 spread.by.sample_RML <- All.Data.Wide %>%
   rename(treatment = Sample.ID,
          Sample.ID = Replicate.Name) %>%
-  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -treatment) %>%
-  filter((Metabolite.name %in% Cmpds.with.duplicates$Metabolite.name)) %>%
-  arrange(Sample.ID) %>%
-  filter(!is.na(Area.Value)) %>%
-  dplyr::select(-Experiment, -treatment) %>%
-  spread(Sample.ID, Area.Value) %>%
-  arrange(Metabolite.name) %>%
-  as.data.frame()
+  select(-(treatment:Experiment)) %>%
+  unique()
 
-spread.by.sample_RML <- ChangeClasses(spread.by.sample_RML, 2)
+result <- spread.by.sample_RML[-1]
+row.names(result) <- spread.by.sample_RML$Sample.ID
+
+
+spread.by.sample_RML <- ChangeClasses(spread.by.sample_RML, 1)
 
 
 clustering.metabs.TZ_RML <- (decostand(spread.by.sample_RML[,-1], method = 'standardize', 1, na.rm = T))
