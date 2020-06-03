@@ -13,6 +13,139 @@ library(viridis)
 file.pattern <- "MSDial_B12"
 my.filename <- "All.Data.Raw"
 
+ID.levels <- c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT",    
+               "IL2IT0", "IL2Control", "IL2DMB", "IL2WBT", "IL2DSW", "IL2DMBnoBT", "IL2noBT",
+               "IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um", "IL1DMBnoBT5um", "IL1noBT5um",
+               "IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um", "IL2DMBnoBT5um", "IL2noBT5um")
+
+
+# Prepare data
+all.dat.no.IS_RML <- read.csv("data_processed/MSDial_B12_Transect_combined_2020-05-11.csv",
+                              stringsAsFactors = FALSE) %>%
+  filter(Dataset == "B12_Incubation") %>%
+  separate(Replicate.Name, into = c("one", "two", "Sample.ID", "four"), remove = FALSE) %>%
+  select(-c("one", "two", "four")) %>%
+  select(Metabolite.name, Area.Value, Replicate.Name, Sample.ID) %>%
+  filter(!str_detect(Replicate.Name,
+                     "ProcessBlk|Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m|Std")) %>%
+  mutate(Experiment = ifelse(str_detect(Sample.ID, "IL1"), "Cyclonic", "Anticyclonic")) %>%
+  mutate(Area.Value = ifelse(Area.Value==0,1,Area.Value))
+
+## USE CLARA for K-means clustering
+## make a dataframe where each row is a sample and each column is a MF
+
+## read data ------------------
+
+wide.all.data_RML <- all.dat.no.IS_RML %>%
+  group_by(Metabolite.name) %>%
+  mutate(row = row_number()) %>%
+  pivot_wider(names_from = Metabolite.name, values_from = Area.Value)  %>%
+  select(-row)
+
+## separate by experiment -----------------------------
+exp.wide.data_RML <- split.data.frame(wide.all.data_RML, wide.all.data_RML$Experiment)
+
+## z-score by column (by each metabolite)  --------------
+#clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "test") {
+
+metabs.w.few_RML <- wide.all.data_RML %>% # exp.wide.data_RML[[1]] when split by experiment
+  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
+  filter(!is.na(Area.Value)) %>%
+  group_by(Metabolite.name) %>%
+  summarise(n = n()) %>%
+  filter(n<160) %>% ## THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
+  #full_join(exp.wide.data[[number]] %>% ORIGINAL
+  full_join(wide.all.data_RML %>%
+              gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
+              filter(is.na(Area.Value)) %>%
+              dplyr::select(Metabolite.name, Experiment) %>%
+              unique())
+
+#spread.by.sample <- exp.wide.data[[number]] %>% ORIGINAL
+spread.by.sample_RML <- wide.all.data_RML %>%
+  rename(treatment = Sample.ID,
+         Sample.ID = Replicate.Name) %>%
+  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -treatment) %>%
+  filter((Metabolite.name %in% metabs.w.few_RML$Metabolite.name)) %>%
+  arrange(Sample.ID) %>%
+  filter(!is.na(Area.Value)) %>%
+  dplyr::select(-Experiment, -treatment) %>%
+  spread(Sample.ID, Area.Value) %>%
+  arrange(Metabolite.name)
+clustering.metabs.TZ_RML <- (decostand(spread.by.sample_RML[,-1], method = 'standardize', 1, na.rm = T))
+rownames(clustering.metabs.TZ_RML) <- spread.by.sample_RML$Metabolite.name
+row.names.remove <- c("Thiamine monophosphate")
+
+clustering.metabs.TZ_RML <- clustering.metabs.TZ_RML[!(row.names(clustering.metabs.TZ_RML) %in% row.names.remove), ]
+
+
+## clara for clusters----------
+Ave.Silh.Width_RML = c()
+k = c()
+for(i in 2:15) {
+  Metabcl.clara <- clara(clustering.metabs.TZ_RML, k = i, metric = "euclidean",
+                         samples = nrow(clustering.metabs.TZ_RML))
+  Ave.Silh.Width_RML = c(Ave.Silh.Width_RML, Metabcl.clara$silinfo$avg.width)
+  k = c(k, i)
+}
+plot(k, Ave.Silh.Width_RML, type = "p", xlab = "No. clusters")
+
+## why is this the best number? why 6? I replaced with 17 but not sure if thats right
+best.number = which(Ave.Silh.Width_RML == (max(Ave.Silh.Width_RML))) + 1
+low.number = which(Ave.Silh.Width_RML[1:7]==(max(Ave.Silh.Width_RML[1:7]))) + 1
+if(best.number==low.number){
+  best.number = which(Ave.Silh.Width_RML[1:14]==(max(Ave.Silh.Width_RML[7:14]))) + 1
+}
+Metabcl.clara.high_RML <- clara(clustering.metabs.TZ_RML, k = best.number, metric = "euclidean",
+                                samples = nrow(clustering.metabs.TZ_RML), correct.d = FALSE)
+Metabcl.clara.low_RML <- clara(clustering.metabs.TZ_RML, k = low.number, metric = "euclidean", 
+                               samples = nrow(clustering.metabs.TZ_RML), correct.d = FALSE)
+
+## combine cluster membership with normalized data 
+clust.membership_RML <- data.frame(Mass.Feature = names(Metabcl.clara.low_RML$clustering), 
+                                   Cluster_low = Metabcl.clara.low_RML$clustering) %>%
+  full_join(., data.frame(Mass.Feature = names(Metabcl.clara.high_RML$clustering), 
+                          Cluster_best = Metabcl.clara.high_RML$clustering))
+heatmap.data_RML = clustering.metabs.TZ_RML %>%
+  mutate(Mass.Feature = rownames(clustering.metabs.TZ_RML)) %>%
+  full_join(clust.membership_RML) %>%
+  gather(Sample.ID, Value, -Mass.Feature, -Cluster_low, -Cluster_best) %>%
+  left_join(all.dat.no.IS_RML %>%
+              rename(treatment = Sample.ID,
+                     Sample.ID = Replicate.Name) %>%
+              dplyr::select(Sample.ID, Experiment, treatment) %>% 
+              unique())  %>%
+  unique() %>%
+  arrange(Cluster_low) %>%
+  select(-Sample.ID) %>%
+  rename(Sample.ID = treatment) %>%
+  mutate(Sample.ID = factor(Sample.ID, levels = ID.levels))
+
+#####
+ggplot() + 
+  geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
+  facet_grid(Cluster_best~., 
+             scales = "free_y",
+             space = "free_y") +
+  scale_fill_viridis(option = "viridis")+
+  theme(#axis.text.y  = element_blank(),
+    axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
+    strip.text = element_blank()) +
+  ggtitle("Best Cluster Number: 11")
+
+
+ggplot() + 
+  geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
+  facet_grid(Cluster_low~., 
+             scales = "free_y",
+             space = "free_y") +
+  scale_fill_viridis(option = "viridis")+
+  theme(axis.text.y  = element_blank(),
+        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
+        strip.text = element_blank()) +
+  ggtitle("Low Cluster Number: 2")
+################################################################################################################
+
 # Imports -----------------------------------------------------------------
 filenames <- RemoveCsv(list.files(path = "data_processed", pattern = regex(file.pattern, ignore_case = TRUE)))
 for (i in filenames) {
@@ -274,142 +407,6 @@ ggplot() +
 # South <- clara.clusters.Angie.Heatmap(exp.wide.data, number = 3, my.name = "_subset_transect-MFs_South_RRExp")
 
 
-source("src/biostats.R")
-source("src/coldiss.R")
-
-library(cluster)
-library(tidyverse)
-library(vegan)
-library(viridis)
-
-# library(readr)
-# library(factoextra)
-# library(broom)
-
-# Prepare data
-all.dat.no.IS_RML <- read.csv("data_processed/MSDial_B12_Transect_combined_2020-05-11.csv",
-                              stringsAsFactors = FALSE) %>%
-  filter(Dataset == "B12_Incubation") %>%
-  separate(Replicate.Name, into = c("one", "two", "Sample.ID", "four"), remove = FALSE) %>%
-  select(-c("one", "two", "four")) %>%
-  select(Metabolite.name, Area.Value, Replicate.Name, Sample.ID) %>%
-  filter(!str_detect(Replicate.Name,
-                     "ProcessBlk|Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m|Std")) %>%
-  mutate(Experiment = ifelse(str_detect(Sample.ID, "IL1"), "Cyclonic", "Anticyclonic")) %>%
-  mutate(Area.Value = ifelse(Area.Value==0,1,Area.Value))
-
-## USE CLARA for K-means clustering
-## make a dataframe where each row is a sample and each column is a MF
-
-## read data ------------------
-
-wide.all.data_RML <- all.dat.no.IS_RML %>%
-  group_by(Metabolite.name) %>%
-  mutate(row = row_number()) %>%
-  pivot_wider(names_from = Metabolite.name, values_from = Area.Value)  %>%
-  select(-row)
-
-## separate by experiment -----------------------------
-exp.wide.data_RML <- split.data.frame(wide.all.data_RML, wide.all.data_RML$Experiment)
-
-## z-score by column (by each metabolite)  --------------
-#clara.clusters.Angie.Heatmap <- function(exp.wide.data, number=1, my.name = "test") {
-
-metabs.w.few_RML <- wide.all.data_RML %>% # exp.wide.data_RML[[1]] when split by experiment
-  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
-  filter(!is.na(Area.Value)) %>%
-  group_by(Metabolite.name) %>%
-  summarise(n = n()) %>%
-  filter(n<160) %>% ## THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
-  #full_join(exp.wide.data[[number]] %>% ORIGINAL
-  full_join(wide.all.data_RML %>%
-              gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
-              filter(is.na(Area.Value)) %>%
-              dplyr::select(Metabolite.name, Experiment) %>%
-              unique())
-
-#spread.by.sample <- exp.wide.data[[number]] %>% ORIGINAL
-spread.by.sample_RML <- wide.all.data_RML %>%
-  rename(treatment = Sample.ID,
-         Sample.ID = Replicate.Name) %>%
-  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -treatment) %>%
-  filter((Metabolite.name %in% metabs.w.few_RML$Metabolite.name)) %>%
-  arrange(Sample.ID) %>%
-  filter(!is.na(Area.Value)) %>%
-  dplyr::select(-Experiment, -treatment) %>%
-  spread(Sample.ID, Area.Value) %>%
-  arrange(Metabolite.name)
-clustering.metabs.TZ_RML <- (decostand(spread.by.sample_RML[,-1], method = 'standardize', 1, na.rm = T))
-rownames(clustering.metabs.TZ_RML) <- spread.by.sample_RML$Metabolite.name
-row.names.remove <- c("Thiamine monophosphate")
-
-clustering.metabs.TZ_RML <- clustering.metabs.TZ_RML[!(row.names(clustering.metabs.TZ_RML) %in% row.names.remove), ]
-
-
-## clara for clusters----------
-Ave.Silh.Width_RML = c()
-k = c()
-for(i in 2:15) {
-  Metabcl.clara <- clara(clustering.metabs.TZ_RML, k = i, metric = "euclidean",
-                         samples = nrow(clustering.metabs.TZ_RML))
-  Ave.Silh.Width_RML = c(Ave.Silh.Width_RML, Metabcl.clara$silinfo$avg.width)
-  k = c(k, i)
-}
-plot(k, Ave.Silh.Width_RML, type = "p", xlab = "No. clusters")
-
-## why is this the best number? why 6? I replaced with 17 but not sure if thats right
-best.number = which(Ave.Silh.Width_RML == (max(Ave.Silh.Width_RML))) + 1
-low.number = which(Ave.Silh.Width_RML[1:7]==(max(Ave.Silh.Width_RML[1:7]))) + 1
-if(best.number==low.number){
-  best.number = which(Ave.Silh.Width_RML[1:14]==(max(Ave.Silh.Width_RML[7:14]))) + 1
-}
-Metabcl.clara.high_RML <- clara(clustering.metabs.TZ_RML, k = best.number, metric = "euclidean",
-                                samples = nrow(clustering.metabs.TZ_RML), correct.d = FALSE)
-Metabcl.clara.low_RML <- clara(clustering.metabs.TZ_RML, k = low.number, metric = "euclidean", 
-                               samples = nrow(clustering.metabs.TZ_RML), correct.d = FALSE)
-
-## combine cluster membership with normalized data 
-clust.membership_RML <- data.frame(Mass.Feature = names(Metabcl.clara.low_RML$clustering), 
-                                   Cluster_low = Metabcl.clara.low_RML$clustering) %>%
-  full_join(., data.frame(Mass.Feature = names(Metabcl.clara.high_RML$clustering), 
-                          Cluster_best = Metabcl.clara.high_RML$clustering))
-heatmap.data_RML = clustering.metabs.TZ_RML %>%
-  mutate(Mass.Feature = rownames(clustering.metabs.TZ_RML)) %>%
-  full_join(clust.membership_RML) %>%
-  gather(Sample.ID, Value, -Mass.Feature, -Cluster_low, -Cluster_best) %>%
-  left_join(all.dat.no.IS_RML %>%
-              rename(treatment = Sample.ID,
-                     Sample.ID = Replicate.Name) %>%
-              dplyr::select(Sample.ID, Experiment, treatment) %>% 
-              unique())  %>%
-  unique() %>%
-  arrange(Cluster_low) %>%
-  select(-Sample.ID) %>%
-  rename(Sample.ID = treatment)
-
-#####
-ggplot() + 
-  geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
-  facet_grid(Cluster_best~., 
-             scales = "free_y",
-             space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
-  theme(#axis.text.y  = element_blank(),
-    axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-    strip.text = element_blank()) +
-  ggtitle("Best Cluster Number: 11")
-
-
-ggplot() + 
-  geom_tile(data = heatmap.data_RML, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
-  facet_grid(Cluster_low~., 
-             scales = "free_y",
-             space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
-  theme(axis.text.y  = element_blank(),
-        axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
-        strip.text = element_blank()) +
-  ggtitle("Low Cluster Number: 2")
 
 
 heatmap.data.sum <- clust.membership %>%
