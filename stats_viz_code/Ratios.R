@@ -5,7 +5,7 @@ library(tidyverse)
 Glutamic.Acid.RF <- 1.83
 Glutamine.RF <- 0.912
 
-BMISd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/BMIS_Output_2020-06-26.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%

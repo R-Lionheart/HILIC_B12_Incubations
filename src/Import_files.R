@@ -33,7 +33,7 @@ for (df in seq_along(headers.set)) {
 }
 
 # Change variable classes -------------------------------------------------
-classes.changed <- lapply(names(headers.set), function(x) ChangeClasses(headers.set[[x]]))
+classes.changed <- lapply(names(headers.set), function(x) ChangeClasses(df = headers.set[[x]], start.column = 10))
 names(classes.changed) <- runs
 
 
