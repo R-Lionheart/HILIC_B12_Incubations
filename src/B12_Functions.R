@@ -12,6 +12,7 @@
 # Fix the StandardizeVariables function
 
 library(ggplot2)
+library(RCurl)
 library(rlist)
 library(stringr)
 library(tidyverse)

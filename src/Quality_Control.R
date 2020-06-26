@@ -7,7 +7,7 @@ RT.flex    <- 0.4
 blk.thresh <- 0.3
 SN.min     <- 4
 
-pattern = "combined"
+pattern = "MSDial_combined"
 
 # Import QC'd files and clean parameter data.
 filename <- RemoveCsv(list.files(path = 'data_processed/', pattern = pattern))

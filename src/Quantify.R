@@ -2,28 +2,24 @@ source("src/B12_Functions.R")
 
 # Enter dilution factor, injection volume, and the filtered volume from the instrument run.
 Dilution.Factor = 2
-Injection.Volume = 400 # pretty sure about this...
+Injection.Volume = 400 
 Volume.Filtered = 8 # liters
-
 
 # Import required files for quantification.
 
 # Import standards and filter NAs ---------------------------------------------------------------
-filename <- RemoveCsv(list.files(path = "data_extras/", pattern = "Ingalls"))
-filepath <- file.path("data_extras", paste(filename, ".csv", sep = ""))
-
-Ingalls.Standards <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
-  filter(Column == "HILIC") %>%
-  rename(Metabolite.Name = Compound.Name) %>%
-  select(Metabolite.Name,Compound.Type, QE.RF.ratio, Conc..uM, HILICMix, Emperical.Formula) %>%
-  filter(!is.na(Conc..uM)) 
+Raw.Standards <- getURL("https://raw.githubusercontent.com/IngallsLabUW/Ingalls_Standards/master/Ingalls_Lab_Standards_NEW.csv")
+Ingalls.Standards <- read.csv(text = Raw.Standards, stringsAsFactors = FALSE) %>%
+    filter(Column == "HILIC") %>%
+    rename(Metabolite.Name = Compound.Name) %>%
+    select(Metabolite.Name,Compound.Type, QE.RF.ratio, Conc..uM, HILICMix, Emperical.Formula) %>%
+    filter(!is.na(Conc..uM))
 Ingalls.Standards$Metabolite.Name <- TrimWhitespace(Ingalls.Standards$Metabolite.Name)
-
 
 # Import BMIS'd sample file ---------------------------------------------------------------
 filename <- RemoveCsv(list.files(path = "data_processed/", pattern = "BMIS_Output"))
 filepath <- file.path("data_processed", paste(filename, ".csv", sep = ""))
-BMISd.data <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE))
+BMISd.data <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE)) 
 
 # Import QC'd files and remove parameter data ------------------------------
 filename <- RemoveCsv(list.files(path = "data_processed/", pattern = "QC_Output"))
@@ -41,8 +37,13 @@ filepath <- file.path("data_extras", paste(filename, ".csv", sep = ""))
 original.IS.key <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, header = TRUE)) %>%
   rename(FinalBMIS = Internal_Standards)
 
+########################################################
+## TEMP METABOLITE FILTER FOR WEI AND ANITRA 6/20/20
+compounds <- c("Glutamic acid", "Glutamine", "Ketoglutaric Acid", "N6-Acetyl-L-lysine")
+########################################################
+
 # Apply appropriate filters and isolate standards ---------------------------------------------------------------
-Full.data <- QCd.data %>%
+QCd.w.Standards <- QCd.data %>%
   rename(Metabolite.Name = Metabolite.name) %>%
   filter(Metabolite.Name %in% Ingalls.Standards$Metabolite.Name) %>%
   filter(str_detect(Replicate.Name, "Std")) %>%
@@ -50,8 +51,7 @@ Full.data <- QCd.data %>%
   select(Replicate.Name, Metabolite.Name, Compound.Type, everything()) %>%
   unique()
 
-
-HILICS.duplicates <- Full.data %>%
+HILICS.duplicates <- QCd.w.Standards %>%
   group_by(Metabolite.Name, Replicate.Name) %>%
   mutate(number = 1) %>%
   mutate(ticker = cumsum(number)) %>%
@@ -61,24 +61,15 @@ HILICS.duplicates <- Full.data %>%
   unique() %>%
   filter(!Metabolite.Name == "Inosine")
 
-
-Full.data <- Full.data %>%
+QCd.w.Standards <- QCd.w.Standards %>%
   filter(!(Metabolite.Name %in% HILICS.duplicates$Metabolite.Name & Column == "HILICNeg")) %>%
   filter(!(Metabolite.Name == "Inosine" & Column == "HILICPos"))
 
-
-# Full.data <- Full.data %>%
-#   mutate(Type = paste(Env = ifelse(str_detect(Replicate.Name, "Stds"), "Standards", "Water"),
-#                       Matrix = ifelse(str_detect(Replicate.Name, "Matrix"), "Matrix", "Water"), sep = "_"))
-
-
-# This code retrieves mol/L from peak areas of targeted compounds.
-
 # Get response factors for compounds ----------------------------------
-Full.data <- data.frame(lapply(Full.data, function(x) {gsub("171002_Std_4uMStdinH20_1a", "171002_Std_4uMStdinH20_1", x)}),
+QCd.w.Standards <- data.frame(lapply(QCd.w.Standards, function(x) {gsub("171002_Std_4uMStdinH20_1a", "171002_Std_4uMStdinH20_1", x)}),
                         stringsAsFactors = FALSE)
 
-Full.data.RF <- Full.data %>%
+Full.data.RF <- QCd.w.Standards %>%
   mutate(Area.with.QC = as.numeric(Area.with.QC),
          Area.Value = as.numeric(Area.Value),
          Conc..uM = as.numeric(Conc..uM)) %>%
@@ -168,7 +159,7 @@ IS.key <- BMISd.data.filtered %>%
 
 
 # Calculate umol/vial for compounds with matched internal standards -----------------
-IS.data <- Full.data %>%
+IS.data <- QCd.w.Standards %>%
   filter(Metabolite.Name %in% IS.key$FinalBMIS) %>%
   mutate(IS_Area = Area.with.QC,
          FinalBMIS = Metabolite.Name) %>%
@@ -222,7 +213,7 @@ All.Info <- Quantitative.data %>%
 # Add in dilution factor and filtered volume --------------------------------------------------
 All.Info.Quantitative <- All.Info %>%
   mutate(nmol.in.Enviro.ave = (umol.in.vial_IS*10^-6*Injection.Volume/Volume.Filtered*1000*Dilution.Factor)) %>%
-  left_join(Full.data %>% select(Metabolite.Name, Emperical.Formula)) %>%
+  left_join(QCd.w.Standards %>% select(Metabolite.Name, Emperical.Formula)) %>%
   unique()
 
 # Get molecules of carbon and nitrogen ------------------------------------
