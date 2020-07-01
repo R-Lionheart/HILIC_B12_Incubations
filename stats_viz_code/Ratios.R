@@ -5,7 +5,7 @@ library(tidyverse)
 Glutamic.Acid.RF <- 1.83
 Glutamine.RF <- 0.912
 
-BMISd <- read.csv("data_processed/BMIS_Output_2020-06-26.csv", stringsAsFactors = FALSE) %>%
+BMISd <- read.csv("data_processed/BMIS_Output_2020-06-17.csv", stringsAsFactors = FALSE) %>%
   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%
@@ -32,14 +32,14 @@ BMISd <- read.csv("data_processed/BMIS_Output_2020-06-26.csv", stringsAsFactors 
 
 #####
 Dataset <- BMISd %>%
-  filter(str_detect(SampID, "5um")) %>%
-  filter(str_detect(SampID, "IL2"))
+  filter(!str_detect(SampID, "5um")) %>%
+  filter(str_detect(SampID, "IL1"))
 
 
 # 1_0.2
-# Dataset$SampID <- factor(Dataset$SampID,
-#                               levels = c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW",
-#                                          "IL1DMBnoBT", "IL1noBT"))
+Dataset$SampID <- factor(Dataset$SampID,
+                              levels = c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW",
+                                         "IL1DMBnoBT", "IL1noBT"))
 
 # 1_5
 Dataset$SampID <- factor(Dataset$SampID,

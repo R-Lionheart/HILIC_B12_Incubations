@@ -57,33 +57,88 @@ ano.Control.Status
 
 
 
-
 # Indicator Species Analysis ----------------------------------------------
+# Indicator species are “A species whose status provides information on the 
+# overall condition of the ecosystem and of other species in that ecosystem. 
+# They reflect the quality and changes in environmental conditions as well 
+# as aspects of community composition.”
+
+#I often use the same groups that I use for the ANOSIM statistical test. 
+# This way I can check to see which species are most responsible for the 
+# differences in microbial community composition between my groups.
+
 which.treatment <- Treatment$Treatment.Status
+
+# The mulitpatt command results in lists of species that are associated
+# with a particular group of samples. If your group has more than 2 categories,
+# multipatt will also identify species that are statistically more abundant in combinations of categories.
 species.indication = multipatt(df_wide_normalizedT, which.treatment,
                                func = "r.g", control = how(nperm=9999))
 summary(species.indication)
+
+# The first list contains the species found significantly more often in the “DSW” grouping. 
+# The #sps 3 shows that 3 species were identified as indicators for this group. 
+# The first column contains species names, the next column contains the stat value 
+# (higher means the OTU is more strongly associated). The p.value column contains 
+# the statistical p values for the species association (lower means stronger significance). 
+# The final column shows the significance level, which is explained by the Signif. codes
+# at the bottom of the output.
+
 individual.species <- as.data.frame(species.indication$sign) %>%
   rownames_to_column() %>%
   mutate(Significant = ifelse(p.value <= 0.05, "Significant", "NotSignificant")) %>%
   rename(Mass.Feature = rowname) %>%
   pivot_longer(cols = s.B12:s.TimeZero, names_to = "SampID")
 
-ggplot(data = individual.species, aes(x=SampID, y=Mass.Feature, 
-                                      size=index, color=Significant)) +
-  geom_point(alpha=0.5) 
+individual.graph <- individual.species %>%
+  group_by(Mass.Feature) %>%
+  mutate(GroupName = paste(SampID[value != 0], collapse = "_")) %>%
+  mutate(testing = as.character(GroupName)) %>%
+  select(-SampID, -value) %>%
+  unique()
 
-myboxplot <- mydf %>% left_join(Treatment) %>% filter(Mass.Feature %in% c("Betaine", "DMSP"))
-ggplot(myboxplot, aes(x = Mass.Feature, y = Adjusted.Area, fill = Treatment.Status)) + 
+
+tbd.layout <- as.data.frame(species.indication$comb)
+possible.goodshit <- as.data.frame(species.indication$str)
+
+## Plot types
+ind.spec.heatmap <- ggplot(data = individual.species, aes(x = Mass.Feature, y = SampID, 
+                                                          fill = stat)) + 
+  geom_tile(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+        #axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 10),
+        strip.text = element_text(size = 10)) 
+  #scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
+print(ind.spec.heatmap)
+
+
+gg = ggplot(individual.species, aes(x = Mass.Feature, y = stat, fill = SampID)) + 
   geom_boxplot(colour = "black", position = position_dodge(0.5)) +
   theme(legend.title = element_text(size = 12, face = "bold"), 
         legend.text = element_text(size = 10, face = "bold"), legend.position = "right", 
-        axis.text.x = element_text(angle = 90), 
+        axis.text.x = element_text(face = "bold", colour = "black", size = 12,
+                                   angle = 90), 
         axis.text.y = element_text(face = "bold", size = 12, colour = "black"), 
         axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
         panel.border = element_rect(fill = NA, colour = "black"), 
-        legend.key=element_blank()) + 
-  labs(x= "", y = "Relative Abundance (%)", fill = "Time") 
+        legend.key=element_blank()) 
+gg
+
+
+ggplot(individual.species, aes(x=stat, y=p.value, size = value, color = SampID)) +
+  geom_point(alpha=0.7) 
+
+ggplot(individual.species, aes(x=p.value, y=stat)) +
+  geom_point(mapping = aes(color = value), alpha = 1/20) + 
+  scale_color_gradient(low="blue", high="orange") +
+  coord_polar() +
+  facet_wrap(~SampID)
+
+ggplot(individual.graph, aes(Significant, stat, label = Mass.Feature)) +
+  geom_point(mapping = aes(color = p.value)) +
+  geom_text(position=position_jitter(width=1,height=1)) + 
+  facet_wrap(~GroupName)
 
 
 # Experiment with NMDS visualizations ------------------------------------------------------------------------

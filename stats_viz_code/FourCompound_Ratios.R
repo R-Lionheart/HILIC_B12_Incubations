@@ -151,3 +151,24 @@ ggplot(All.Info.Quantitative, aes(x = SampID, y = umol.in.vial.ave, fill = Metab
        subtitle="All sizes and eddies, unsorted") + 
   theme(plot.subtitle=element_text(size=10, color="black"),
         axis.text.x = element_text(angle = 90))
+
+
+# Isolate Gln/Glu ratios to check Wei's work ------------------------------
+Gln_Glu <- All.Info.Quantitative %>%
+  select(Metabolite.Name, SampID, umol.in.vial.ave) %>%
+  filter(str_detect(Metabolite.Name, "Glutamic|Glutamine")) %>%
+  filter(str_detect(SampID, "T0")) %>%
+  group_by(Metabolite.Name, SampID) %>%
+  mutate(Total.umol.Ave = mean(umol.in.vial.ave, na.rm = TRUE)) %>%
+  mutate(Eddy = ifelse(str_detect(SampID, "IL1"), "Cyclonic", "Anticyclonic")) %>%
+  mutate(Filter.Size = ifelse(str_detect(SampID, "5um"), "5um_Filter", "0.2um_Filter")) %>%
+  select(-umol.in.vial.ave) %>%
+  unique() %>%
+  ungroup() %>%
+  group_by(SampID) %>%
+  mutate(Ratios = (Total.umol.Ave[Metabolite.Name == "L-Glutamine"]) 
+         / (Total.umol.Ave[Metabolite.Name == "L-Glutamic acid"]))
+
+ggplot(data = Gln_Glu, aes(Eddy, Ratios, fill = Eddy)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ggtitle("B12 HILIC Incubations Cyclonic + Anticyclonic")
