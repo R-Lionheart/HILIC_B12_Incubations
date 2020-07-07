@@ -2,6 +2,8 @@ source("src/B12_Functions.R")
 source("src/biostats.R")
 options(scipen = 999)
 
+library(grid)
+library(gridExtra)
 library(indicspecies)
 library(tidyverse) 
 library(vegan)
@@ -63,7 +65,7 @@ ano.Control.Status
 # They reflect the quality and changes in environmental conditions as well 
 # as aspects of community composition.”
 
-#I often use the same groups that I use for the ANOSIM statistical test. 
+# I often use the same groups that I use for the ANOSIM statistical test. 
 # This way I can check to see which species are most responsible for the 
 # differences in microbial community composition between my groups.
 
@@ -91,25 +93,49 @@ individual.species <- as.data.frame(species.indication$sign) %>%
   pivot_longer(cols = s.B12:s.TimeZero, names_to = "SampID")
 
 individual.graph <- individual.species %>%
+  mutate(SampID = substr(SampID, 3, nchar(SampID))) %>%
   group_by(Mass.Feature) %>%
   mutate(GroupName = paste(SampID[value != 0], collapse = "_")) %>%
-  mutate(testing = as.character(GroupName)) %>%
   select(-SampID, -value) %>%
-  unique()
+  unique() %>%
+  filter(GroupName != "B12_DeepSeaWater_DMBnoB12")
 
 
 tbd.layout <- as.data.frame(species.indication$comb)
 possible.goodshit <- as.data.frame(species.indication$str)
 
-## Plot types
-ind.spec.heatmap <- ggplot(data = individual.species, aes(x = Mass.Feature, y = SampID, 
-                                                          fill = stat)) + 
+
+d1 <- individual.graph[1:3, 1, drop=FALSE]
+d2 <- individual.graph[1:2,1:2]
+
+g1 <- tableGrob(d1)
+g2 <- tableGrob(d2)
+
+haligned <- gtable_combine(g1,g2, along=1)
+valigned <- gtable_combine(g1,g2, along=2)
+grid.newpage()
+grid.arrange(haligned, valigned, ncol=2)
+
+ggplot(individual.graph, aes(Significant, stat, label = Mass.Feature)) +
+  geom_point(mapping = aes(color = Significant)) +
+  geom_text() + 
+  facet_wrap(~GroupName) +
+  theme(axis.text.x = element_blank())
+
+ggplot(as.data.frame(table(individual.graph)), 
+       aes(x=Mass.Feature, y = GroupName, fill=Significant)) + 
+  geom_bar(stat="identity")
+
+
+# Other options
+ind.spec.heatmap <- ggplot(data = individual.species, aes(x = stat, y = p.value, 
+                                                          fill = Significant)) + 
   geom_tile(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
         #axis.text.x = element_blank(),
         axis.text.y = element_text(size = 10),
-        strip.text = element_text(size = 10)) 
-  #scale_y_discrete(limits = rev(levels(as.factor(heatmap.data$SampID)))) +
+        strip.text = element_text(size = 10)) +
+  facet_wrap(~SampID)
 print(ind.spec.heatmap)
 
 
@@ -135,10 +161,6 @@ ggplot(individual.species, aes(x=p.value, y=stat)) +
   coord_polar() +
   facet_wrap(~SampID)
 
-ggplot(individual.graph, aes(Significant, stat, label = Mass.Feature)) +
-  geom_point(mapping = aes(color = p.value)) +
-  geom_text(position=position_jitter(width=1,height=1)) + 
-  facet_wrap(~GroupName)
 
 
 # Experiment with NMDS visualizations ------------------------------------------------------------------------
