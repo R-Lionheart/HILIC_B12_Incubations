@@ -1,8 +1,6 @@
 ## Osmolyes
 
-capFirst <- function(s) {
-  paste(toupper(substring(s, 1, 1)), substring(s, 2), sep = "")
-}
+source("src/B12_Functions.R")
 
 Raw.Osmolytes <- read.csv("data_extras/Method_Osmolytes.csv", stringsAsFactors = FALSE) %>%
   rename(Osmolytes = 2,

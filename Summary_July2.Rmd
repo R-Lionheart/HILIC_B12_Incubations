@@ -22,6 +22,9 @@ source("src/B12_BMIS_HILIC.R")
 ```
 
 Next step is to 
+Process osmolytes
+Split.by.eddy
+chl uploads standardize
 
 
 ### Chl-A Normalizations

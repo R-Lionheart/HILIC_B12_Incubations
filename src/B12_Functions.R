@@ -162,18 +162,68 @@ MakeFacetGraphs <- function (df, title, scale) {
   print(df.plot)
 }
 
-# MakeWide <- function(df) {
-#   df.wide <- df %>%
-#     ungroup() %>%
-#     tidyr::spread(Replicate.Name, Adjusted.Area) %>%
-#     as.data.frame()
-#   
-#   df.rownames <- df.wide[,-1]
-#   rownames(df.rownames) <- df.wide[,1]
-#   
-#   df.rownames[is.na(df.rownames)] <- NA
-#   
-#   #df.noNA <- na.omit(df.rownames)
-#   
-#   return(df.rownames)
-# }
+MakeWide <- function(df) {
+  df.wide <- df %>%
+    ungroup() %>%
+    tidyr::spread(Replicate.Name, Adjusted.Area) %>%
+    as.data.frame()
+
+  df.rownames <- df.wide[,-1]
+  rownames(df.rownames) <- df.wide[,1]
+
+  df.rownames[is.na(df.rownames)] <- NA
+
+  #df.noNA <- na.omit(df.rownames)
+
+  return(df.rownames)
+}
+
+ChlMakeWide <- function(df) {
+  df.wide <- df %>%
+    ungroup() %>%
+    tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
+    as.data.frame()
+  
+  df.rownames <- df.wide[,-1]
+  rownames(df.rownames) <- df.wide[,1]
+  
+  df.rownames[is.na(df.rownames)] <- NA
+  
+  return(df.rownames)  
+}
+UploadChlorophyll <- function() {
+  df <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
+    select(1:6) %>%
+    rename(Filter.size = Filter..µm.,
+           Chla = Chl.a..µg.L.) %>%
+    mutate(Date = as.character(Date),
+           Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
+    #filter(str_detect(Eddy, whichEddy)) %>%
+    unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
+    filter(Filter.size == 5.0) %>%
+    mutate(Chla = as.numeric(Chla))
+  
+  return(df)
+}
+UploadFiles <- function(myfilepath) {
+  # Function for uploading non-standardized files.
+  #
+  # Returns: dataframe with relevant columns selected.
+  uploaded.df <- read.csv(myfilepath, stringsAsFactors = FALSE) %>%
+    select(Mass.Feature:Adjusted.Area)
+  
+  return(uploaded.df)
+}
+
+FixBMISNames <- function(df) {
+  BMISd_fixed <- df %>%
+    separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+    select(-c("one", "two")) %>%
+    unite(SampID, replicate, col = "Replicate.Name")
+  
+  return(BMISd_fixed)
+}
+
+capFirst <- function(s) {
+  paste(toupper(substring(s, 1, 1)), substring(s, 2), sep = "")
+}

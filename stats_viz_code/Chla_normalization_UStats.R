@@ -136,7 +136,13 @@ write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_Ch
 write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
 
 
-
+# # Import Chlorophyll ------------------------------------------------------
+# filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(Chl.pattern, ignore_case = TRUE)))
+# 
+# for (i in filenames) {
+#   filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+#   assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE))
+# }
 
 #############################################################################################
 # Log normalize the chlorophyll-normalized data ---------------------------
