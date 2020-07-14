@@ -161,3 +161,19 @@ MakeFacetGraphs <- function (df, title, scale) {
     ggtitle(title)
   print(df.plot)
 }
+
+# MakeWide <- function(df) {
+#   df.wide <- df %>%
+#     ungroup() %>%
+#     tidyr::spread(Replicate.Name, Adjusted.Area) %>%
+#     as.data.frame()
+#   
+#   df.rownames <- df.wide[,-1]
+#   rownames(df.rownames) <- df.wide[,1]
+#   
+#   df.rownames[is.na(df.rownames)] <- NA
+#   
+#   #df.noNA <- na.omit(df.rownames)
+#   
+#   return(df.rownames)
+# }

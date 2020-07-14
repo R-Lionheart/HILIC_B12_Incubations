@@ -1,10 +1,11 @@
-## Data normalized to Chlorphyll-a
-
 library(tidyverse)
 library(vegan)
 options(scipen = 999)
 
-makeWide <- function(df) {
+source("src/B12_Functions.R")
+
+## Data normalized to Chlorophyll-a
+ChlMakeWide <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
     tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
@@ -15,11 +16,9 @@ makeWide <- function(df) {
   
   df.rownames[is.na(df.rownames)] <- NA
   
-  #df.noNA <- na.omit(df.rownames)
-  
-  return(df.rownames)
+  return(df.rownames)  
 }
-uploadFiles <- function(myfilepath) {
+UploadFiles <- function(myfilepath) {
   # Function for uploading non-standardized files.
   #
   # Returns: dataframe with relevant columns selected.
@@ -30,10 +29,10 @@ uploadFiles <- function(myfilepath) {
 }
 
 # Upload all required files
-BMISd_1_0.2_notnormd <- uploadFiles("data_processed/IsoLagran1_0.2_notnormd.csv")
-BMISd_1_5_notnormd <- uploadFiles("data_processed/IsoLagran1_5_notnormd.csv")
-BMISd_2_0.2_notnormd <- uploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv")
-BMISd_2_5_notnormd <- uploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
+BMISd_1_0.2_notnormd <- UploadFiles("data_processed/IsoLagran1_0.2_notnormd.csv")
+BMISd_1_5_notnormd <- UploadFiles("data_processed/IsoLagran1_5_notnormd.csv")
+BMISd_2_0.2_notnormd <- UploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv")
+BMISd_2_5_notnormd <- UploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
 
 # Set filtering conditions that correspond to the treatments you are comparing.
 Condition1 <- "IL1DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
@@ -106,8 +105,6 @@ Chlorophyll_fixed <- Chlorophyll %>%
   select(SampID, replicate, Chla) %>%
   unite(SampID, replicate, col = "Replicate.Name")
 
-write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
-
 # Fix BMISd names to match ------------------------------------------------------------
 BMISd_fixed <- BMISd %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
@@ -120,19 +117,26 @@ complete.set <- Chlorophyll_fixed %>%
   left_join(BMISd_fixed) %>%
   mutate(Chla = as.numeric(Chla)) %>%
   mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
-  filter(!Chla < 0) %>% # Remove negative sChl-A values
+  filter(!Chla < 0) %>% # Remove negative Chl-A values
   select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
   na.omit()
 
 ## Standardize
-complete.wide <- makeWide(complete.set)
+complete.wide <- ChlMakeWide(complete.set)
 complete.wide[is.na(complete.wide)] <- 1000
 complete.wideT <- t(complete.wide)
 
 complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", na.rm = TRUE) 
 
+
+
+## Save Chlorophyll files to data_processed/
 write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_std.csv", sep = ""))
 write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
+write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
+
+
+
 
 #############################################################################################
 # Log normalize the chlorophyll-normalized data ---------------------------

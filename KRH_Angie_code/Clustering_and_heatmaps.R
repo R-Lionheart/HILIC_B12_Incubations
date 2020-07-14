@@ -4,9 +4,9 @@ library(tidyverse)
 # library(stringr)
 # library(readr)
 # library(dplyr)
-# library(vegan)
+library(vegan)
 # 
-# library(cluster)
+library(cluster)
 # library(factoextra)
 # library(viridis)
 # library(broom)
@@ -100,7 +100,7 @@ exp.wide.data <- split.data.frame(wide.all.data, wide.all.data$Experiment)
     facet_grid(Cluster_13~., 
                scales = "free_y",
                space = "free_y") +
-    scale_fill_viridis(option = "viridis")+
+    #scale_fill_viridis(option = "viridis")+
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank())
@@ -112,7 +112,7 @@ exp.wide.data <- split.data.frame(wide.all.data, wide.all.data$Experiment)
     facet_grid(Cluster_3~., 
                scales = "free_y",
                space = "free_y") +
-    scale_fill_viridis(option = "viridis")+
+    #scale_fill_viridis(option = "viridis")+
     theme(axis.text.y  = element_blank(),
           axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
           strip.text = element_blank())

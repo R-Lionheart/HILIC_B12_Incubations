@@ -13,7 +13,7 @@ Chl.pattern = "ChlA" # Enter this to identify which files are Chlorophyll. Patte
 percentMissing = 0.5
 
 # Functions
-makeNMDS <- function(mydf, hasChlorophyll) {
+MakeNMDS <- function(mydf, hasChlorophyll) {
   
   Treatment <- mydf %>%
     ungroup() %>%
@@ -71,35 +71,6 @@ makeNMDS <- function(mydf, hasChlorophyll) {
   
   return(Iso_wide_nmds)
 }
-makeWide <- function(df) {
-  df.wide <- df %>%
-    ungroup() %>%
-    tidyr::spread(Replicate.Name, Adjusted.Area) %>%
-    as.data.frame()
-  
-    df.rownames <- df.wide[,-1]
-    rownames(df.rownames) <- df.wide[,1]
-    
-    df.rownames[is.na(df.rownames)] <- NA
-    
-    df.noNA <- na.omit(df.rownames)
-  
-  return(df.noNA)
-}
-RemoveCsv <- function(full.filepaths) {
-  # Remove a .csv file extension and obtain basename from a given list of filepaths.
-  #
-  # Args
-  #   Character strings of filepaths in a directory.
-  #
-  # Returns
-  #   Character strings of file basenames, without a csv extension.
-  #
-  no.path <- substr(full.filepaths, 1, nchar(full.filepaths)-4)
-  no.ID <-   gsub("\\_.*","", no.path)
-  
-  return(no.path)
-}
 
 # BMIS import and filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = "data_processed/", pattern = BMIS.pattern))
@@ -112,7 +83,7 @@ HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = 
   filter(!Mass.Feature == "Inj_vol") %>%
   filter(!str_detect(Mass.Feature, ","))
 
-# Adjust for ILT0 naming issues --------------------------------------------
+# Adjust for T0 naming issues --------------------------------------------
 HILIC_all <- HILIC_all %>%
   mutate(Replicate.Name = recode(Replicate.Name, 
                                  "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
