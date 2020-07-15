@@ -1,6 +1,8 @@
 library(tidyverse)
 options(scipen = 999)
 
+source("src/B12_Functions.R")
+
 # Setup -------------------------------------------------------------------
 # Specific size/eddy
 
@@ -9,24 +11,34 @@ myTreatments <- c("IL1WBT|IL1noBT|IL1Control")
 myTitle <- "Anticyclonic Eddy (#1), 5um size fraction"
 myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
 
-BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_1_5_notnormd <- read.csv("data_processed/IsoLagran1_5_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_2_0.2_notnormd <- read.csv("data_processed/IsoLagran2_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_2_5_notnormd <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
+dataset.pattern <- "notstd|wide"
 
-BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+## Import your datasets. This will import a lot of information.
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+# BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_1_5_notnormd <- read.csv("data_processed/IsoLagran1_5_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_2_0.2_notnormd <- read.csv("data_processed/IsoLagran2_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_2_5_notnormd <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+
+# BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
 
 # Assign names
 BMISd.long <- BMISd_1_5_notnormd
-  
 BMISd.wide <- BMISd_1_5_wide
+
 colnames(BMISd.wide)[1] <- "Replicate.Name"
 BMISd.wide.notnormd <- BMISd.long %>%
   pivot_wider(names_from = Replicate.Name, 

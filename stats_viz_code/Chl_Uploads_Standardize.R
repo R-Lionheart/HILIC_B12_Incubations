@@ -106,9 +106,9 @@ complete.wide.normalizedT.IL25 <- decostand(complete.wideT.IL25, method = "stand
 
 
 ## Save Chlorophyll files to data_processed/
-write.csv(complete.wide.normalizedT.IL15, paste("data_processed/IL1_5um_ChlA_normd_std.csv", sep = ""))
-write.csv(complete.set.IL15, paste("data_processed/IL1_5um_ChlA_normd_notstd.csv", sep = ""))
+write.csv(complete.wide.normalizedT.IL15, paste("data_processed/IL1_5um_ChlAnormd_std.csv", sep = ""))
+write.csv(complete.set.IL15, paste("data_processed/IL1_5um_ChlAnormd_notstd.csv", sep = ""))
 
-write.csv(complete.wide.normalizedT.IL25, paste("data_processed/IL2_5um_ChlA_normd_std.csv", sep = ""))
-write.csv(complete.set.IL25, paste("data_processed/IL2_5um_ChlA_normd_notstd.csv", sep = ""))
+write.csv(complete.wide.normalizedT.IL25, paste("data_processed/IL2_5um_ChlAnormd_std.csv", sep = ""))
+write.csv(complete.set.IL25, paste("data_processed/IL2_5um_ChlAnormd_notstd.csv", sep = ""))
 

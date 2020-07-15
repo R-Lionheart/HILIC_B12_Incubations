@@ -25,7 +25,11 @@ Next step is to
 Process osmolytes
 Split.by.eddy
 chl uploads standardize
+NMDS
 
+should be in any order:
+ANOSIM_species indic (STILL NEEDS LOTS OF WORK)
+ANOVA_all (mostly useless. needs work.)
 
 ### Chl-A Normalizations
 #### Heatmaps

@@ -21,7 +21,7 @@ for (i in filenames) {
 ## Set information for ANOSIM test
 EddyInformation <- "1_Cyclonic_5um"
 mydf <- IsoLagran1_5_notstd
-mydf.wide <- IsoLagran1_Cyclonic_5um_std
+mydf.wide <- IsoLagran1_Cyclonic_5um_wide_std
 hasChlorophyll <- "no"
 
 ## Create Treatment dataframe for ANOSIM analysis

@@ -1,25 +1,24 @@
 library(tidyverse)
 options(scipen = 999)
 
-makeLong <- function(df) {
-  colnames(df)[1] <- "Replicate.Name"
-  df.long <- pivot_longer(df, -Replicate.Name,
-               names_to = "Mass.Feature",
-               values_to = "Area.BMISd.Normd") %>%
-    select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
-  return(df.long)
-} 
+source("src/B12_Functions.R")
 
-# BMISd normd
-BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+dataset.pattern <- "IsoLagran|wide"
+BMIS.pattern <- "Time0"
 
-BMISd_1_0.2_long <- makeLong(BMISd_1_0.2_wide)
-BMISd_1_5_long <- makeLong(BMISd_1_5_wide)
-BMISd_2_0.2_long <- makeLong(BMISd_2_0.2_wide)
-BMISd_2_5_long <- makeLong(BMISd_2_5_wide)
+## Import your datasets. This will import a lot of information.
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+
+BMISd_1_0.2_long <- makeLong(IsoLagran1_Cyclonic_0.2um_wide_std)
+BMISd_1_5_long <- makeLong(IsoLagran1_Cyclonic_5um_wide_std)
+BMISd_2_0.2_long <- makeLong(IsoLagran2_Anticyclonic_0.2um_wide_std)
+BMISd_2_5_long <- makeLong(IsoLagran2_Anticyclonic_5um_wide_std)
 
 BMISD.normd <- BMISd_1_0.2_long %>%
   rbind(BMISd_1_5_long) %>%
@@ -30,30 +29,38 @@ rm(list=ls(pattern="long|wide"))
 
 
 # Complete BMISd not normd
-BMISd.notnormd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
-  filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
-  separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = TRUE) %>%
-  mutate(Replicate.Name = recode(Replicate.Name, 
-                                 "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
-                                 "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
-                                 "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
-                                 "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
-                                 "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
-                                 "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
-                                 "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
-                                 "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
-                                 "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
-                                 "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
-                                 "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
-                                 "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
-  select(Mass.Feature, Replicate.Name, SampID, Adjusted.Area) %>%
-  drop_na()
+# BMISd.notnormd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
+#   filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
+#   separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = TRUE) %>%
+#   mutate(Replicate.Name = recode(Replicate.Name, 
+#                                  "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
+#                                  "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
+#                                  "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
+#                                  "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
+#                                  "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
+#                                  "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
+#                                  "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
+#                                  "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
+#                                  "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
+#                                  "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
+#                                  "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
+#                                  "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
+#   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
+#   select(Mass.Feature, Replicate.Name, SampID, Adjusted.Area) %>%
+#   drop_na()
 
-grouped.BMISd <- BMISd.notnormd %>%
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = BMIS.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+BMISd <- BMISd_Time0_Fixed_2020.07.15
+grouped.BMISd <- BMISd %>%
   left_join(BMISD.normd) %>%
-  select(-Replicate.Name) %>%
+  separate(Replicate.Name, into = c("date", "runtype", "SampID", "replicate")) %>%
   group_by(Mass.Feature, SampID) %>%
   mutate(Avg.Area = mean(Adjusted.Area)) %>%
   mutate(Count = n()) %>%

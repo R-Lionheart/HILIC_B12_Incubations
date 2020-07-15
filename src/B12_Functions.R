@@ -148,6 +148,15 @@ MakeBarPlot <- function(df, title) {
   print(df.plot)
 }
 
+makeLong <- function(df) {
+  colnames(df)[1] <- "Replicate.Name"
+  df.long <- pivot_longer(df, -Replicate.Name,
+                          names_to = "Mass.Feature",
+                          values_to = "Area.BMISd.Normd") %>%
+    select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
+  return(df.long)
+} 
+
 
 MakeFacetGraphs <- function (df, title, scale) {
   df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +

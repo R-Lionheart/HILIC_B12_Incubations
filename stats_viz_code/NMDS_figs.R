@@ -9,7 +9,7 @@ library(vegan)
 
 # User data
 BMIS.pattern = "IsoLagran"
-Chl.pattern = "ChlA_normd_notstd" # Enter this to identify which files are Chlorophyll. Pattern match to your directory.
+Chl.pattern = "ChlAnormd_notstd" # Enter this to identify which files are Chlorophyll. Pattern match to your directory.
 # percentMissing = 0.5
 
 # Functions
@@ -49,7 +49,7 @@ MakeNMDS <- function(mydf, hasChlorophyll) {
   # Standardize + distance matrix --------------------------------------------------------------
   df_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE)
   df_dataframe <- as.data.frame(df_wide_normalizedT)
-  write.csv(df_wide_normalizedT, paste("data_processed/IsoLagran", EddyInformation, "_std.csv", sep = ""))
+  write.csv(df_wide_normalizedT, paste("data_processed/IsoLagran", EddyInformation, "_wide_std.csv", sep = ""))
   
   Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
                                   k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
@@ -92,8 +92,8 @@ for (i in filenames) {
 
 
 # Set data and run function ------------------------------------------------------------------------
-EddyInformation <- "2_Anticyclonic_5_ChlA"
-df_wide_normalizedT <- MakeNMDS(IL2_5um_ChlA_normd_notstd, hasChlorophyll = "yes")
+EddyInformation <- "1_Cyclonic_5um_wChlA"
+df_wide_normalizedT <- MakeNMDS(IL1_5um_ChlAnormd_notstd, hasChlorophyll = "yes")
 
 
 ###################################
