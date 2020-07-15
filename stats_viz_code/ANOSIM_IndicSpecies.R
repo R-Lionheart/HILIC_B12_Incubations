@@ -8,12 +8,23 @@ library(indicspecies)
 library(tidyverse) 
 library(vegan)
 
-## Import your dataset from NMDS_figs.R
+dataset.pattern <- "IsoLagran"
+
+## Import your datasets. This will import a lot of information.
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+## Set information for ANOSIM test
 EddyInformation <- "1_Cyclonic_5um"
-mydf <- IsoLagran1_5
+mydf <- IsoLagran1_5_notstd
+mydf.wide <- IsoLagran1_Cyclonic_5um_std
 hasChlorophyll <- "no"
 
-
+## Create Treatment dataframe for ANOSIM analysis
 Treatment <- mydf %>%
   ungroup() %>%
   select(Replicate.Name) %>%
@@ -40,23 +51,15 @@ Treatment <- Treatment %>%
                                                                ifelse(str_detect(Supergroup, "DMB"), "DMB", "noB12"))))))) %>%
   select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
 
-# Transform to wide for analysis -----------------------------------------------------------------
-Iso_wide <- makeWide(mydf)
-Iso_wide[is.na(Iso_wide)] <- 1000
-Iso_wideT <- t(Iso_wide)
+## Transform 
 
-# Standardize + distance matrix -----------------------------------------------------------------
-df_wide_normalizedT <- decostand(Iso_wideT, method = "standardize", na.rm = TRUE)
-df_dataframe <- as.data.frame(df_wide_normalizedT) 
-
-ano.Treatment.Status = anosim(df_wide_normalizedT, Treatment$Treatment.Status, 
+ano.Treatment.Status = anosim(mydf.wide[,-1], Treatment$Treatment.Status, 
                               distance = "euclidean", permutations = 9999)
 ano.Treatment.Status
 
-ano.Control.Status = anosim(df_wide_normalizedT, Treatment$Control.Status, 
+ano.Control.Status = anosim(mydf.wide[,-1], Treatment$Control.Status, 
                             distance = "euclidean", permutations = 9999)
 ano.Control.Status
-
 
 
 # Indicator Species Analysis ----------------------------------------------
@@ -74,7 +77,7 @@ which.treatment <- Treatment$Treatment.Status
 # The mulitpatt command results in lists of species that are associated
 # with a particular group of samples. If your group has more than 2 categories,
 # multipatt will also identify species that are statistically more abundant in combinations of categories.
-species.indication = multipatt(df_wide_normalizedT, which.treatment,
+species.indication = multipatt(mydf.wide[,-1], which.treatment,
                                func = "r.g", control = how(nperm=9999))
 summary(species.indication)
 
@@ -122,9 +125,10 @@ ggplot(individual.graph, aes(Significant, stat, label = Mass.Feature)) +
   facet_wrap(~GroupName) +
   theme(axis.text.x = element_blank())
 
-ggplot(as.data.frame(table(individual.graph)), 
-       aes(x=Mass.Feature, y = GroupName, fill=Significant)) + 
-  geom_bar(stat="identity")
+## Currently not working
+# ggplot(as.data.frame(table(individual.graph)), 
+#        aes(x=Mass.Feature, y = GroupName, fill=Significant)) + 
+#   geom_bar(stat="identity")
 
 
 # Other options
@@ -160,25 +164,3 @@ ggplot(individual.species, aes(x=p.value, y=stat)) +
   scale_color_gradient(low="blue", high="orange") +
   coord_polar() +
   facet_wrap(~SampID)
-
-
-
-# Experiment with NMDS visualizations ------------------------------------------------------------------------
-Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
-                                k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
-
-# Visualize scree plot of potential ordination axes
-dimcheckMDS(df_wide_normalizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
-vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddyInformation, sep = " "))
-
-# Quick vectors
-myNMDS = data.frame(MDS1 = Iso_wide_nmds$points[,1], MDS2 = Iso_wide_nmds$points[,2], 
-                    MDS3 = Iso_wide_nmds$points[,3]) #originally had just 2
-
-myvec.sp <- envfit(Iso_wide_nmds$points, df_wide_normlizedT, perm=1000)
-myvec.sp.df <- as.data.frame(myvec.sp$vectors$arrows*sqrt(myvec.sp$vectors$r))
-myvec.sp.df$species<-rownames(myvec.sp.df)
-
-myNMDS2 <- myNMDS %>%
-  rownames_to_column()
-

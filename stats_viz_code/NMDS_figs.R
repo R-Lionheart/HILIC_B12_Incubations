@@ -71,7 +71,7 @@ MakeNMDS <- function(mydf, hasChlorophyll) {
   return(Iso_wide_nmds)
 }
 
-# # BMIS import and filtering of unnecessary SampIDs --------------------------------------------
+# BMIS import and filtering of unnecessary SampIDs --------------------------------------------
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = BMIS.pattern))
 filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
 for (i in filenames) {

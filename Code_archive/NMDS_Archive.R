@@ -1,5 +1,27 @@
 ## Originally in NMDS_figs.R after the scree plot visualization
 
+
+# Experiment with NMDS visualizations ------------------------------------------------------------------------
+Iso_wide_nmds <- vegan::metaMDS(df_wide_normalizedT, distance = "euclidean", 
+                                k = 3, autotransform = FALSE, trymax = 100, wascores = FALSE)
+
+# Visualize scree plot of potential ordination axes
+dimcheckMDS(df_wide_normalizedT, distance="euclidean", k=6, autotransform=FALSE, trymax=20) 
+vegan::stressplot(Iso_wide_nmds, main = paste("Stressplot, Eddy", EddyInformation, sep = " "))
+
+# Quick vectors
+myNMDS = data.frame(MDS1 = Iso_wide_nmds$points[,1], MDS2 = Iso_wide_nmds$points[,2], 
+                    MDS3 = Iso_wide_nmds$points[,3]) #originally had just 2
+
+myvec.sp <- envfit(Iso_wide_nmds$points, df_wide_normlizedT, perm=1000)
+myvec.sp.df <- as.data.frame(myvec.sp$vectors$arrows*sqrt(myvec.sp$vectors$r))
+myvec.sp.df$species<-rownames(myvec.sp.df)
+
+myNMDS2 <- myNMDS %>%
+  rownames_to_column()
+
+
+
 # Check stressplots, scree diagrams
 Iso_wide_nmds$stress # Add a flag if this is high?
 nmds.monte(df_wide_normlizedT, distance="euclidean", k=3, autotransform=FALSE, trymax=20)

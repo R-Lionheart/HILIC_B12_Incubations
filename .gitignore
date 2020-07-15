@@ -3,6 +3,6 @@
 .RData
 .Ruserdata
 
-data_processed/*.png
+figures/*.png
 data_processed/*.csv
 
