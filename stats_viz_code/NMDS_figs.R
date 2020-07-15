@@ -13,7 +13,7 @@ Chl.pattern = "ChlAnormd_notstd" # Enter this to identify which files are Chloro
 # percentMissing = 0.5
 
 # Functions
-MakeNMDS <- function(mydf, hasChlorophyll) {
+MakeNMDS <- function(mydf, hasChlorophyll, EddyInformation) {
   
   Treatment <- mydf %>%
     ungroup() %>%
@@ -60,7 +60,8 @@ MakeNMDS <- function(mydf, hasChlorophyll) {
                                                           "DMBnoB12", "noB12"))
   # Plot NMDS graph ----------------------------------------------
   Isograph <- ggplot() + 
-    geom_polygon(data=Iso_pointlocation, aes(x=MDS1, y=MDS2, fill=Treatment.Status, group=Treatment.Status), alpha=0.30) +
+    geom_polygon(data=Iso_pointlocation, aes(x=MDS1, y=MDS2, 
+                                             fill=Treatment.Status, group=Treatment.Status), alpha=0.30) +
     geom_point(data=Iso_pointlocation, aes(x=MDS1,y=MDS2, colour=Treatment.Status),size=4) + 
     geom_text(data=Iso_pointlocation,aes(x=MDS1,y=MDS2,label=Treatment.Status), size=4) +  # add the species labels
     xlim(-20, 10) +
@@ -91,9 +92,26 @@ for (i in filenames) {
 }
 
 
-# Set data and run function ------------------------------------------------------------------------
-EddyInformation <- "1_Cyclonic_5um_wChlA"
-df_wide_normalizedT <- MakeNMDS(IL1_5um_ChlAnormd_notstd, hasChlorophyll = "yes")
+# Set data and run functions ------------------------------------------------------------------------
+EddyInformation_1_0.2um <- "1_Cyclonic_0.2um"
+EddyInformation_1_5um <- "1_Cyclonic_5um"
+EddyInformation_2_0.2um <- "2_Anticyclonic_0.2um"
+EddyInformation_2_5um <- "2_Anticyclonic_5um"
+EddyInformation_1_5um_wChla <- "1_Cyclonic_5um_wChlA"
+EddyInformation_2_5um_wChla <- "2_Anticyclonic_5um_wChlA"
+
+df_wide_normalizedT_1_0.2um <- MakeNMDS(IsoLagran1_0.2_notstd, hasChlorophyll = "no", 
+                                        EddyInformation = EddyInformation_1_0.2um)
+df_wide_normalizedT_1_5um <- MakeNMDS(IsoLagran1_5_notstd, hasChlorophyll = "no",
+                                      EddyInformation = EddyInformation_1_5um)
+df_wide_normalizedT_2_0.2um <- MakeNMDS(IsoLagran1_0.2_notstd, hasChlorophyll = "no",
+                                        EddyInformation_2_0.2um)
+df_wide_normalizedT_2_5um <- MakeNMDS(IsoLagran2_5_notstd, hasChlorophyll = "no",
+                                      EddyInformation_2_5um)
+df_wide_normalizedT_1_5um_wChla <- MakeNMDS(IL1_5um_ChlAnormd_notstd, hasChlorophyll = "yes",
+                                            EddyInformation = EddyInformation_1_5um_wChla)
+df_wide_normalizedT_2_5um_wChla <- MakeNMDS(IL2_5um_ChlAnormd_notstd, hasChlorophyll = "yes",
+                                            EddyInformation = EddyInformation_2_5um_wChla)
 
 
 ###################################

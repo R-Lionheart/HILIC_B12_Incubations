@@ -1,6 +1,8 @@
 library(tidyverse)
 options(scipen = 999)
 
+source("src/B12_Functions.R")
+
 # Setup -------------------------------------------------------------------
 # Specific size/eddy
 
@@ -10,42 +12,56 @@ myTitle <- "Anticyclonic Eddy (#1), 5um size fraction"
 myTreatmentTitle <- "Deep Sea Water v no B12 v Control"
 myTreatmentsSplit <- unlist(strsplit(myTreatments, split = '|', fixed = TRUE))
 
-BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_1_5_notnormd <- read.csv("data_processed/IsoLagran1_5_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_2_0.2_notnormd <- read.csv("data_processed/IsoLagran2_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
-BMISd_2_5_notnormd <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature:Adjusted.Area)
+dataset.pattern <- "notstd|wide"
 
-BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
-BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+## Import your datasets. This will import a lot of information.
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
+filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+}
+
+# BMISd_1_0.2_notnormd <- read.csv("data_processed/IsoLagran1_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_1_5_notnormd <- read.csv("data_processed/IsoLagran1_5_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_2_0.2_notnormd <- read.csv("data_processed/IsoLagran2_0.2_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# BMISd_2_5_notnormd <- read.csv("data_processed/IsoLagran2_5_notnormd.csv", stringsAsFactors = FALSE) %>%
+#   select(Mass.Feature:Adjusted.Area)
+# 
+# BMISd_1_0.2_wide <- read.csv("data_processed/IsoLagran1_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_1_5_wide <- read.csv("data_processed/IsoLagran1_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_2_0.2_wide <- read.csv("data_processed/IsoLagran2_0.2_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
+# BMISd_2_5_wide <- read.csv("data_processed/IsoLagran2_5_normd.csv", stringsAsFactors = FALSE, check.names = FALSE)
 
 # Assign names
-BMISd.long <- BMISd_1_5_notnormd
+BMISd.long.notstd <- IsoLagran1_0.2_notstd
+BMISd.wide.std <- IsoLagran1_Cyclonic_0.2um_wide_std
 
-BMISd.wide <- BMISd_1_5_wide
-colnames(BMISd.wide)[1] <- "Replicate.Name"
-BMISd.wide.notnormd <- BMISd.long %>%
+positions <- c(2:4)
+colnames(BMISd.wide.std)[1] <- "Replicate.Name"
+names(BMISd.long.notstd) <- make.names(names(BMISd.long.notstd))
+BMISd.wide.notstd <- BMISd.long.notstd %>%
+  select(-X) %>%
   pivot_wider(names_from = Replicate.Name, 
               values_from = Adjusted.Area)
 
 # Change all sets to long format
-BMISd.long.normd <- BMISd.wide %>%
+BMISd.long.std <- BMISd.wide.std %>%
   pivot_longer(-Replicate.Name,
                names_to = "Mass.Feature",
                values_to = "Area.BMISd.Normd") %>%
   select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
 
-BMISd.wide.normd <- BMISd.long.normd %>%
+BMISd.wide.std <- BMISd.long.std %>%
   spread(key = "Replicate.Name", value = "Area.BMISd.Normd")
 
+
 # Combine all data and rearrange
-full.BMISd <- BMISd.long.normd %>%
-  left_join(BMISd.long) %>%
+full.BMISd <- BMISd.long.std %>%
+  left_join(BMISd.long.notstd) %>%
   filter(str_detect(Replicate.Name, myTreatments)) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>% 
   select(Mass.Feature, Replicate.Name, SampID, Area.BMISd.Normd, Adjusted.Area) %>%
@@ -65,12 +81,12 @@ FC.plot <- ggplot(FC.test, aes(x = Mass.Feature, y = Average.Area)) +
   geom_bar(position = "dodge", stat="identity", aes(fill = SampID)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   ggtitle(paste("Areas between samples:", myTitle))
-#FC.plot 
+FC.plot 
 
 # Start analysis ----------------------------------------------------------
 
 # Calculate fold changes between treatments
-Analysis <- BMISd.wide.notnormd[complete.cases(BMISd.wide.notnormd), ]
+Analysis <- BMISd.wide.notstd[complete.cases(BMISd.wide.notstd), ]
 mySamps <- colnames(Analysis)
 
 myTreat1 <- mySamps[grepl(myTreatmentsSplit[1], mySamps)] # Treat1 = DSW
@@ -91,35 +107,29 @@ Analysis <- Analysis %>%
          PlotC_Yaxis = .[[4]])
 
 # Set up data for ANOVA
-AnovaB12 <- full.BMISd %>%
+AnovaDSW <- full.BMISd %>%
   select(-Replicate.Name) %>%
   mutate(SampID = factor(SampID, ordered = TRUE)) %>%
   group_by(Mass.Feature) %>%
   mutate(Count = n()) %>%
-  filter(!Count < 9 ) %>% # 3 replicates of each treatment, total of 9. Filter those groups missing replicates.
+  filter(!Count < 8) %>% # DSW so 8 instead of 9
   arrange(Mass.Feature) %>%
   select(-Count) 
 
-# testdf <- AnovaB12 %>%
-#   group_by(Mass.Feature, SampID) %>%
-#   mutate(Averages = mean(Area.BMISd.Normd)) %>%
-#   filter(str_detect(SampID, "noBT")) %>%
-#   arrange(desc(Averages)) 
-# 
-# mylevels <- print(unique(testdf$Mass.Feature))
-# AnovaB12$Mass.Feature = factor(AnovaB12$Mass.Feature, levels = mylevels)
 
 # Graph normalized areas for reference
-Normd.Areas <- ggplot(AnovaB12, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
+Normd.Areas <- ggplot(AnovaDSW, aes(x = SampID, y = Area.BMISd.Normd, fill = SampID)) +
   geom_boxplot() +
   facet_wrap(~Mass.Feature) +
   theme(axis.text.x = element_blank()) +
-  labs(y="Normalized Area Distribution Boxplots") +
-  ggtitle(paste("Normalized Area Boxplots:", myTitle))
-#Normd.Areas
+  geom_jitter(shape = 15,
+              color = "steelblue",
+              position = position_jitter(0.21)) +
+  ggtitle(myTitle) 
+Normd.Areas
 
 # Apply ANOVA to dataframe, summarize and check significance
-AnovaList <- lapply(split(AnovaB12, AnovaB12$Mass.Feature), function(i) {
+AnovaList <- lapply(split(AnovaDSW, AnovaDSW$Mass.Feature), function(i) {
   aov(lm(Adjusted.Area ~ SampID, data = i))
 }) 
 AnovaListSummary <- lapply(AnovaList, function(i) {
