@@ -30,6 +30,10 @@ NMDS
 should be in any order:
 ANOSIM_species indic (STILL NEEDS LOTS OF WORK)
 ANOVA_all (mostly useless. needs work.)
+anova b12
+anova dsw
+univariate stats
+
 
 ### Chl-A Normalizations
 #### Heatmaps

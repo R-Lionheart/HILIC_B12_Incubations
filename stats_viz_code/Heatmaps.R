@@ -77,8 +77,8 @@ filterForOsmolytes <- function(df) {
 }
 
 # Upload files and enter user data ----------------------------------------
-file.pattern = "IsoLagran|Osmolytes" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
-Norm.Type = "BMISd, with Chl-A" # For titles & labeling
+file.pattern = "IL|Osmolytes" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
+Norm.Type = "BMISd with ChlA" # For titles & labeling. Add Chla when appropriate
 
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = file.pattern))
 filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
@@ -89,32 +89,32 @@ for (i in filenames) {
 }
 
 # Create heatmaps for all non-Chl datasets -----------------------
-IL1_0.2_noChl <- createHeatmap(IsoLagran1_0.2_normd, mytitle = "Cyclonic Eddy, 0.2um",
+IL1_0.2_noChl <- createHeatmap(IsoLagran1_Cyclonic_0.2um_wide_std, mytitle = "Cyclonic Eddy, 0.2um",
                                c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT"))
-IL1_5_noChl <- createHeatmap(IsoLagran1_5_normd, mytitle = "Cyclonic Eddy, 5um",
+IL1_5_noChl <- createHeatmap(IsoLagran1_Cyclonic_5um_wide_std, mytitle = "Cyclonic Eddy, 5um",
                              c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um"))
-IL2_0.2_noChl <- createHeatmap(IsoLagran2_0.2_normd, mytitle = "Anticyclonic Eddy, 0.2um", 
+IL2_0.2_noChl <- createHeatmap(IsoLagran2_Anticyclonic_0.2um_wide_std, mytitle = "Anticyclonic Eddy, 0.2um", 
                                c("IL2IT0", "IL2Control", "IL2DMB", "IL2WBT", "IL2DSW", "IL2DMBnoBT", "IL2noBT"))
-IL2_5_noChl <- createHeatmap(IsoLagran2_5_normd, mytitle = "Anticyclonic Eddy, 5um",
+IL2_5_noChl <- createHeatmap(IsoLagran2_Anticyclonic_5um_wide_std, mytitle = "Anticyclonic Eddy, 5um",
                              c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 
 # Create heatmaps for all Chl-normd datasets -----------------------
-IL1_5_wChl <- createHeatmap(IL1_5um_Chla_normd_std, mytitle = "Cyclonic Eddy, 5um",
+IL1_5_wChl <- createHeatmap(IL1_5um_ChlAnormd_std, mytitle = "Cyclonic Eddy, 5um",
                              c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um"))
-IL2_5_wChl <- createHeatmap(IL2_5um_Chla_normd_std, mytitle = "Anticyclonic Eddy, 5um",
+IL2_5_wChl <- createHeatmap(IL2_5um_ChlAnormd_std, mytitle = "Anticyclonic Eddy, 5um",
                              c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 
 # Create heatmaps for Osmolyte-filtered datasets -----------------------
 osmocolumns <- Osmolytes_edited[[2]]
 
-## Chl-adjusted
-IL1_5um_Chla_normd_std_osmolytes <- filterForOsmolytes(IL1_5um_Chla_normd_std)
-Osmolyte_heatmap_IL1_5um_Chla_normd_std <- createHeatmap(IL1_5um_Chla_normd_std_osmolytes, 
+## Chl-adjusted osmolytes
+IL1_5um_ChlAnormd_std_osmolytes<- filterForOsmolytes(IL1_5um_ChlAnormd_std)
+IL1_5um_ChlAnormd_std_osmolytes_heatmap <- createHeatmap(IL1_5um_ChlAnormd_std_osmolytes, 
                                                          mytitle = "Cyclonic Eddy, 5um, Chl-Normalized, Osmolytes",
                       c("IL1IT05um", "IL1Control5um", "IL1DMB5um", "IL1WBT5um", "IL1DSW5um","IL1DMBnoBT5um", "IL1noBT5um"))
 
-IL2_5um_Chla_normd_std_osmolytes <- filterForOsmolytes(IL2_5um_Chla_normd_std)
-Osmolyte_heatmap_IL2_5um_Chla_normd_std <- createHeatmap(IL2_5um_Chla_normd_std_osmolytes, 
+IL2_5um_ChlAnormd_std_osmolytes <- filterForOsmolytes(IL2_5um_ChlAnormd_std)
+IL2_5um_ChlAnormd_std_osmolytes_heatmap <- createHeatmap(IL2_5um_ChlAnormd_std_osmolytes, 
                                                          mytitle = "Anticyclonic Eddy, 5um, Chl-Normalized, Osmolytes",
                                                          c("IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um","IL2DMBnoBT5um", "IL2noBT5um"))
 

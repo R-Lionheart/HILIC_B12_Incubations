@@ -1,10 +1,5 @@
 source("src/B12_Functions.R")
 
-# Enter dilution factor, injection volume, and the filtered volume from the instrument run.
-Dilution.Factor = 2
-Injection.Volume = 400 # nanoliters
-Volume.Filtered = 8 # liters
-
 ########################################################
 ## TEMP METABOLITE FILTER FOR WEI AND ANITRA 6/20/20
 mystandards <- c("L-Glutamic acid", "L-Glutamine", "2-Ketoglutaric acid", "N6-Acetyl-L-lysine")
