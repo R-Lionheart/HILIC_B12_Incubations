@@ -4,154 +4,162 @@ options(scipen = 999)
 
 source("src/B12_Functions.R")
 
-## Data normalized to Chlorophyll-a
+# ## Data normalized to Chlorophyll-a
 ChlMakeWide <- function(df) {
   df.wide <- df %>%
     ungroup() %>%
     tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
     as.data.frame()
-  
+
   df.rownames <- df.wide[,-1]
   rownames(df.rownames) <- df.wide[,1]
-  
+
   df.rownames[is.na(df.rownames)] <- NA
-  
-  return(df.rownames)  
-}
-UploadFiles <- function(myfilepath) {
-  # Function for uploading non-standardized files.
-  #
-  # Returns: dataframe with relevant columns selected.
-  uploaded.df <- read.csv(myfilepath, stringsAsFactors = FALSE) %>%
-    select(Mass.Feature:Adjusted.Area)
-  
-  return(uploaded.df)
-}
 
-# Upload all required files
-BMISd_1_0.2_notnormd <- UploadFiles("data_processed/IsoLagran1_0.2_notnormd.csv")
-BMISd_1_5_notnormd <- UploadFiles("data_processed/IsoLagran1_5_notnormd.csv")
-BMISd_2_0.2_notnormd <- UploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv")
-BMISd_2_5_notnormd <- UploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
-
-# Set filtering conditions that correspond to the treatments you are comparing.
+  return(df.rownames)
+}
+# UploadFiles <- function(myfilepath) {
+#   # Function for uploading non-standardized files.
+#   #
+#   # Returns: dataframe with relevant columns selected.
+#   uploaded.df <- read.csv(myfilepath, stringsAsFactors = FALSE) %>%
+#     select(Mass.Feature:Adjusted.Area)
+#   
+#   return(uploaded.df)
+# }
+# 
+# # Upload all required files
+# BMISd_1_0.2_notnormd <- UploadFiles("data_processed/IsoLagran1_0.2_notnormd.csv")
+# BMISd_1_5_notnormd <- UploadFiles("data_processed/IsoLagran1_5_notnormd.csv")
+# BMISd_2_0.2_notnormd <- UploadFiles("data_processed/IsoLagran2_0.2_notnormd.csv")
+# BMISd_2_5_notnormd <- UploadFiles("data_processed/IsoLagran2_5_notnormd.csv")
+# 
+# # Set filtering conditions that correspond to the treatments you are comparing.
 Condition1 <- "IL1DSW5um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc.
 Condition2 <- "IL1Control5um"
 FilterSize <- "5um"
 ChlaEddy <- "IL1"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs 
+file.pattern <- "Chla Normalized Cyclonic_5um" # will be used as a search ID and title for graphs
 SigNumber <- 0.1 # Pvalue cutoff
 BMISd <- BMISd_1_5_notnormd # Assign correct dataframe for analysis.
 
-## Upload and recode chlorophyll data
-Chlorophyll <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
-  select(1:6) %>%
-  rename(Filter.size = Filter..µm.,
-         Chla = Chl.a..µg.L.) %>%
-  mutate(Date = as.character(Date),
-         Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
-  filter(str_detect(Eddy, ChlaEddy)) %>%
-  unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
-  filter(Filter.size == 5.0) %>%
-  mutate(Chla = as.numeric(Chla))
+# ## Upload and recode chlorophyll data
+# Chlorophyll <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
+#   select(1:6) %>%
+#   rename(Filter.size = Filter..µm.,
+#          Chla = Chl.a..µg.L.) %>%
+#   mutate(Date = as.character(Date),
+#          Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
+#   filter(str_detect(Eddy, ChlaEddy)) %>%
+#   unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
+#   filter(Filter.size == 5.0) %>%
+#   mutate(Chla = as.numeric(Chla))
 
 # Fix Replicate Name labels -----------------------------------------------
-Chlorophyll_fixed <- Chlorophyll %>%
-  mutate(Replicate.Name = recode(Replicate.Name,
-                                 "C-1_IL1" ="171009_Smp_IL1Control5um_1",
-                                 "C-1_IL2" = "171009_Smp_IL2Control5um_1",
-                                 "C-2_IL1" = "171009_Smp_IL1Control5um_2",
-                                 "C-2_IL2" = "171009_Smp_IL2Control5um_2",
-                                 "C-3_IL1" = "171009_Smp_IL1Control5um_3",
-                                 "C-3_IL2" = "171009_Smp_IL2Control5um_3",
-                                 "ØBT-1_IL1" = "171009_Smp_IL1noBT5um_1",
-                                 "ØBT-1_IL2" = "171009_Smp_IL2noBT5um_1",
-                                 "ØBT-2_IL1" = "171009_Smp_IL1noBT5um_2",
-                                 "ØBT-2_IL2" = "171009_Smp_IL2noBT5um_2",
-                                 "ØBT-3_IL1" = "171009_Smp_IL1noBT5um_3",
-                                 "ØBT-3_IL2" = "171009_Smp_IL2noBT5um_3",
-                                 "DMB-1_IL1" = "171009_Smp_IL1DMB5um_1",
-                                 "DMB-1_IL2" = "171009_Smp_IL2DMB5um_1",
-                                 "DMB-2_IL1" = "171009_Smp_IL1DMB5um_2",
-                                 "DMB-2_IL2" = "171009_Smp_IL2DMB5um_2",
-                                 "DMB-3_IL1" = "171009_Smp_IL1DMB5um_3",
-                                 "DMB-3_IL2" = "171009_Smp_IL2DMB5um_3",
-                                 "DMBØBT-1_IL1" = "171009_Smp_IL1DMBnoBT5um_1",
-                                 "DMBØBT-1_IL2" = "171009_Smp_IL2DMBnoBT5um_1",
-                                 "DMBØBT-2_IL1" = "171009_Smp_IL1DMBnoBT5um_2",
-                                 "DMBØBT-2_IL2" = "171009_Smp_IL2DMBnoBT5um_2",
-                                 "DMBØBT-3_IL1" = "171009_Smp_IL1DMBnoBT5um_3",
-                                 "DMBØBT-3_IL2" = "171009_Smp_IL2DMBnoBT5um_3",
-                                 "DSW-1_IL1" = "171009_Smp_IL1DSW5um_1",
-                                 "DSW-1_IL2" = "171009_Smp_IL2DSW5um_1",
-                                 "DSW-2_IL1" = "171009_Smp_IL1DSW5um_2",
-                                 "DSW-2_IL2" = "171009_Smp_IL2DSW5um_2",
-                                 "DSW-3_IL1" = "171009_Smp_IL1DSW5um_3",
-                                 "DSW-3_IL2" = "171009_Smp_IL2DSW5um_3",
-                                 "IS-1_IL1" = "171009_Smp_IL1IT05um_1",
-                                 "IS-1_IL2" = "171009_Smp_IL2IT05um_1",
-                                 "IS-2_IL1" = "171009_Smp_IL1IT05um_2",
-                                 "IS-2_IL2" = "171009_Smp_IL2IT05um_2",
-                                 "IS-3_IL1" = "171009_Smp_IL1IT05um_3",
-                                 "IS-3_IL2" = "171009_Smp_IL2IT05um_3",
-                                 "WBT-1_IL1" = "171009_Smp_IL1WBT5um_1",
-                                 "WBT-1_IL2" = "171009_Smp_IL2WBT5um_1",
-                                 "WBT-2_IL1" = "171009_Smp_IL1WBT5um_2",
-                                 "WBT-2_IL2" = "171009_Smp_IL2WBT5um_2",
-                                 "WBT-3_IL1" = "171009_Smp_IL1WBT5um_3",
-                                 "WBT-3_IL2" = "171009_Smp_IL2WBT5um_3")) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
-  select(SampID, replicate, Chla) %>%
-  unite(SampID, replicate, col = "Replicate.Name")
+# Chlorophyll_fixed <- Chlorophyll %>%
+#   mutate(Replicate.Name = recode(Replicate.Name,
+#                                  "C-1_IL1" ="171009_Smp_IL1Control5um_1",
+#                                  "C-1_IL2" = "171009_Smp_IL2Control5um_1",
+#                                  "C-2_IL1" = "171009_Smp_IL1Control5um_2",
+#                                  "C-2_IL2" = "171009_Smp_IL2Control5um_2",
+#                                  "C-3_IL1" = "171009_Smp_IL1Control5um_3",
+#                                  "C-3_IL2" = "171009_Smp_IL2Control5um_3",
+#                                  "ØBT-1_IL1" = "171009_Smp_IL1noBT5um_1",
+#                                  "ØBT-1_IL2" = "171009_Smp_IL2noBT5um_1",
+#                                  "ØBT-2_IL1" = "171009_Smp_IL1noBT5um_2",
+#                                  "ØBT-2_IL2" = "171009_Smp_IL2noBT5um_2",
+#                                  "ØBT-3_IL1" = "171009_Smp_IL1noBT5um_3",
+#                                  "ØBT-3_IL2" = "171009_Smp_IL2noBT5um_3",
+#                                  "DMB-1_IL1" = "171009_Smp_IL1DMB5um_1",
+#                                  "DMB-1_IL2" = "171009_Smp_IL2DMB5um_1",
+#                                  "DMB-2_IL1" = "171009_Smp_IL1DMB5um_2",
+#                                  "DMB-2_IL2" = "171009_Smp_IL2DMB5um_2",
+#                                  "DMB-3_IL1" = "171009_Smp_IL1DMB5um_3",
+#                                  "DMB-3_IL2" = "171009_Smp_IL2DMB5um_3",
+#                                  "DMBØBT-1_IL1" = "171009_Smp_IL1DMBnoBT5um_1",
+#                                  "DMBØBT-1_IL2" = "171009_Smp_IL2DMBnoBT5um_1",
+#                                  "DMBØBT-2_IL1" = "171009_Smp_IL1DMBnoBT5um_2",
+#                                  "DMBØBT-2_IL2" = "171009_Smp_IL2DMBnoBT5um_2",
+#                                  "DMBØBT-3_IL1" = "171009_Smp_IL1DMBnoBT5um_3",
+#                                  "DMBØBT-3_IL2" = "171009_Smp_IL2DMBnoBT5um_3",
+#                                  "DSW-1_IL1" = "171009_Smp_IL1DSW5um_1",
+#                                  "DSW-1_IL2" = "171009_Smp_IL2DSW5um_1",
+#                                  "DSW-2_IL1" = "171009_Smp_IL1DSW5um_2",
+#                                  "DSW-2_IL2" = "171009_Smp_IL2DSW5um_2",
+#                                  "DSW-3_IL1" = "171009_Smp_IL1DSW5um_3",
+#                                  "DSW-3_IL2" = "171009_Smp_IL2DSW5um_3",
+#                                  "IS-1_IL1" = "171009_Smp_IL1IT05um_1",
+#                                  "IS-1_IL2" = "171009_Smp_IL2IT05um_1",
+#                                  "IS-2_IL1" = "171009_Smp_IL1IT05um_2",
+#                                  "IS-2_IL2" = "171009_Smp_IL2IT05um_2",
+#                                  "IS-3_IL1" = "171009_Smp_IL1IT05um_3",
+#                                  "IS-3_IL2" = "171009_Smp_IL2IT05um_3",
+#                                  "WBT-1_IL1" = "171009_Smp_IL1WBT5um_1",
+#                                  "WBT-1_IL2" = "171009_Smp_IL2WBT5um_1",
+#                                  "WBT-2_IL1" = "171009_Smp_IL1WBT5um_2",
+#                                  "WBT-2_IL2" = "171009_Smp_IL2WBT5um_2",
+#                                  "WBT-3_IL1" = "171009_Smp_IL1WBT5um_3",
+#                                  "WBT-3_IL2" = "171009_Smp_IL2WBT5um_3")) %>%
+#   separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+#   select(SampID, replicate, Chla) %>%
+#   unite(SampID, replicate, col = "Replicate.Name")
 
 # Fix BMISd names to match ------------------------------------------------------------
-BMISd_fixed <- BMISd %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
-  select(-c("one", "two")) %>%
-  unite(SampID, replicate, col = "Replicate.Name")
-
-# Normalize to chlorophyll ------------------------------------------------------------
-complete.set <- Chlorophyll_fixed %>%
-  select(Replicate.Name, Chla) %>%
-  left_join(BMISd_fixed) %>%
-  mutate(Chla = as.numeric(Chla)) %>%
-  mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
-  filter(!Chla < 0) %>% # Remove negative Chl-A values
-  select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
-  na.omit()
-
-## Standardize
-complete.wide <- ChlMakeWide(complete.set)
-complete.wide[is.na(complete.wide)] <- 1000
-complete.wideT <- t(complete.wide)
-
-complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", na.rm = TRUE) 
+# BMISd_fixed <- BMISd %>%
+#   separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+#   select(-c("one", "two")) %>%
+#   unite(SampID, replicate, col = "Replicate.Name")
+# 
+# # Normalize to chlorophyll ------------------------------------------------------------
+# complete.set <- Chlorophyll_fixed %>%
+#   select(Replicate.Name, Chla) %>%
+#   left_join(BMISd_fixed) %>%
+#   mutate(Chla = as.numeric(Chla)) %>%
+#   mutate(Normalized.by.Chla = Adjusted.Area/Chla) %>%
+#   filter(!Chla < 0) %>% # Remove negative Chl-A values
+#   select(Mass.Feature, Replicate.Name, Normalized.by.Chla) %>%
+#   na.omit()
+# 
+# ## Standardize
+# complete.wide <- ChlMakeWide(complete.set)
+# complete.wide[is.na(complete.wide)] <- 1000
+# complete.wideT <- t(complete.wide)
+# 
+# complete.wide.normalizedT <- decostand(complete.wideT, method = "standardize", na.rm = TRUE) 
 
 
 
 ## Save Chlorophyll files to data_processed/
-write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_std.csv", sep = ""))
-write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
-write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
+# write.csv(complete.wide.normalizedT, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_std.csv", sep = ""))
+# write.csv(complete.set, paste("data_processed/", ChlaEddy, "_", FilterSize, "_ChlA_normd_nostd.csv", sep = ""))
+# write.csv(Chlorophyll_fixed, "data_processed/Chlorophyll_fixed.csv")
 
 
+Chl.pattern <- "ChlAnormd"
 # # Import Chlorophyll ------------------------------------------------------
-# filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(Chl.pattern, ignore_case = TRUE)))
-# 
-# for (i in filenames) {
-#   filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
-#   assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE))
-# }
+filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(Chl.pattern, ignore_case = TRUE)))
+
+for (i in filenames) {
+  filepath <- file.path("data_processed/", paste(i, ".csv", sep = ""))
+  assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE))
+}
 
 #############################################################################################
 # Log normalize the chlorophyll-normalized data ---------------------------
-complete.set.wide <- complete.set %>%
-  tidyr::spread(Replicate.Name, Normalized.by.Chla) 
-complete.set.wide <- column_to_rownames(complete.set.wide, "Mass.Feature")
+
+complete.set <- IL1_5um_ChlAnormd_notstd %>%
+  select (-X)
+
+complete.set.wide <- ChlMakeWide(complete.set) %>%
+  na.omit()
+
+# complete.set.wide <- complete.set %>%
+#   tidyr::spread(Replicate.Name, Normalized.by.Chla) 
+# complete.set.wide <- column_to_rownames(complete.set.wide, "Mass.Feature")
 complete.set.normalized <- decostand(complete.set.wide, method = "log", na.rm = TRUE)
 
-final.set <- complete.set.normalized[complete.cases(complete.set.normalized), ]
+#final.set <- complete.set.normalized[complete.cases(complete.set.normalized), ]
 mySamps.normd <- colnames(complete.set.normalized)
 
 # Add Condition 1 v Condition 2 stats -------------------------------------
