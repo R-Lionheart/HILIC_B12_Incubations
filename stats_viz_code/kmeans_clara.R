@@ -1,278 +1,142 @@
 library(cluster)
-library(factoextra)
-library(ISLR) # for college dataset
-library(progress)
-library(readr)
 library(Rtsne)
 library(tidyverse)
 options(scipen = 999)
 
-BMISd <- read.csv("data_processed/BMIS_Output_2020-03-26.csv", stringsAsFactors = FALSE) %>%
-  select(Mass.Feature, Adjusted.Area, Run.Cmpd) %>%
-  filter(!str_detect(Run.Cmpd, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
-  separate(Run.Cmpd, sep = " ", into = c("Replicate.Name"), remove = FALSE) %>%
-  mutate(Replicate.Name = recode(Replicate.Name, 
-                                 "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
-                                 "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
-                                 "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
-                                 "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
-                                 "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
-                                 "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
-                                 "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
-                                 "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
-                                 "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
-                                 "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
-                                 "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
-                                 "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
-  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
-  select(Mass.Feature, SampID, Adjusted.Area) %>%
-  drop_na()
-standards <- read.csv("data_extras/Ingalls_Lab_Standards.csv", stringsAsFactors = FALSE) %>%
-  rename(Mass.Feature = Compound.Name) 
+source("src/B12_Functions.R")
 
-cluster.test <- BMISd %>%
-  left_join(standards) %>%
-  replace(is.na(.), "Unknown") %>%
-  select(Mass.Feature:Column, m.z) %>%
+# Import BMIS files
+dataset.pattern <- "Time0"
+
+filename <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
+filepath <- file.path("data_processed", paste(filename, ".csv", sep = ""))
+
+BMISd <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
+
+# Combine BMIS and standards. 
+BMISd.tidied <- BMISd %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four")) %>%
+  select(Mass.Feature, SampID, Adjusted.Area) %>%
   mutate(Mass.Feature = as.factor(Mass.Feature),
          SampID = as.factor(SampID),
-         Compound.Type = as.factor(Compound.Type),
-         Column = as.factor(Column)) %>%
-  select(-m.z)
+         Adjusted.Area = as.numeric(Adjusted.Area)) 
 
-# My version, clutering mixed data types ----------------------------------------------------------
-# mine
-metab_clean <- cluster.test %>%
+# Calculating Distance
+# In order for a yet-to-be-chosen algorithm to group observations together, 
+# we first need to define some notion of (dis)similarity between observations. 
+# A popular choice for clustering is Euclidean distance. 
+# However, Euclidean distance is only valid for continuous variables, 
+# and thus is not applicable here. In order for a clustering algorithm to yield sensible results, 
+# we have to use a distance metric that can handle mixed data types. 
+# In this case, we will use something called Gower distance.
+
+# My version, clustering mixed data types --------------------------------------------------------
+full.data <- BMISd.tidied %>%
   mutate(isControl = as.factor(ifelse(str_detect(SampID, "Control"), "Control", "NonControl")),
          eddy = ifelse(str_detect(SampID, "IL1"), "Cyclonic", "Anticyclonic"),
          size = ifelse(str_detect(SampID, "5um"), "5um", "0.2um")) %>%
   unite(eddy_size, c("eddy", "size"), sep = "_") %>%
   mutate(eddy_size = as.factor(eddy_size))
-glimpse(metab_clean)
+glimpse(full.data)
 
-# Check attributes to ensure the correct methods are being used
+# Gower distance
+# The concept of Gower distance is actually quite simple. For each variable type, 
+# a particular distance metric that works well for that type is used and scaled 
+# to fall between 0 and 1. Then, a linear combination using user-specified weights 
+# (most simply an average) is calculated to create the final distance matrix. 
+# The metrics used for each data type are described below:
+  
+# quantitative (interval): range-normalized Manhattan distance
+# ordinal: variable is first ranked, then Manhattan distance is used with a special adjustment
+# for ties
+# nominal: variables of k categories are first converted into k binary columns 
+# and then the Dice coefficient is used
 
-mygower_dist <- daisy(metab_clean[, -1], # Remove mass.feature
+# pros: Intuitive to understand and straightforward to calculate
+# cons: Sensitive to non-normality and outliers present in continuous variables, 
+# so transformations as a pre-processing step might be necessary. 
+# Also requires an NxN distance matrix to be calculated, which is computationally 
+# intensive to keep in-memory for large samples
+
+gower.distance <- daisy(full.data, # Remove mass.feature
                       metric = "gower",
                       type = list(logratio = 3))
-# mine
-summary(mygower_dist)
-mygower_mat <- as.matrix(mygower_dist)
+
+summary(gower.distance) # check data types: mix of N and I
+gower.matrix <- as.matrix(gower.distance)
 
 
-# mine
+# Sanity Check
 #similar (can this be expanded to include more grouping?)
-metab_clean[
-  which(mygower_mat == min(mygower_mat[mygower_mat != min(mygower_mat)]),
+full.data[
+  which(gower.matrix == min(gower.matrix[gower.matrix != min(gower.matrix)]),
         arr.ind = TRUE)[1, ], ]
 # dissimilar
-metab_clean[
-  which(mygower_mat == max(mygower_mat[mygower_mat != max(mygower_mat)]),
+full.data[
+  which(gower.matrix == max(gower.matrix[gower.matrix != max(gower.matrix)]),
         arr.ind = TRUE)[1, ], ]
 
 # Calculate silhouette width for many k using PAM, and plot sihouette width (higher is better)
+# If you know the k-means algorithm, partioning around medoids (PAM) might look very familiar. 
+# In fact, both approaches are identical, except k-means has cluster centers defined by 
+# Euclidean distance (i.e., centroids), while cluster centers for PAM are restricted 
+# to be the observations themselves (i.e., medoids).
+
+# pros: Easy to understand, more robust to noise and outliers when compared to k-means, 
+# and has the added benefit of having an observation serve as the exemplar for each cluster
+# cons: Both run time and memory are quadratic (i.e., $O(n^2)$)
 
 # mine
-mysil_width <- c(NA)
+# We will use silhouette width, an internal validation metric which is an aggregated 
+# measure of how similar an observation is to its own cluster compared its closest 
+# neighboring cluster. The metric can range from -1 to 1, where higher values are better. 
+
+silhouette.width <- c(NA)
 for(i in 2:10){
-  mypam_fit <- pam(mygower_dist,
+  PAM.fit <- pam(gower.distance,
                  diss = TRUE,
                  k = i)
-  mysil_width[i] <- mypam_fit$silinfo$avg.width
+  silhouette.width[i] <- PAM.fit$silinfo$avg.width
 }
-plot(1:10, mysil_width,
+plot(1:10, silhouette.width,
      xlab = "My Number of clusters",
      ylab = "My Silhouette Width")
-lines(1:10, mysil_width)
+lines(1:10, silhouette.width)
 
 
 # mine
-mypam_fit <- pam(mygower_dist, diss = TRUE, k = 8)
-mypam_results <- metab_clean %>%
+PAM.fit <- pam(gower.distance, diss = TRUE, k = 8)
+PAM.results <- full.data %>%
   dplyr::select(-Mass.Feature) %>%
-  mutate(cluster = mypam_fit$clustering) %>%
+  mutate(cluster = PAM.fit$clustering) %>%
   group_by(cluster) %>%
   do(the_summary = summary(.))
-mypam_results$the_summary
-metab_clean[mypam_fit$medoids, ]
+PAM.results$the_summary
+full.data[PAM.fit$medoids, ]
 
-# mine
-mytsne_obj <- Rtsne(mygower_dist, is_distance = TRUE)
-mytsne_data <- mytsne_obj$Y %>%
+# One way to visualize many variables in a lower dimensional space is with 
+# t-distributed stochastic neighborhood embedding, or t-SNE. 
+# This method is a dimension reduction technique that tries to preserve local structure 
+# so as to make clusters visible in a 2D or 3D visualization. 
+# While it typically utilizes Euclidean distance, it has the ability to handle 
+# a custom distance metric like the one we created above. In this case, 
+# the plot shows the three well-separated clusters that PAM was able to detect. 
+
+TSNE.obj <- Rtsne(gower.distance, is_distance = TRUE)
+TSNE.data <- TSNE.obj$Y %>%
   data.frame() %>%
   setNames(c("X", "Y")) %>%
-  mutate(cluster = factor(mypam_fit$clustering),
-         name = metab_clean$Mass.Feature)
+  mutate(cluster = factor(PAM.fit$clustering),
+         name = full.data$Mass.Feature,
+         SampID = full.data$SampID) %>%
+  unique()
 
-ggplot(aes(x = X, y = Y), data = mytsne_data) +
+ggplot(aes(x = X, y = Y), data = TSNE.data) +
   geom_point(aes(color = cluster))
 
-
-
-# Original online example ------------------------------------------------
-# original
-college_clean <- College %>%
-  mutate(name = row.names(.),
-         accept_rate = Accept/Apps,
-         isElite = cut(Top10perc,
-                       breaks = c(0, 50, 100),
-                       labels = c("Not Elite", "Elite"),
-                       include.lowest = TRUE)) %>%
-  mutate(isElite = factor(isElite)) %>%
-  select(name, accept_rate, Outstate, Enroll,
-         Grad.Rate, Private, isElite)
-glimpse(college_clean)
-
-# original
-gower_dist <- daisy(college_clean[, -1], # Remove college name
-                    metric = "gower",
-                    type = list(logratio = 3))
-
-# Check attributes to ensure the correct methods are being used
-# (I = interval, N = nominal)
-# Note that despite logratio being called, 
-# the type remains coded as "I"
-# original
-summary(gower_dist)
-gower_mat <- as.matrix(gower_dist)
-
-# Output most similar pair
-# original
-college_clean[
-  which(gower_mat == min(gower_mat[gower_mat != min(gower_mat)]),
-        arr.ind = TRUE)[1, ], ]
-# Most dissimilar pair
-college_clean[
-  which(gower_mat == max(gower_mat[gower_mat != max(gower_mat)]),
-        arr.ind = TRUE)[1, ], ]
-
-# original
-sil_width <- c(NA)
-for(i in 2:10){
-  pam_fit <- pam(gower_dist,
-                 diss = TRUE,
-                 k = i)
-  sil_width[i] <- pam_fit$silinfo$avg.width
-}
-plot(1:10, sil_width,
-     xlab = "Number of clusters",
-     ylab = "Silhouette Width")
-lines(1:10, sil_width)
-
-# original
-pam_fit <- pam(gower_dist, diss = TRUE, k = 3)
-pam_results <- college_clean %>%
-  dplyr::select(-name) %>%
-  mutate(cluster = pam_fit$clustering) %>%
-  group_by(cluster) %>%
-  do(the_summary = summary(.))
-pam_results$the_summary
-college_clean[pam_fit$medoids, ]
-
-# original
-tsne_obj <- Rtsne(gower_dist, is_distance = TRUE)
-tsne_data <- tsne_obj$Y %>%
-  data.frame() %>%
-  setNames(c("X", "Y")) %>%
-  mutate(cluster = factor(pam_fit$clustering),
-         name = college_clean$name)
-
-ggplot(aes(x = X, y = Y), data = tsne_data) +
-  geom_point(aes(color = cluster))
-
-
-## K means clustering test 
-ggplot(metab_clean, aes(x = Mass.Feature, y = Adjusted.Area)) +
-  geom_point() +
-  theme(axis.text.x = element_text(angle = 90))
-
-
-ggplot(cluster.test, aes(x = Mass.Feature, y = Adjusted.Area, color = myCluster$cluster)) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  geom_point()
-
-
-ggplot(cluster.test, aes(x = Mass.Feature, y = SampID, color = myCluster$cluster)) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  geom_jitter(shape = 15,
-              position = position_jitter(0.21))
-
-
-ggplot(data = cluster.test, aes(x = Adjusted.Area, y = myCluster$cluster, fill = SampID)) +
-  scale_y_discrete(breaks = seq(1, 7, by = 1)) +
-  geom_tile() +
-  coord_equal() +
-  theme_classic()
-
-# -----------------------------------------------------------
-# How to compute CLARA (Clustering Large Applications) in R
-# -----------------------------------------------------------
-
-# generate Simulated Data 
-# Generate 500 objects, divided into 2 clusters.
-df <- rbind(cbind(rnorm(200,0,8), rnorm(200,0,8)),
-            cbind(rnorm(300,50,8), rnorm(300,50,8)),
-            cbind(rnorm(400,100,8), rnorm(400,100,8)))
-colnames(df) <- c("x", "y")
-rownames(df) <- paste0("S", 1:nrow(df))
-
-# optimal number of clusters
-fviz_nbclust(df, clara, method = "silhouette")+
-  theme_classic()
-
-# Compute CLARA
-clara.res <- clara(df, 3, samples = 50, pamLike = TRUE)
-
-# Print components of clara.res
-print(clara.res)
-
-# Add clustering result to the Data
-dd <- cbind(df, cluster = clara.res$cluster)
-head(dd, n = 4)
-
-# Visualise clusters
-fviz_cluster(clara.res, 
-             palette = c("#00AFBB", "#FC4E07", "#E7B800"), # color palette
-             ellipse.type = "t", # Concentration ellipse
-             geom = "point", pointsize = 1,
-             ggtheme = theme_classic()
-)
-
-# -----------------------------------------------------------
-# My version
-# -----------------------------------------------------------
-clara.test <- cluster.test %>%
-  select(Adjusted.Area)
-
-# optimal number of clusters
-fviz_nbclust(clara.test, clara, method = "silhouette")+
-  theme_classic()
-
-# Compute CLARA
-myclara.res <- clara(clara.test, 2, samples = 50, pamLike = TRUE)
-
-# Print components of clara.res
-print(clara.res)
-
-# Add clustering result to the Data
-mydd <- cbind(clara.test, cluster = myclara.res$cluster)
-head(mydd, n = 4)
-
-# Visualise clusters
-fviz_cluster(myclara.res, 
-             palette = c("#00AFBB", "#FC4E07"), # color palette
-             ellipse.type = "t", # Concentration ellipse
-             geom = "point", pointsize = 1,
-             ggtheme = theme_classic()
-)
-
-# -----------------------------------------------------------
-# KRH version
-# -----------------------------------------------------------
-datclu.clara <- clara(Iso_wide, k = 3, metric = "euclidean", samples = 100, sampsize = nrow(Iso_wide))
-
-fviz_cluster(datclu.clara, 
-             ellipse.type = "t", # Concentration ellipse
-             geom = "point", pointsize = 1,
-             ggtheme = theme_classic()
-)
+TSNE.data.filter <- TSNE.data %>%
+  filter(X > 40,
+         Y > -40 & Y < -20) %>%
+  left_join(full.data) %>%
+  collect %>%
+  .[["name"]]

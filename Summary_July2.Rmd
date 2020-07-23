@@ -33,7 +33,7 @@ ANOVA_all (mostly useless. needs work.)
 anova b12
 anova dsw
 univariate stats
-
+heatmaps
 
 ### Chl-A Normalizations
 #### Heatmaps
