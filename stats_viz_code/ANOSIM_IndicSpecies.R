@@ -52,6 +52,14 @@ Treatment <- Treatment %>%
   select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
 
 ## Transform 
+# The ANOSIM statistic “R” compares the mean of ranked dissimilarities between groups 
+# to the mean of ranked dissimilarities within groups. An R value close to “1.0” suggests 
+# dissimilarity between groups while an R value close to “0” suggests an even distribution
+# of high and low ranks within and between groups
+
+# A Significance value less than 0.05 is generally considered to be statistically significant, 
+# and means the null hypothesis can be rejected. Therefore, there is a statistically significant 
+# difference in the microbial communities between your groups. 
 
 ano.Treatment.Status = anosim(mydf.wide[,-1], Treatment$Treatment.Status, 
                               distance = "euclidean", permutations = 9999)
@@ -82,7 +90,7 @@ species.indication = multipatt(mydf.wide[,-1], which.treatment,
 summary(species.indication)
 
 # The first list contains the species found significantly more often in the “DSW” grouping. 
-# The #sps 3 shows that 3 species were identified as indicators for this group. 
+# The #sps shows the numer of species that were identified as indicators for this group. 
 # The first column contains species names, the next column contains the stat value 
 # (higher means the OTU is more strongly associated). The p.value column contains 
 # the statistical p values for the species association (lower means stronger significance). 
@@ -93,10 +101,10 @@ individual.species <- as.data.frame(species.indication$sign) %>%
   rownames_to_column() %>%
   mutate(Significant = ifelse(p.value <= 0.05, "Significant", "NotSignificant")) %>%
   rename(Mass.Feature = rowname) %>%
-  pivot_longer(cols = s.B12:s.TimeZero, names_to = "SampID")
+  pivot_longer(cols = s.B12:s.TimeZero, names_to = "SampID") %>%
+  mutate(SampID = substr(SampID, 3, nchar(SampID)))
 
 individual.graph <- individual.species %>%
-  mutate(SampID = substr(SampID, 3, nchar(SampID))) %>%
   group_by(Mass.Feature) %>%
   mutate(GroupName = paste(SampID[value != 0], collapse = "_")) %>%
   select(-SampID, -value) %>%

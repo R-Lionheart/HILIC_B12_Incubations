@@ -132,11 +132,9 @@ TSNE.data <- TSNE.obj$Y %>%
   unique()
 
 ggplot(aes(x = X, y = Y), data = TSNE.data) +
-  geom_point(aes(color = cluster))
+  geom_point(aes(color = cluster)) +
+  ggtitle("")
 
 TSNE.data.filter <- TSNE.data %>%
-  filter(X > 40,
-         Y > -40 & Y < -20) %>%
-  left_join(full.data) %>%
-  collect %>%
-  .[["name"]]
+  filter(X > -30 & X < 0,
+         Y > 30)

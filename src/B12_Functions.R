@@ -1,52 +1,13 @@
 ## Function definitions ##
 
-# TODO --------------------------------------------------------
-# Organize directory referencing a little easier? Set value ahead of time?
-# Nested loop or list comprehension for renaming the uploads. Functions?
-# Order function descriptions neatly at beginning of script.
-# Cleanly name items in the upload, rather than manually changing it to SN, RZ, etc.
-# Figure out a better way to choose columns out of MSDIAL
-# Add comments to clarify the process.
-# Make function for always downloading the most up to date Ingalls lab standards.
-# Figure out a way to preserve the QC parameter values.
-# Fix the StandardizeVariables function
-
-library(ggplot2)
 library(RCurl)
 library(rlist)
-library(stringr)
 library(tidyverse)
-library(tidyr)
 
-SetHeader <- function(df) {
-  # Remove empty or unnecessary lines from machine output, and make column names headers.
+CapitalizeFirstLetter <- function(s) {
+  # Convert lowercase first letter of string to uppercase.
   #
-  # Args
-  #   df: Raw output file from MSDial.
-  #
-  # Returns
-  #   df: modified dataframe with correct headers and no empty lines.
-  #
-  df <- df[!(is.na(df[1]) | df[1]==""), ]
-  colnames(df) <- make.names(as.character(unlist(df[1,])))
-  df <- df[-1, ]
-  
-  return(df)
-}
-
-RemoveCsv <- function(full.filepaths) {
-  # Remove a .csv file extension and obtain basename from a given list of filepaths.
-  #
-  # Args
-  #   Character strings of filepaths in a directory.
-  #
-  # Returns
-  #   Character strings of file basenames, without a csv extension.
-  #
-  no.path <- substr(full.filepaths, 1, nchar(full.filepaths)-4)
-  no.ID <-   gsub("\\_.*","", no.path)
-  
-  return(no.path)
+  paste(toupper(substring(s, 1, 1)), substring(s, 2), sep = "")
 }
 
 ChangeClasses <- function(df, start.column) {
@@ -64,34 +25,34 @@ ChangeClasses <- function(df, start.column) {
   return(df)
 }
 
-IdentifyRunTypes <- function(msdial.file) {
-  # Identify run typfes and return each unique value present in the Skyline output.
+FixBMISNames <- function(df) {
+  # Shortcut for separating Replicate.Name into manageable columns.
   #
   # Args
-  #   msdial.file: Raw output file from Skyline.
+  #   df: Long format dataframe containing Replicate.Name column.
   #
   # Returns
-  #   run.type: list of labels identifying the run types, isolated from Replicate.Name.
-  #   Options conssist of samples (smp), pooled (poo), standards (std), and blanks (blk).
+  #   df.Replicate.Name.split: df with column split.
   #
-  run.type <- tolower(str_extract(msdial.file$Replicate.Name, "(?<=_)[^_]+(?=_)"))
-  print(paste("Your runtypes are:", toString(unique(run.type))))
+  df.Replicate.Name.split <- df %>%
+    separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
+    select(-c("one", "two")) %>%
+    unite(SampID, replicate, col = "Replicate.Name")
+  
+  return(df.Replicate.Name.split)
 }
-
-TrimWhitespace <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 IdentifyDuplicates <- function(df) {
   # Determine which compounds are detected in both positive and negative HILIC runs.
   # 
   # Args
-  #   df: MSDial dataframe, containing all required parameters (MZ, SN, Area, etc),
-  #       and modified to long form instead of wide.
+  #   df: MSDial or Skyline dataframe in long form.
   # 
   # Returns
   #   duplicates: Simple dataframe of listed compounds that have been identified as duplicates.
   #
   duplicates <- df %>%
-    group_by(Metabolite.name, Replicate.Name) %>%
+    group_by(Metabolite.Name, Replicate.Name) %>%
     mutate(number = 1) %>%
     mutate(ticker = cumsum(number)) %>%
     filter(ticker == 2) %>%
@@ -101,138 +62,168 @@ IdentifyDuplicates <- function(df) {
   return(duplicates)
 }
 
-RearrangeDatasets <- function(df, parameter) {
-  # Shortcut for altering multiple datasets using the tidyr::gather() function.
+IdentifyRunTypes <- function(df) {
+  # Identify run typfes and return each unique value present in the Skyline output.
   #
   # Args
-  #   df: MSDial dataframe with first n empty rows removed.
-  #   parameter: Table value. This parameter will become the column name when 
-  #              changed to long format.
+  #   df: Raw output file from Skyline, or other dataframe containing a Replicate.Name
+  #       column.
   #
   # Returns
-  #   df: MSDial dataframe, changed to long format and with a custom-named value column.
-  df <- df %>%
-    tidyr::gather(
-      key = "Replicate.Name",
-      value = "parameter",
-      starts_with("X")) %>%
-    select(Replicate.Name, parameter, everything())
-  
-  names(df)[2] <- parameter
-  
-  return(df)
+  #   run.type: list of labels identifying the run types, isolated from Replicate.Name.
+  #   Options conssist of samples (smp), pooled (poo), standards (std), and blanks (blk).
+  #
+  run.type <- tolower(str_extract(df$Replicate.Name, "(?<=_)[^_]+(?=_)"))
+  print(paste("Your runtypes are:", toString(unique(run.type))))
 }
 
-# Functions --------------------------------------------
-
-FindStdDev <- function(df) {
-  df.first <- df %>%
-    group_by(Mass.Feature) %>%
-    group_split()
-  df.midframe <- lapply(df.first, function(x) mutate(x, Std.dev = sd(Area.Ave, na.rm = TRUE)))
-  df.final <- bind_rows(df.midframe)
-  
-  return(df.final)
-}
-MakeBarPlot <- function(df, title) {
-  df.plot <- ggplot(df, aes(x = Mass.Feature, y = Area.Ave, fill = SampID)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-          axis.text.y = element_text(size = 10),
-          legend.position = "top",
-          axis.ticks.length=unit(.25, "cm"),
-          strip.text = element_text(size = 10)) +
-    geom_errorbar(aes(ymin=Area.Ave - Std.dev, ymax=Area.Ave + Std.dev), width=.2,
-                  position=position_dodge(.9)) +
-    ggtitle(title)
-  print(df.plot)
-}
-
-makeLong <- function(df) {
+MakeLong <- function(df) {
+  # Shortcut for pivoting multiple datasets from wide to long format. 
+  #
+  # Args
+  #   df: Standardized dataframe, mass features as column names and samples as rownames.
+  #
+  # Returns
+  #   df.long: Dataframe, still standardized, but pivoted to long format.
+  #
   colnames(df)[1] <- "Replicate.Name"
   df.long <- pivot_longer(df, -Replicate.Name,
                           names_to = "Mass.Feature",
                           values_to = "Area.BMISd.Normd") %>%
     select(Mass.Feature, Replicate.Name, Area.BMISd.Normd)
+  
   return(df.long)
 } 
 
-
-MakeFacetGraphs <- function (df, title, scale) {
-  df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +
-    geom_bar(stat = "identity") +
-    facet_wrap( ~Mass.Feature, scales = scale) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-          axis.text.y = element_text(size = 5),
-          legend.position = "top",
-          axis.ticks.length=unit(.25, "cm"),
-          strip.text = element_text(size = 10)) +
-    ggtitle(title)
-  print(df.plot)
-}
-
-MakeWide <- function(df) {
+MakeWide <- function(df, area.column.name) {
+  # Shortcut for pivoting multiple dataframes from long to wide format.
+  #
+  # Args
+  #   df: Long dataframe, containing a Replicate.Name and Area column).
+  #   area.column.name: String of the column name that contains information
+  #                     pertaining to area.
+  #
+  # Returns
+  #   df.rownames: Original dataframe pivoted wider, with the mass feature column
+  #                changed to rownames
+  #
   df.wide <- df %>%
     ungroup() %>%
-    tidyr::spread(Replicate.Name, Adjusted.Area) %>%
+    pivot_wider(names_from = Replicate.Name,
+                values_from = area.column.name) %>%
     as.data.frame()
-
+  
   df.rownames <- df.wide[,-1]
   rownames(df.rownames) <- df.wide[,1]
-
   df.rownames[is.na(df.rownames)] <- NA
-
-  #df.noNA <- na.omit(df.rownames)
-
+  
   return(df.rownames)
 }
 
-ChlMakeWide <- function(df) {
-  df.wide <- df %>%
-    ungroup() %>%
-    tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
-    as.data.frame()
+RearrangeDatasets <- function(df, parameter) {
+  # Shortcut for altering multiple datasets using the tidyr::gather() function.
+  #
+  # Args
+  #   df: MSDial dataframe with first (n) empty rows removed.
+  #   parameter: Table value. This parameter will become the column name when 
+  #              changed to long format.
+  #
+  # Returns
+  #   df.long: MSDial dataframe, changed to long format and with a custom-named value column.
+  df.long <- df %>%
+    pivot_longer(names_to = "Replicate.Name",
+                 values_to = "parameter",
+                 starts_with("X")) %>%
+    select(Replicate.Name, parameter, everything())
   
-  df.rownames <- df.wide[,-1]
-  rownames(df.rownames) <- df.wide[,1]
+  names(df.long)[2] <- parameter
+  df.long$Replicate.Name <- gsub("^.{0,1}", "", df.long$Replicate.Name)
   
-  df.rownames[is.na(df.rownames)] <- NA
-  
-  return(df.rownames)  
+  return(df.long)
 }
-UploadChlorophyll <- function() {
-  df <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
-    select(1:6) %>%
-    rename(Filter.size = Filter..µm.,
-           Chla = Chl.a..µg.L.) %>%
-    mutate(Date = as.character(Date),
-           Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
-    #filter(str_detect(Eddy, whichEddy)) %>%
-    unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
-    filter(Filter.size == 5.0) %>%
-    mutate(Chla = as.numeric(Chla))
+
+RemoveCsv <- function(full.filepaths) {
+  # Remove a .csv file extension and obtain basename from a given filepath or list
+  # of filepaths.
+  #
+  # Args
+  #   Character string of filepaths in a directory.
+  #
+  # Returns
+  #   Character string of file basenames, without a csv extension.
+  #
+  no.path <- substr(full.filepaths, 1, nchar(full.filepaths)-4)
+  no.ID <-   gsub("\\_.*","", no.path)
+  
+  return(no.path)
+}
+
+SetHeader <- function(df) {
+  # Remove empty or unnecessary lines from machine output, and make column names headers.
+  #
+  # Args
+  #   df: Raw output file from MSDial.
+  #
+  # Returns
+  #   df: Modified dataframe with correct headers and no empty lines.
+  #
+  df <- df[!(is.na(df[1]) | df[1]==""), ]
+  colnames(df) <- make.names(as.character(unlist(df[1,])))
+  df <- df[-1, ]
   
   return(df)
 }
+
+TrimWhitespace <- function (x) gsub("^\\s+|\\s+$", "", x)
+
 UploadFiles <- function(myfilepath) {
-  # Function for uploading non-standardized files.
+  # Shortcut for uploading multiple long-format files.
+  # Args
+  #   myfilepath: inner-project filepath to dataframe.
   #
-  # Returns: dataframe with relevant columns selected.
+  # Returns
+  #   uploaded.df: dataframe with relevant columns selected.
+  #
   uploaded.df <- read.csv(myfilepath, stringsAsFactors = FALSE) %>%
     select(Mass.Feature:Adjusted.Area)
   
   return(uploaded.df)
 }
 
-FixBMISNames <- function(df) {
-  BMISd_fixed <- df %>%
-    separate(Replicate.Name, into = c("one", "two", "SampID", "replicate")) %>%
-    select(-c("one", "two")) %>%
-    unite(SampID, replicate, col = "Replicate.Name")
-  
-  return(BMISd_fixed)
-}
+# FindStdDev <- function(df) {
+#   df.first <- df %>%
+#     group_by(Mass.Feature) %>%
+#     group_split()
+#   df.midframe <- lapply(df.first, function(x) mutate(x, Std.dev = sd(Area.Ave, na.rm = TRUE)))
+#   df.final <- bind_rows(df.midframe)
+#   
+#   return(df.final)
+# }
 
-capFirst <- function(s) {
-  paste(toupper(substring(s, 1, 1)), substring(s, 2), sep = "")
-}
+# MakeBarPlot <- function(df, title) {
+#   df.plot <- ggplot(df, aes(x = Mass.Feature, y = Area.Ave, fill = SampID)) +
+#     geom_bar(stat = "identity", position = "dodge") +
+#     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+#           axis.text.y = element_text(size = 10),
+#           legend.position = "top",
+#           axis.ticks.length=unit(.25, "cm"),
+#           strip.text = element_text(size = 10)) +
+#     geom_errorbar(aes(ymin=Area.Ave - Std.dev, ymax=Area.Ave + Std.dev), width=.2,
+#                   position=position_dodge(.9)) +
+#     ggtitle(title)
+#   print(df.plot)
+# }
+
+# MakeFacetGraphs <- function (df, title, scale) {
+#   df.plot <- ggplot(df, aes(x = SampID, y = Area.Ave, fill = SampID)) +
+#     geom_bar(stat = "identity") +
+#     facet_wrap( ~Mass.Feature, scales = scale) +
+#     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+#           axis.text.y = element_text(size = 5),
+#           legend.position = "top",
+#           axis.ticks.length=unit(.25, "cm"),
+#           strip.text = element_text(size = 10)) +
+#     ggtitle(title)
+#   print(df.plot)
+# }
+

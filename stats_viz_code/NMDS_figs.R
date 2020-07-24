@@ -14,7 +14,7 @@ Chl.pattern = "ChlAnormd_notstd" # Enter this to identify which files are Chloro
 
 # Functions
 MakeNMDS <- function(mydf, hasChlorophyll, EddyInformation) {
-  
+
   Treatment <- mydf %>%
     ungroup() %>%
     select(Replicate.Name) %>%
@@ -42,7 +42,7 @@ MakeNMDS <- function(mydf, hasChlorophyll, EddyInformation) {
     select(Replicate.Name, Control.Status, Treatment.Status, Supergroup)
   
   # Transform to wide for analysis -----------------------------------------------------------------
-  Iso_wide <- MakeWide(mydf)
+  Iso_wide <- MakeWide(mydf, "Adjusted.Area")
   Iso_wide[is.na(Iso_wide)] <- 1000
   Iso_wideT <- t(Iso_wide)
   

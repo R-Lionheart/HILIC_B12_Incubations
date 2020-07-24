@@ -5,19 +5,7 @@ options(scipen = 999)
 source("src/B12_Functions.R")
 
 # ## Data normalized to Chlorophyll-a
-ChlMakeWide <- function(df) {
-  df.wide <- df %>%
-    ungroup() %>%
-    tidyr::spread(Replicate.Name, Normalized.by.Chla) %>%
-    as.data.frame()
 
-  df.rownames <- df.wide[,-1]
-  rownames(df.rownames) <- df.wide[,1]
-
-  df.rownames[is.na(df.rownames)] <- NA
-
-  return(df.rownames)
-}
 # UploadFiles <- function(myfilepath) {
 #   # Function for uploading non-standardized files.
 #   #

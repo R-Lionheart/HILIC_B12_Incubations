@@ -74,9 +74,6 @@ combined.neg <- Area.neg %>%
 combined <- rbind(combined.pos, combined.neg) %>%
   mutate(Metabolite.name = ifelse(str_detect(Metabolite.name, "Ingalls_"), sapply(strsplit(Metabolite.name, "_"), `[`, 2), Metabolite.name)) 
 
-combined$Replicate.Name <- gsub("^.{0,1}", "", combined$Replicate.Name)
-
-
 currentDate <- Sys.Date()
 csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
 

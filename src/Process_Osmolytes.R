@@ -21,7 +21,7 @@ Osmolytes[nrow(Osmolytes)+7,] <- NA
 
 All.Osmolytes <- cbind(Osmolytes, Possible)
 
-All.Osmolytes$Osmolytes <- capFirst(All.Osmolytes$Osmolytes)
+All.Osmolytes$Osmolytes <- CapitalizeFirstLetter(All.Osmolytes$Osmolytes)
 All.Osmolytes$Possible <- capFirst(All.Osmolytes$Possible)
 
 All.Osmolytes[All.Osmolytes == "NANA"] <- NA

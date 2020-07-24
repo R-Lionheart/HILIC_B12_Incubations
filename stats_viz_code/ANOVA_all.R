@@ -15,10 +15,10 @@ for (i in filenames) {
 }
 
 
-BMISd_1_0.2_long <- makeLong(IsoLagran1_Cyclonic_0.2um_wide_std)
-BMISd_1_5_long <- makeLong(IsoLagran1_Cyclonic_5um_wide_std)
-BMISd_2_0.2_long <- makeLong(IsoLagran2_Anticyclonic_0.2um_wide_std)
-BMISd_2_5_long <- makeLong(IsoLagran2_Anticyclonic_5um_wide_std)
+BMISd_1_0.2_long <- MakeLong(IsoLagran1_Cyclonic_0.2um_wide_std)
+BMISd_1_5_long <- MakeLong(IsoLagran1_Cyclonic_5um_wide_std)
+BMISd_2_0.2_long <- MakeLong(IsoLagran2_Anticyclonic_0.2um_wide_std)
+BMISd_2_5_long <- MakeLong(IsoLagran2_Anticyclonic_5um_wide_std)
 
 BMISD.normd <- BMISd_1_0.2_long %>%
   rbind(BMISd_1_5_long) %>%

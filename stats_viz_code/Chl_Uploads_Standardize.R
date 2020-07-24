@@ -13,7 +13,16 @@ for (i in filenames) {
 }
 
 # Upload Chlorophyll data
-Chlorophyll.data <- UploadChlorophyll()
+Chlorophyll.data <- read.csv("data_raw/Dyhrman_MS_Chla.csv", stringsAsFactors = FALSE) %>%
+  select(1:6) %>%
+  rename(Filter.size = Filter..µm.,
+         Chla = Chl.a..µg.L.) %>%
+  mutate(Date = as.character(Date),
+         Eddy = ifelse(str_detect(Date, "13|9"), "IL2", "IL1")) %>%
+  unite("Replicate.Name", SAMPLE, Eddy, sep = "_", remove = TRUE) %>%
+  filter(Filter.size == 5.0) %>%
+  mutate(Chla = as.numeric(Chla))
+
 
 # Fix Replicate Name labels 
 Chlorophyll_fixed <- Chlorophyll.data %>%
@@ -92,8 +101,8 @@ complete.set.IL25 <- NormalizeToChla(BMIS_fixed_IL25)
 
 
 ## Standardize
-complete.wide.IL15 <- ChlMakeWide(complete.set.IL15)
-complete.wide.IL25 <- ChlMakeWide(complete.set.IL25)
+complete.wide.IL15 <- MakeWide(complete.set.IL15, "Normalized.by.Chla")
+complete.wide.IL25 <- MakeWide(complete.set.IL25, "Normalized.by.Chla")
 
 complete.wide.IL15[is.na(complete.wide.IL15)] <- 1000
 complete.wide.IL25[is.na(complete.wide.IL25)] <- 1000
