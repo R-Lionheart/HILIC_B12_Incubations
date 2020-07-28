@@ -5,12 +5,9 @@ source("src/coldiss.R")
 library(cluster)
 library(tidyverse)
 library(vegan)
-library(viridis)
-
-# TODO: THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
 
 # User input
-file.pattern <- "MSDial_B12"
+file.pattern <- "Time0"
 my.filename <- "All.Data.Raw"
 
 ID.levels <- c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT",    
@@ -20,73 +17,40 @@ ID.levels <- c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT
 
 
 
-filenames <- RemoveCsv(list.files(path = "data_processed", pattern = regex(file.pattern, ignore_case = TRUE)))
-
+filenames <- RemoveCsv(list.files(path = "data_processed", 
+                                  pattern = regex(file.pattern, ignore_case = TRUE)))
 for (i in filenames) {
   filepath <- file.path("data_processed", paste(i, ".csv", sep = ""))
   assign(my.filename, read.csv(filepath, stringsAsFactors = FALSE))
 }
 
-my.dataframe <- grep(my.filename, names(.GlobalEnv), value = TRUE, ignore.case = TRUE)
-All.Data <- do.call("data.frame", get(my.dataframe)) 
-
 
 # Tidy and filter data ----------------------------------------------------
-All.Data.Filtered <- All.Data %>%
-  filter(Dataset == "B12_Incubation") %>%
-  separate(Replicate.Name, into = c("one", "two", "Sample.ID", "four"), remove = FALSE) %>%
+All.Data.Filtered <- All.Data.Raw %>%
+  separate(Replicate.Name, into = c("one", "two", "SampID", "four"), remove = FALSE) %>%
   select(-c("one", "two", "four")) %>%
-  select(Metabolite.name, Area.Value, Replicate.Name, Sample.ID) %>%
-  filter(!str_detect(Replicate.Name,
-                     "ProcessBlk|Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m|Std")) %>%
-  mutate(Experiment = ifelse(str_detect(Sample.ID, "IL1"), "Cyclonic", "Anticyclonic")) %>%
-  mutate(Area.Value = ifelse(Area.Value == 0, 1, Area.Value))
+  mutate(Experiment = ifelse(str_detect(SampID, "IL1"), "Cyclonic", "Anticyclonic")) %>%
+  mutate(Adjusted.Area = ifelse(is.na(Adjusted.Area), 1000, Adjusted.Area))
 
 
 # Pivot dataframe to wide -------------------------------------------------
 # Make a dataframe where each row is a sample and each column is a MF
 
 Wide.All.Data.Filtered <- All.Data.Filtered %>%
-  group_by(Metabolite.name) %>%
+  group_by(Mass.Feature) %>%
   mutate(row = row_number()) %>%
-  pivot_wider(names_from = Metabolite.name, values_from = Area.Value)  %>%
+  pivot_wider(names_from = Mass.Feature, values_from = Adjusted.Area)  %>%
   select(-row)
 
-
-# Identify duplicates and filter by replicate counts ----------------------
-Metabolite.Counts <- Wide.All.Data.Filtered %>%
-  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
-  filter(!is.na(Area.Value)) %>%
-  group_by(Metabolite.name) %>%
-  summarise(n = n()) %>%
-  filter(n<160) %>% ## THIS NEEDS TO BE EDITED FOR THE DUPLICATES IN THE HILIC ION MODE STUFF
-  full_join(Wide.All.Data.Filtered %>%
-              gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -Replicate.Name) %>%
-              filter(is.na(Area.Value)) %>%
-              select(Metabolite.name, Experiment) %>%
-              unique())
-
-
-# Pivot wider and spread by sample ----------------------------------------
-
 Spread.by.Sample <- Wide.All.Data.Filtered %>%
-  rename(treatment = Sample.ID,
-         Sample.ID = Replicate.Name) %>%
-  gather(Metabolite.name, Area.Value, -Sample.ID, -Experiment, -treatment) %>%
-  filter((Metabolite.name %in% Metabolite.Counts$Metabolite.name)) %>%
-  arrange(Sample.ID) %>%
-  filter(!is.na(Area.Value)) %>%
-  select(-Experiment, -treatment) %>%
-  spread(Sample.ID, Area.Value) %>%
-  arrange(Metabolite.name)
+  column_to_rownames(var = "Replicate.Name") %>%
+  select(-SampID, -Experiment) %>%
+  t() %>%
+  as.data.frame()
 
 
 # Standardize wide dataset ------------------------------------------------
 Standardized.Samples <- (decostand(Spread.by.Sample[,-1], method = 'standardize', 1, na.rm = T))
-rownames(Standardized.Samples) <- Spread.by.Sample$Metabolite.name
-row.names.remove <- c("Thiamine monophosphate")
-
-Standardized.Samples <- Standardized.Samples[!(row.names(Standardized.Samples) %in% row.names.remove), ]
 
 
 # Clara for clusters ------------------------------------------------------
@@ -98,15 +62,14 @@ for(i in 2:15) {
   Average.Silh.Width = c(Average.Silh.Width, Clustered.List$silinfo$avg.width)
   k = c(k, i)
 }
-plot(k, Average.Silh.Width, type = "p", xlab = "No. clusters")
+plot(k, Average.Silh.Width, type = "b", xlab = "Number of clusters")
 
 
 # Assign cluster numbers --------------------------------------------------
-## why is this the best number? why 6? I replaced with 17 but not sure if thats right
 best.number = which(Average.Silh.Width == (max(Average.Silh.Width))) + 1
-low.number = which(Average.Silh.Width[1:7]==(max(Average.Silh.Width[1:7]))) + 1
-if(best.number==low.number){
-  best.number = which(Average.Silh.Width[1:14]==(max(Average.Silh.Width[7:14]))) + 1
+low.number = which(Average.Silh.Width[1:7] == (max(Average.Silh.Width[1:7]))) + 1
+if(best.number == low.number){
+  best.number = which(Average.Silh.Width[1:14] == (max(Average.Silh.Width[7:14]))) + 1
 }
 High.Cluster.Number <- clara(Standardized.Samples, k = best.number, metric = "euclidean",
                                 samples = nrow(Standardized.Samples), correct.d = FALSE)
@@ -125,39 +88,38 @@ Cluster.Membership <- data.frame(Mass.Feature = names(Low.Cluster.Number$cluster
 Heatmap.Data = Standardized.Samples %>%
   mutate(Mass.Feature = rownames(Standardized.Samples)) %>%
   full_join(Cluster.Membership) %>%
-  gather(Sample.ID, Value, -Mass.Feature, -Cluster_low, -Cluster_best) %>%
+  gather(SampID, Value, -Mass.Feature, -Cluster_low, -Cluster_best) %>%
   left_join(All.Data.Filtered %>%
-              rename(treatment = Sample.ID,
-                     Sample.ID = Replicate.Name) %>%
-              dplyr::select(Sample.ID, Experiment, treatment) %>% 
+              rename(treatment = SampID,
+                     SampID = Replicate.Name) %>%
+              dplyr::select(SampID, Experiment, treatment) %>% 
               unique())  %>%
   unique() %>%
   arrange(Cluster_low) %>%
-  select(-Sample.ID) %>%
-  rename(Sample.ID = treatment) %>%
-  mutate(Sample.ID = factor(Sample.ID, levels = ID.levels))
+  select(-SampID) %>%
+  rename(SampID = treatment,
+         Standardized.Area.Value = Value) %>%
+  mutate(SampID = factor(SampID, levels = ID.levels))
 
 
 # Plot data ---------------------------------------------------------------
 ggplot() + 
-  geom_tile(data = Heatmap.Data, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
+  geom_tile(data = Heatmap.Data, aes(x = SampID, y = Mass.Feature, fill = Standardized.Area.Value)) +
   facet_grid(Cluster_best~., 
              scales = "free_y",
              space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
   theme(#axis.text.y  = element_blank(),
     axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
     strip.text = element_blank()) +
-  ggtitle("Best Cluster Number: 11")
+  ggtitle(paste("Best Cluster Number:", best.number))
 
 
 ggplot() + 
-  geom_tile(data = Heatmap.Data, aes(x = Sample.ID, y = Mass.Feature, fill = Value)) +
+  geom_tile(data = Heatmap.Data, aes(x = SampID, y = Mass.Feature, fill = Standardized.Area.Value)) +
   facet_grid(Cluster_low~., 
              scales = "free_y",
              space = "free_y") +
-  scale_fill_viridis(option = "viridis")+
-  theme(axis.text.y  = element_blank(),
+  theme(#axis.text.y  = element_blank(),
         axis.text.x = element_text(angle = 270, vjust = 0, hjust = 0),
         strip.text = element_blank()) +
-  ggtitle("Low Cluster Number: 2")
+  ggtitle(paste("Low Cluster Number:", low.number))

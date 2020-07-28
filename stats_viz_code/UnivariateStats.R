@@ -4,7 +4,7 @@ options(scipen = 999)
 source("src/B12_Functions.R")
 
 # Import Chlorophyll ------------------------------------------------------
-Chl.pattern <- "ChlAnormd"
+Chl.pattern <- "ChlAnormd" # "ChlAnormd" for chlorophyll, # "IsoLagran" for non-ChlA
 
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(Chl.pattern, ignore_case = TRUE)))
 for (i in filenames) {
@@ -13,7 +13,8 @@ for (i in filenames) {
            select(-X))
 }
 
-# Import non-standardized files ------------------------------------------------------
+# Import any non-standardized files ------------------------------------------------------
+# Required for both ChlA and non-ChlA situations
 dataset.pattern <- "_notstd"
 
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(dataset.pattern, ignore_case = TRUE)))
@@ -25,16 +26,16 @@ for (i in filenames) {
 
 # Set filtering conditions that correspond to the treatments you are comparing.
 Condition1 <- "IL1IT05um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc. Include 5um if using those!
-Condition2 <- "IL1Control5um"
+Condition2 <- "IL1DSW5um"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Cyclonic_5um_wChlA" # will be used as a search ID and title for graphs. Use "ChlA" if ChlA is involved.
+file.pattern <- "Cyclonic_5um_wChlA" # will be used as a search ID and title for graphs. Use "wChlA" if ChlA is involved.
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- IL1_5um_ChlAnormd_notstd # Assign correct dataframe for analysis
+BMISd <- IL1_5um_ChlAnormd_notstd # Assign correct dataframe for analysis. Should be non-standardized.
 
 currentDate <- Sys.Date()
 
-# First analysis 
 
+# Create table for analysis -----------------------------------------------
 if (grepl("wChlA", file.pattern)) {
   WBMISd <- BMISd %>%
     spread(key = "Replicate.Name", value = "Normalized.by.Chla")
@@ -131,10 +132,68 @@ if (grepl("wChlA", file.pattern)) {
     mutate(myave = mean(Adjusted.Area, na.rm = TRUE))
 }
 
-ggplot(sanitycheck, aes(Mass.Feature, myave, fill = SampID)) +
+# Plotting section --------------------------------------------------------
+
+# Plot non-transformed data
+if (grepl("wChlA", file.pattern)) {
+  ggplot(sanitycheck, aes(x = reorder(Mass.Feature, -Normalized.by.Chla), 
+                          y = Normalized.by.Chla, fill = SampID)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 90, size = 11, vjust = 0.5)) +
+    ggtitle(paste(file.pattern, Condition1, "v", Condition2))
+} else {
+  ggplot(sanitycheck, aes(x = reorder(Mass.Feature, -myave), 
+                          y = myave, fill = SampID)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme(axis.text.x = element_text(angle = 90, size = 11, vjust = 0.5)) +
+    ggtitle(paste(file.pattern, Condition1, "v", Condition2))
+}
+
+# Plot log-normalized data
+if (grepl("wChlA", file.pattern)) {
+  logNormalized <- sanitycheck %>%
+    mutate(log.normed = log(Normalized.by.Chla + 1))
+} else {
+  logNormalized <- sanitycheck %>%
+    mutate(log.normed = log(myave + 1))
+}
+
+ggplot(logNormalized, aes(x = reorder(Mass.Feature, -log.normed), 
+                        y = log.normed, fill = SampID)) +
   geom_bar(stat = "identity", position = "dodge") +
-  theme(axis.text.x = element_text(angle = 90, size = 11)) +
-  ggtitle(paste(file.pattern, Condition1, "v", Condition2))
+  theme(axis.text.x = element_text(angle = 90, size = 11, vjust = 0.5)) +
+  ggtitle(paste(file.pattern, Condition1, "v", Condition2, "_logNormalized"))
+
+# Plot square root data
+if (grepl("wChlA", file.pattern)) {
+  squareRoot <- sanitycheck %>%
+    mutate(square.root = sqrt(Normalized.by.Chla))
+} else {
+  squareRoot <- sanitycheck %>%
+    mutate(square.root = sqrt(myave))
+}
+
+ggplot(squareRoot, aes(x = reorder(Mass.Feature, -square.root), 
+                       y = square.root, fill = SampID)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, size = 11, vjust = 0.5)) +
+  ggtitle(paste(file.pattern, Condition1, "v", Condition2, "_SquareRoot"))
+
+
+# Plot fourth root data
+if (grepl("wChlA", file.pattern)) {
+  fourthRoot <- sanitycheck %>%
+    mutate(fourth.root = Normalized.by.Chla ^ 0.25)
+} else {
+  fourthRoot <- sanitycheck %>%
+    mutate(fourth.root = myave ^ 0.25)
+}
+
+ggplot(fourthRoot, aes(x = reorder(Mass.Feature, -fourth.root), 
+                     y = fourth.root, fill = SampID)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, size = 11, vjust = 0.5)) +
+  ggtitle(paste(file.pattern, Condition1, "v", Condition2, "_FourthRoot"))
 
 
 # Condition1 v Condition 2 Significance
@@ -165,4 +224,6 @@ figureFileName <- paste("Figure_", file.pattern, "_",
                      currentDate, ".png", sep = "")
 
 ggsave(filename = figureFileName, plot = SignificancePlot, path = "figures/")
-  
+
+
+

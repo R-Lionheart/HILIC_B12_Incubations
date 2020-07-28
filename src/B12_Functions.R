@@ -110,7 +110,7 @@ MakeWide <- function(df, area.column.name) {
   df.wide <- df %>%
     ungroup() %>%
     pivot_wider(names_from = Replicate.Name,
-                values_from = area.column.name) %>%
+                values_from = all_of(area.column.name)) %>%
     as.data.frame()
   
   df.rownames <- df.wide[,-1]

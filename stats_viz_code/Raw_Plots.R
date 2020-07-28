@@ -5,34 +5,13 @@ options(scipen = 999)
 library(tidyverse) 
 library(vegan)
 
-BMIS.pattern = "BMIS_Output"
+BMIS.pattern = "Time0_Fixed"
 
 # BMIS import and filtering of unnecessary SampIDs --------------------------------------------
 filename <- RemoveCsv(list.files(path = "data_processed/", pattern = BMIS.pattern))
 filepath <- file.path("data_processed", paste(filename, ".csv", sep = ""))
 
-HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE)) %>%
-  select(Mass.Feature, runDate:replicate, Adjusted.Area) %>%
-  unite(Replicate.Name, runDate:replicate, sep = "_") %>%
-  filter(!str_detect(Replicate.Name, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m")) %>%
-  filter(!Mass.Feature == "Inj_vol") %>%
-  filter(!str_detect(Mass.Feature, ","))
-
-# Adjust for ILT0 naming issues --------------------------------------------
-HILIC_all <- HILIC_all %>%
-  mutate(Replicate.Name = recode(Replicate.Name, 
-                                 "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
-                                 "171002_Smp_IT0_2" = "171002_Smp_IL1IT0_2",
-                                 "171002_Smp_IT0_3" = "171002_Smp_IL1IT0_3",
-                                 "171009_Smp_IT05um_1" = "171009_Smp_IL1IT05um_1",
-                                 "171009_Smp_IT05um_2" = "171009_Smp_IL1IT05um_2",
-                                 "171009_Smp_IT05um_3" = "171009_Smp_IL1IT05um_3",
-                                 "171016_Smp_IT0_1" = "171016_Smp_IL2IT0_1",
-                                 "171016_Smp_IT0_2" = "171016_Smp_IL2IT0_2",
-                                 "171016_Smp_IT0_3" = "171016_Smp_IL2IT0_3",
-                                 "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
-                                 "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
-                                 "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3"))
+HILIC_all <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = FALSE))
 
 all.hilics.data <- HILIC_all %>%
   group_by(Mass.Feature) %>%
@@ -57,7 +36,7 @@ stacked.hilics.data <- HILIC_all %>%
   select(Mass.Feature, SampID, My.Average, Percent.Total) %>%
   unique()
 
-# 1_0.2
+# Stacked HILICS
 stacked.hilics.data$SampID <- factor(stacked.hilics.data$SampID, levels = 
                                        c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT", "IL1noBT", 
                                          "IL2IT0", "IL2Control", "IL2DMB", "IL2WBT", "IL2DSW", "IL2DMBnoBT", "IL2noBT",

@@ -10,7 +10,8 @@ library(vegan)
 
 dataset.pattern <- "IsoLagran"
 
-## Import your datasets. This will import a lot of information.
+## Import your datasets. This will import all datasets split by eddy and filter, non-standardized long formats,
+## and those that have been pivoted wider and standardized (aka gone through the NMDS distance matrix production).
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = dataset.pattern))
 filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))
 for (i in filenames) {
@@ -19,10 +20,10 @@ for (i in filenames) {
 }
 
 ## Set information for ANOSIM test
-EddyInformation <- "1_Cyclonic_5um"
-mydf <- IsoLagran1_5_notstd
-mydf.wide <- IsoLagran1_Cyclonic_5um_wide_std
-hasChlorophyll <- "no"
+EddyInformation <- "1_Cyclonic_0.2um" # EddyNumber_EddyDirection_FilterSize. e.g. "1_Cyclonic_0.2um"
+mydf <- IsoLagran1_0.2_notstd # Non-standardized, long format.
+mydf.wide.std <- IsoLagran1_Cyclonic_0.2um_wide_std # Standardized, wide format.
+hasChlorophyll <- "no" # yes or no
 
 ## Create Treatment dataframe for ANOSIM analysis
 Treatment <- mydf %>%
@@ -58,14 +59,15 @@ Treatment <- Treatment %>%
 # of high and low ranks within and between groups
 
 # A Significance value less than 0.05 is generally considered to be statistically significant, 
-# and means the null hypothesis can be rejected. Therefore, there is a statistically significant 
-# difference in the microbial communities between your groups. 
+# and means the null hypothesis can be rejected. 
+# Euclidean distance vs gower distance produces very similar results, both confirming statistical
+# significance.
 
-ano.Treatment.Status = anosim(mydf.wide[,-1], Treatment$Treatment.Status, 
+ano.Treatment.Status = anosim(mydf.wide.std[,-1], Treatment$Treatment.Status, 
                               distance = "euclidean", permutations = 9999)
 ano.Treatment.Status
 
-ano.Control.Status = anosim(mydf.wide[,-1], Treatment$Control.Status, 
+ano.Control.Status = anosim(mydf.wide.std[,-1], Treatment$Control.Status, 
                             distance = "euclidean", permutations = 9999)
 ano.Control.Status
 
@@ -76,21 +78,22 @@ ano.Control.Status
 # They reflect the quality and changes in environmental conditions as well 
 # as aspects of community composition.”
 
-# I often use the same groups that I use for the ANOSIM statistical test. 
-# This way I can check to see which species are most responsible for the 
-# differences in microbial community composition between my groups.
+# You can use the same groups used for the ANOSIM test. 
+# Then you can check to see which species are most responsible for the 
+# differences in microbial community composition between groups.
 
 which.treatment <- Treatment$Treatment.Status
 
 # The mulitpatt command results in lists of species that are associated
-# with a particular group of samples. If your group has more than 2 categories,
-# multipatt will also identify species that are statistically more abundant in combinations of categories.
-species.indication = multipatt(mydf.wide[,-1], which.treatment,
+# with a particular group of samples. In our case, which compounds are associated with which treatments.
+# If your group has more than 2 categories, multipatt will also identify species that are 
+# statistically more abundant in combinations of categories.
+species.indication = multipatt(mydf.wide.std[,-1], which.treatment,
                                func = "r.g", control = how(nperm=9999))
 summary(species.indication)
 
 # The first list contains the species found significantly more often in the “DSW” grouping. 
-# The #sps shows the numer of species that were identified as indicators for this group. 
+# The #sps shows the number of species that were identified as indicators for this group. 
 # The first column contains species names, the next column contains the stat value 
 # (higher means the OTU is more strongly associated). The p.value column contains 
 # the statistical p values for the species association (lower means stronger significance). 
@@ -108,14 +111,23 @@ individual.graph <- individual.species %>%
   group_by(Mass.Feature) %>%
   mutate(GroupName = paste(SampID[value != 0], collapse = "_")) %>%
   select(-SampID, -value) %>%
-  unique() %>%
-  filter(GroupName != "B12_DeepSeaWater_DMBnoB12")
+  unique() 
 
 
 tbd.layout <- as.data.frame(species.indication$comb)
-possible.goodshit <- as.data.frame(species.indication$str)
+
+heatmap.data <- individual.graph %>%
+  filter(Significant == "Significant")
+heatmap <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = GroupName, fill = stat)) + 
+  geom_tile(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+        #axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 10),
+        strip.text = element_text(size = 10))
+print(heatmap)
 
 
+# Table layout
 d1 <- individual.graph[1:3, 1, drop=FALSE]
 d2 <- individual.graph[1:2,1:2]
 
@@ -127,46 +139,32 @@ valigned <- gtable_combine(g1,g2, along=2)
 grid.newpage()
 grid.arrange(haligned, valigned, ncol=2)
 
-ggplot(individual.graph, aes(Significant, stat, label = Mass.Feature)) +
+# Heatmap layout
+ggplot(heatmap.data, aes(Significant, stat, label = Mass.Feature)) +
   geom_point(mapping = aes(color = Significant)) +
   geom_text() + 
   facet_wrap(~GroupName) +
   theme(axis.text.x = element_blank())
 
-## Currently not working
-# ggplot(as.data.frame(table(individual.graph)), 
-#        aes(x=Mass.Feature, y = GroupName, fill=Significant)) + 
-#   geom_bar(stat="identity")
 
-
-# Other options
-ind.spec.heatmap <- ggplot(data = individual.species, aes(x = stat, y = p.value, 
-                                                          fill = Significant)) + 
-  geom_tile(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
-        #axis.text.x = element_blank(),
-        axis.text.y = element_text(size = 10),
-        strip.text = element_text(size = 10)) +
-  facet_wrap(~SampID)
-print(ind.spec.heatmap)
-
-
+# Boxplot layout (shitty)
 gg = ggplot(individual.species, aes(x = Mass.Feature, y = stat, fill = SampID)) + 
   geom_boxplot(colour = "black", position = position_dodge(0.5)) +
   theme(legend.title = element_text(size = 12, face = "bold"), 
         legend.text = element_text(size = 10, face = "bold"), legend.position = "right", 
-        axis.text.x = element_text(face = "bold", colour = "black", size = 12,
+        axis.text.x = element_text(colour = "black", size = 12,
                                    angle = 90), 
-        axis.text.y = element_text(face = "bold", size = 12, colour = "black"), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
+        axis.text.y = element_text(size = 12, colour = "black"), 
+        axis.title.y = element_text(size = 14, colour = "black"), 
         panel.border = element_rect(fill = NA, colour = "black"), 
         legend.key=element_blank()) 
 gg
 
-
+# Point layout
 ggplot(individual.species, aes(x=stat, y=p.value, size = value, color = SampID)) +
   geom_point(alpha=0.7) 
 
+# Polar point layout
 ggplot(individual.species, aes(x=p.value, y=stat)) +
   geom_point(mapping = aes(color = value), alpha = 1/20) + 
   scale_color_gradient(low="blue", high="orange") +

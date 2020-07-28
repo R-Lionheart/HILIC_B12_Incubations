@@ -21,11 +21,13 @@ source("src/Quality_Control.R")
 source("src/B12_BMIS_HILIC.R")
 ```
 
-Next step is to 
-Process osmolytes
-Split.by.eddy
-chl uploads standardize
-NMDS
+Next is to complete the preliminary stats processing; incorporate osmolytes and chlorophyll, create datasets split by eddy orientation and filter size, and run all data through an NMDS script to create a distance matrix. 
+```{r Preliminary processing, include=TRUE}
+source("src/Process_Osmolytes.R")
+source("stats_viz_code/Split_by_EddyFilter.R")
+source("stats_viz_code/Chl_Uploads_Standardize.R")
+source("stats_viz_code/NMDS_figs.R")
+```
 
 should be in any order:
 ANOSIM_species indic (STILL NEEDS LOTS OF WORK)
