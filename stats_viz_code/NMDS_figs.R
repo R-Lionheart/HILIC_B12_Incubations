@@ -104,7 +104,7 @@ df_wide_normalizedT_1_0.2um <- MakeNMDS(IsoLagran1_0.2_notstd, hasChlorophyll = 
                                         EddyInformation = EddyInformation_1_0.2um)
 df_wide_normalizedT_1_5um <- MakeNMDS(IsoLagran1_5_notstd, hasChlorophyll = "no",
                                       EddyInformation = EddyInformation_1_5um)
-df_wide_normalizedT_2_0.2um <- MakeNMDS(IsoLagran1_0.2_notstd, hasChlorophyll = "no",
+df_wide_normalizedT_2_0.2um <- MakeNMDS(IsoLagran2_0.2_notstd, hasChlorophyll = "no",
                                         EddyInformation_2_0.2um)
 df_wide_normalizedT_2_5um <- MakeNMDS(IsoLagran2_5_notstd, hasChlorophyll = "no",
                                       EddyInformation_2_5um)
@@ -122,8 +122,3 @@ df_wide_normalizedT_2_5um_wChla <- MakeNMDS(IL2_5um_ChlAnormd_notstd, hasChlorop
 #   
 # IL25um_osmolytes <- IL2_0.5um_ChlA_normd_notstd %>%
 #   filter(Mass.Feature %in% Osmolytes$Osmolytes)
-
-
-
-
-

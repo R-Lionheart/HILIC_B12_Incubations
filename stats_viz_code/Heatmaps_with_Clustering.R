@@ -16,7 +16,6 @@ ID.levels <- c("IL1IT0", "IL1Control", "IL1DMB", "IL1WBT", "IL1DSW", "IL1DMBnoBT
                "IL2IT05um", "IL2Control5um", "IL2DMB5um", "IL2WBT5um", "IL2DSW5um", "IL2DMBnoBT5um", "IL2noBT5um")
 
 
-
 filenames <- RemoveCsv(list.files(path = "data_processed", 
                                   pattern = regex(file.pattern, ignore_case = TRUE)))
 for (i in filenames) {
@@ -35,7 +34,6 @@ All.Data.Filtered <- All.Data.Raw %>%
 
 # Pivot dataframe to wide -------------------------------------------------
 # Make a dataframe where each row is a sample and each column is a MF
-
 Wide.All.Data.Filtered <- All.Data.Filtered %>%
   group_by(Mass.Feature) %>%
   mutate(row = row_number()) %>%
@@ -67,10 +65,11 @@ plot(k, Average.Silh.Width, type = "b", xlab = "Number of clusters")
 
 # Assign cluster numbers --------------------------------------------------
 best.number = which(Average.Silh.Width == (max(Average.Silh.Width))) + 1
-low.number = which(Average.Silh.Width[1:7] == (max(Average.Silh.Width[1:7]))) + 1
+low.number = which(Average.Silh.Width[7:14] == (max(Average.Silh.Width[7:14]))) + 1
 if(best.number == low.number){
   best.number = which(Average.Silh.Width[1:14] == (max(Average.Silh.Width[7:14]))) + 1
-}
+} # If the same, make the best number to a bigger option. In this case, 8 is the best choice above 7.
+# Maybe pick 4, or 6 instead.
 High.Cluster.Number <- clara(Standardized.Samples, k = best.number, metric = "euclidean",
                                 samples = nrow(Standardized.Samples), correct.d = FALSE)
 Low.Cluster.Number <- clara(Standardized.Samples, k = low.number, metric = "euclidean", 

@@ -4,7 +4,7 @@ options(scipen = 999)
 source("src/B12_Functions.R")
 
 # Import Chlorophyll ------------------------------------------------------
-Chl.pattern <- "ChlAnormd" # "ChlAnormd" for chlorophyll, # "IsoLagran" for non-ChlA
+Chl.pattern <- "IsoLagran" # "ChlAnormd" for chlorophyll, # "IsoLagran" for non-ChlA
 
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = regex(Chl.pattern, ignore_case = TRUE)))
 for (i in filenames) {
@@ -28,9 +28,9 @@ for (i in filenames) {
 Condition1 <- "IL1IT05um" # Other options: IL1DMBnoBT, IL2WBT, IL1noBt, etc. Include 5um if using those!
 Condition2 <- "IL1DSW5um"
 SigValue <- "pvalue" # alternative is "qvalue", when using fdr-corrected values.
-file.pattern <- "Cyclonic_5um_wChlA" # will be used as a search ID and title for graphs. Use "wChlA" if ChlA is involved.
+file.pattern <- "Cyclonic_5um" # will be used as a search ID and title for graphs. Use "wChlA" if ChlA is involved.
 SigNumber <- 0.1 # Pvalue cutoff
-BMISd <- IL1_5um_ChlAnormd_notstd # Assign correct dataframe for analysis. Should be non-standardized.
+BMISd <- IsoLagran1_5_notstd # Assign correct dataframe for analysis. Should be non-standardized.
 
 currentDate <- Sys.Date()
 

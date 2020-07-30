@@ -77,8 +77,8 @@ filterForOsmolytes <- function(df) {
 }
 
 # Upload files and enter user data ----------------------------------------
-file.pattern = "IL|Osmolytes" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
-Norm.Type = "BMISd with ChlA" # For titles & labeling. Add Chla when appropriate
+file.pattern = "IsoLagran" # "IL" or Chl-normalized data. "IsoLagran" for plain BMIS-adjusted data
+Norm.Type = "BMISd" # For titles & labeling. Add "with ChlA" when appropriate
 
 filenames <- RemoveCsv(list.files(path = "data_processed/", pattern = file.pattern))
 filepath <- file.path("data_processed", paste(filenames, ".csv", sep = ""))

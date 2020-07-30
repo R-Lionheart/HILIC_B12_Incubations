@@ -58,6 +58,9 @@ glimpse(full.data)
 # Also requires an NxN distance matrix to be calculated, which is computationally 
 # intensive to keep in-memory for large samples
 
+full.data <- full.data %>%
+  mutate(Adjusted.Area = sqrt(Adjusted.Area))
+
 gower.distance <- daisy(full.data, # Remove mass.feature
                       metric = "gower",
                       type = list(logratio = 3))
@@ -67,7 +70,7 @@ gower.matrix <- as.matrix(gower.distance)
 
 
 # Sanity Check
-#similar (can this be expanded to include more grouping?)
+# similar (can this be expanded to include more grouping?)
 full.data[
   which(gower.matrix == min(gower.matrix[gower.matrix != min(gower.matrix)]),
         arr.ind = TRUE)[1, ], ]
@@ -133,7 +136,7 @@ TSNE.data <- TSNE.obj$Y %>%
 
 ggplot(aes(x = X, y = Y), data = TSNE.data) +
   geom_point(aes(color = cluster)) +
-  ggtitle("")
+  ggtitle("PAM K-means")
 
 TSNE.data.filter <- TSNE.data %>%
   filter(X > -30 & X < 0,

@@ -20,9 +20,9 @@ for (i in filenames) {
 }
 
 ## Set information for ANOSIM test
-EddyInformation <- "1_Cyclonic_0.2um" # EddyNumber_EddyDirection_FilterSize. e.g. "1_Cyclonic_0.2um"
-mydf <- IsoLagran1_0.2_notstd # Non-standardized, long format.
-mydf.wide.std <- IsoLagran1_Cyclonic_0.2um_wide_std # Standardized, wide format.
+EddyInformation <- "2_Anticyclonic_5um" # EddyNumber_EddyDirection_FilterSize. e.g. "1_Cyclonic_0.2um"
+mydf <- IsoLagran2_5_notstd # Non-standardized, long format.
+mydf.wide.std <- IsoLagran2_Anticyclonic_5um_wide_std # Standardized, wide format.
 hasChlorophyll <- "no" # yes or no
 
 ## Create Treatment dataframe for ANOSIM analysis
@@ -88,6 +88,7 @@ which.treatment <- Treatment$Treatment.Status
 # with a particular group of samples. In our case, which compounds are associated with which treatments.
 # If your group has more than 2 categories, multipatt will also identify species that are 
 # statistically more abundant in combinations of categories.
+
 species.indication = multipatt(mydf.wide.std[,-1], which.treatment,
                                func = "r.g", control = how(nperm=9999))
 summary(species.indication)
@@ -114,7 +115,8 @@ individual.graph <- individual.species %>%
   unique() 
 
 
-tbd.layout <- as.data.frame(species.indication$comb)
+tbd.layout <- as.data.frame(species.indication$comb) %>%
+  cbind(mydf.wide.std[1, ])
 
 heatmap.data <- individual.graph %>%
   filter(Significant == "Significant")
@@ -123,7 +125,8 @@ heatmap <- ggplot(data = heatmap.data, aes(x = Mass.Feature, y = GroupName, fill
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
         #axis.text.x = element_blank(),
         axis.text.y = element_text(size = 10),
-        strip.text = element_text(size = 10))
+        strip.text = element_text(size = 10)) +
+  ggtitle("Species Indicator Analysis")
 print(heatmap)
 
 
@@ -162,11 +165,12 @@ gg
 
 # Point layout
 ggplot(individual.species, aes(x=stat, y=p.value, size = value, color = SampID)) +
-  geom_point(alpha=0.7) 
+  geom_point(alpha=0.7) +
+  ggtitle("Species Indicator Analysis")
 
 # Polar point layout
 ggplot(individual.species, aes(x=p.value, y=stat)) +
-  geom_point(mapping = aes(color = value), alpha = 1/20) + 
+  geom_point(mapping = aes(color = value), alpha = 1/5) + 
   scale_color_gradient(low="blue", high="orange") +
   coord_polar() +
   facet_wrap(~SampID)
