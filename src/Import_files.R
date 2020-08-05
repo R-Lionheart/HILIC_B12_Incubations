@@ -23,12 +23,11 @@ columns.to.drop <- c('Average.Rt.min.', 'Formula', 'Ontology', 'INCHIKEY',
 runs <- grep(matching.variable, names(.GlobalEnv), value = TRUE, ignore.case = TRUE)
 runlist <- do.call("list", mget(runs))
 
-
 headers.set <- lapply(names(runlist), function(x) SetHeader(runlist[[x]]))
 names(headers.set) <- runs
 
 for (df in seq_along(headers.set)) { 
-  headers.set[[df]] <- headers.set[[df]] %>% filter(!Metabolite.name == "Unknown")
+  headers.set[[df]] <- headers.set[[df]] %>% filter(!Metabolite.Name == "Unknown")
   headers.set[[df]] <- headers.set[[df]] %>% select(-one_of(columns.to.drop))
 }
 
@@ -72,7 +71,7 @@ combined.neg <- Area.neg %>%
   select(Replicate.Name, Column, Area.Value, Mz.Value, RT.Value, SN.Value, everything())
 
 combined <- rbind(combined.pos, combined.neg) %>%
-  mutate(Metabolite.name = ifelse(str_detect(Metabolite.name, "Ingalls_"), sapply(strsplit(Metabolite.name, "_"), `[`, 2), Metabolite.name)) 
+  mutate(Metabolite.Name = ifelse(str_detect(Metabolite.Name, "Ingalls_"), sapply(strsplit(Metabolite.Name, "_"), `[`, 2), Metabolite.Name)) 
 
 currentDate <- Sys.Date()
 csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
@@ -80,7 +79,7 @@ csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep
 #############################
 options(scipen = 999)
 test <- combined %>%
-  select(Metabolite.name, Replicate.Name, Area.Value) %>%
+  select(Metabolite.Name, Replicate.Name, Area.Value) %>%
   filter(!str_detect(Replicate.Name, "Sept29QC|TruePooWeek1|TruePooWeek2|TruePooWeek3|TruePooWeek4|DSW700m|Process|Std")) %>%
   mutate(Replicate.Name = recode(Replicate.Name, 
                                  "171002_Smp_IT0_1" ="171002_Smp_IL1IT0_1", 
@@ -96,15 +95,15 @@ test <- combined %>%
                                  "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
                                  "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
   separate(Replicate.Name, into = c("one", "two", "SampID", "four"), fill = "right", remove = FALSE) %>%
-  select(Metabolite.name, SampID, Area.Value) %>%
+  select(Metabolite.Name, SampID, Area.Value) %>%
   drop_na() %>%
-  group_by(Metabolite.name, SampID) %>%
+  group_by(Metabolite.Name, SampID) %>%
   mutate(Averages = mean(Area.Value, na.rm = TRUE)) %>%
-  select(Metabolite.name, SampID, Averages) %>%
+  select(Metabolite.Name, SampID, Averages) %>%
   unique() %>%
   mutate(Five_um = ifelse(str_detect(SampID, "5um"), TRUE, FALSE)) 
 
-ggplot(data = test, aes(x = Metabolite.name, y = Averages, fill = Five_um)) +
+ggplot(data = test, aes(x = Metabolite.Name, y = Averages, fill = Five_um)) +
   geom_bar(stat = "identity", position = "dodge")
 #############################
 write.csv(combined, csvFileName, row.names = FALSE)

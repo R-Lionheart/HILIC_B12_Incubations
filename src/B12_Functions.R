@@ -57,7 +57,7 @@ IdentifyDuplicates <- function(df) {
     mutate(ticker = cumsum(number)) %>%
     filter(ticker == 2) %>%
     ungroup() %>%
-    select(Metabolite.name) %>%
+    select(Metabolite.Name) %>%
     unique()
   return(duplicates)
 }
@@ -160,6 +160,8 @@ RemoveCsv <- function(full.filepaths) {
 
 SetHeader <- function(df) {
   # Remove empty or unnecessary lines from machine output, and make column names headers.
+  # Also change the default header "Metabolite.name" to "Metabolite.Name" so as to maintain
+  # consistency across analyses.
   #
   # Args
   #   df: Raw output file from MSDial.
@@ -170,6 +172,8 @@ SetHeader <- function(df) {
   df <- df[!(is.na(df[1]) | df[1]==""), ]
   colnames(df) <- make.names(as.character(unlist(df[1,])))
   df <- df[-1, ]
+  names(df)[names(df) == "Metabolite.name"] <- "Metabolite.Name"
+  
   
   return(df)
 }

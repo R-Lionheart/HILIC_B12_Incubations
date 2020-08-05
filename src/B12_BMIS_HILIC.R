@@ -40,25 +40,25 @@ HILIC.QC <- assign(make.names(filename), read.csv(filepath, stringsAsFactors = F
 
 ## 03/24/20 edit of duplicate removal here: specifically for making figures. Maybe keep?
 HILICS.duplicates <- IdentifyDuplicates(HILIC.QC) %>%
-  filter(!Metabolite.name == "Inosine")
+  filter(!Metabolite.Name == "Inosine")
 
 HILIC.QC <- HILIC.QC %>%
-  filter(!(Metabolite.name %in% HILICS.duplicates$Metabolite.name & Column == "HILICNeg")) %>%
-  filter(!(Metabolite.name == "Inosine" & Column == "HILICPos"))
+  filter(!(Metabolite.Name %in% HILICS.duplicates$Metabolite.Name & Column == "HILICNeg")) %>%
+  filter(!(Metabolite.Name == "Inosine" & Column == "HILICPos"))
 
 
 # Match QC'd HILIC data with Internal Standards list -----------------------------------------------------------------
 HILIC.withIS <- HILIC.QC %>%
-  filter(Metabolite.name %in% Internal.Standards$Compound.Name)
+  filter(Metabolite.Name %in% Internal.Standards$Compound.Name)
 
 HILIC.NoIS <- HILIC.QC %>%
-  filter(!Metabolite.name %in% Internal.Standards$Compound.Name)
+  filter(!Metabolite.Name %in% Internal.Standards$Compound.Name)
 
 # Create HILICs Internal Standard data -----------------------------------------------------------------
 HILIC.IS.data <- HILIC.withIS %>%
-  select(Replicate.Name, Metabolite.name, Area.with.QC) %>%
-  mutate(Mass.Feature = Metabolite.name) %>%
-  select(-Metabolite.name) 
+  select(Replicate.Name, Metabolite.Name, Area.with.QC) %>%
+  mutate(Mass.Feature = Metabolite.Name) %>%
+  select(-Metabolite.Name) 
   #filter(!MassFeature == "Guanosine Monophosphate, 15N5")
 
 # Add injection volume -----------------------------------------------------------------
@@ -94,7 +94,7 @@ IS.Raw.Area.Plot <- ggplot(HILIC.IS.data, aes(x = Replicate.Name, y = Area.with.
 
 # Edit data so names match-----------------------------------------------------------------
 HILIC.long  <- HILIC.NoIS %>%
-  rename(Mass.Feature = Metabolite.name) %>%
+  rename(Mass.Feature = Metabolite.Name) %>%
   select(Replicate.Name, Mass.Feature, Area.with.QC) %>%
   filter(!str_detect(Replicate.Name, "dda")) %>%
   arrange(Replicate.Name)
