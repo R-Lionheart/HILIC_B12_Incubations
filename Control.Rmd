@@ -19,6 +19,9 @@ Unless otherwise stated, all inputs come from the data_raw or data_extras direct
 If you are starting from scratch, it's a good idea to clean out the "data_processed/" and "figures/" folders so you can be sure your code is producing everything it needs for iterative analysis.
 
 ```{r Optional clean slate chunk, include=TRUE}
+if(!dir.exists("data_processed"))dir.create("data_processed")
+if(!dir.exists("figures"))dir.create("data_processed")
+
 if (length(dir(path = "data_processed/")) == 0) {
   cat("\nData_processed subdirectory is empty.")
 } else {
