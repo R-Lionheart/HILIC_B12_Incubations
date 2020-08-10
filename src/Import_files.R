@@ -71,7 +71,7 @@ combined.neg <- Area.neg %>%
   select(Replicate.Name, Column, Area.Value, Mz.Value, RT.Value, SN.Value, everything())
 
 combined <- rbind(combined.pos, combined.neg) %>%
-  mutate(Metabolite.Name = ifelse(str_detect(Metabolite.Name, "Ingalls_"), sapply(strsplit(Metabolite.Name, "_"), `[`, 2), Metabolite.Name)) 
+  mutate(Metabolite.Name = gsub(pattern = "Ingalls_", replacement = "", x = .$Metabolite.Name)) 
 
 currentDate <- Sys.Date()
 csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
@@ -107,5 +107,6 @@ ggplot(data = test, aes(x = Metabolite.Name, y = Averages, fill = Five_um)) +
   geom_bar(stat = "identity", position = "dodge")
 #############################
 write.csv(combined, csvFileName, row.names = FALSE)
+
 
 rm(list = ls())
