@@ -67,7 +67,7 @@ MakeNMDS <- function(mydf, hasChlorophyll, EddyInformation) {
     xlim(-20, 10) +
     ggtitle(paste("Incubation Experiments: Eddy", EddyInformation, sep = " ")) 
   print(Isograph)
-  ggsave(path = "figures", paste("Incubation Experiments: Eddy", EddyInformation, ".png", sep = ""))
+  ggsave(path = "figures", paste("Incubation Experiments- Eddy", EddyInformation, ".png", sep = ""))
 
   return(Iso_wide_nmds)
 }
