@@ -78,7 +78,7 @@ Outputs:
 Inputs: 
 - All four IsoLagran files from previous step.
 - Chlorophyll datafile.
-Ouputs:
+Outputs:
 - Chlorophyll file, names fixed for future processing.
 - Four files, each one normalized to ChlA (5um only, no chlorophyll exists for the 0.2um filter size). Two are non-decostandardized and in long format ("notstd"), and two are decostandardized and in wide format ("std").
 
