@@ -63,7 +63,7 @@ Next is to complete the preliminary stats processing; incorporate osmolytes and 
 
 *Process_Osmolytes.R*
 Inputs: Method Osmolytes file.
-Outputs: Osmolytes file, edited for input into the rest of the script, titled Osmolytes_dited.csv.
+Outputs: Osmolytes file, edited for input into the rest of the script, titled Osmolytes_edited.csv.
 
 *Split_by_EddyFilter.R*
 Inputs: BMIS file from BMIS processing step.
@@ -83,7 +83,7 @@ Ouputs:
 Inputs:
 - All four non-standardized, non-ChlA csvs split by eddy and size fraction.
 - Nonstandardized, ChlA-normalized csvs split by eddy (IL1_5um, IL2_5um).
-Oupts:
+Outputs:
 - Six files from inputs, all shifted to wide format and standardized.
 - Six images of all NMDS figures from the output files.
 
@@ -98,14 +98,16 @@ After the above chunks have been run, the below scripts should be possible to ru
 
 The below files are not perfect and still need work, but feel free to explore any of the analytical pathways!
 
-ANOSIM_IndicSpecies.R
-ANOVA_all (mostly useless. needs work.)
-anova b12
-anova dsw
-FourCompound_Ratios.R
-Heatmaps.R
-Heatmps_with_Clustering.R
-kmeans_PAM.R
-Ratios.R
-Raw_Plots.R
-Univariate_Stats.R
+```{r Followup scripts}
+source("stats_visualization/ANOSIM_IndicSpecies.R")
+source("stats_visualization/ANOVA_all.R") #(mostly useless. needs work.)
+source("stats_visualization/ANOVA_B12.R")
+source("stats_visualization/ANOVA_DSW.R")
+source("stats_visualization/FourCompound_Ratios.R")
+source("stats_visualization/Heatmaps.R")
+source("stats_visualization/Heatmps_with_Clustering.R")
+source("stats_visualization/kmeans_PAM.R")
+source("stats_visualization/Ratios.R")
+source("stats_visualization/Raw_Plots.R")
+source("stats_visualization/Univariate_Stats.R")
+```
