@@ -12,8 +12,6 @@ library(RCurl)
 library(rlist)
 library(tidyverse)
 
-T <- FALSE
-F <- TRUE
 ```
 
 This Control.Rmd script outlines the order in which the MESOSCOPE B12 Incubation code snippets are to be run. 
