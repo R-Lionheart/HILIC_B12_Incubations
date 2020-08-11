@@ -108,6 +108,11 @@ ggplot(data = test, aes(x = Metabolite.Name, y = Averages, fill = Five_um)) +
 #############################
 write.csv(combined, csvFileName, row.names = FALSE)
 
+
+# This unit test replicates all of the above code, returning a data frame that
+# should match the "combined" data frame exactly once it's arranged in the
+# same way. Runs from reading in raw data to reorganization to collation.
+
 unit_test_df <- "data_raw" %>%
   dir(pattern = "HILIC.*\\.csv", full.names = TRUE) %>%
   sapply(read.csv, simplify = FALSE) %>%
@@ -132,6 +137,8 @@ unit_test_df <- "data_raw" %>%
   mutate(Replicate.Name=gsub("^X", "", x = .$Replicate.Name)) %>%
   arrange(desc(Column), Metabolite.Name)
 
+# Actual unit test below: if the two data frames differ, report a diff
+# between them and stop running.
 if(!identical(unit_test_df, arrange(combined, desc(Column), Metabolite.Name))){
   cat(all.equal(unit_test_df, arrange(combined, desc(Column), Metabolite.Name)))
   stop("Unit test failed, see diff above.")
