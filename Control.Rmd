@@ -8,6 +8,10 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(RCurl)
+library(rlist)
+library(tidyverse)
+
 ```
 
 This Control.Rmd script outlines the order in which the MESOSCOPE B12 Incubation code snippets are to be run. 
@@ -19,6 +23,9 @@ Unless otherwise stated, all inputs come from the data_raw or data_extras direct
 If you are starting from scratch, it's a good idea to clean out the "data_processed/" and "figures/" folders so you can be sure your code is producing everything it needs for iterative analysis.
 
 ```{r Optional clean slate chunk, include=TRUE}
+if(!dir.exists("data_processed"))dir.create("data_processed")
+if(!dir.exists("figures"))dir.create("data_processed")
+
 if (length(dir(path = "data_processed/")) == 0) {
   cat("\nData_processed subdirectory is empty.")
 } else {
@@ -60,7 +67,7 @@ Next is to complete the preliminary stats processing; incorporate osmolytes and 
 
 *Process_Osmolytes.R*
 Inputs: Method Osmolytes file.
-Outputs: Osmolytes file, edited for input into the rest of the script, titled Osmolytes_dited.csv.
+Outputs: Osmolytes file, edited for input into the rest of the script, titled Osmolytes_edited.csv.
 
 *Split_by_EddyFilter.R*
 Inputs: BMIS file from BMIS processing step.
@@ -72,7 +79,7 @@ Outputs:
 Inputs: 
 - All four IsoLagran files from previous step.
 - Chlorophyll datafile.
-Ouputs:
+Outputs:
 - Chlorophyll file, names fixed for future processing.
 - Four files, each one normalized to ChlA (5um only, no chlorophyll exists for the 0.2um filter size). Two are non-decostandardized and in long format ("notstd"), and two are decostandardized and in wide format ("std").
 
@@ -80,7 +87,7 @@ Ouputs:
 Inputs:
 - All four non-standardized, non-ChlA csvs split by eddy and size fraction.
 - Nonstandardized, ChlA-normalized csvs split by eddy (IL1_5um, IL2_5um).
-Oupts:
+Outputs:
 - Six files from inputs, all shifted to wide format and standardized.
 - Six images of all NMDS figures from the output files.
 
@@ -95,14 +102,16 @@ After the above chunks have been run, the below scripts should be possible to ru
 
 The below files are not perfect and still need work, but feel free to explore any of the analytical pathways!
 
-ANOSIM_IndicSpecies.R
-ANOVA_all (mostly useless. needs work.)
-anova b12
-anova dsw
-FourCompound_Ratios.R
-Heatmaps.R
-Heatmps_with_Clustering.R
-kmeans_PAM.R
-Ratios.R
-Raw_Plots.R
-Univariate_Stats.R
+```{r Followup scripts}
+source("stats_visualization/ANOSIM_IndicSpecies.R")
+source("stats_visualization/ANOVA_all.R") #(mostly useless. needs work.)
+source("stats_visualization/ANOVA_B12.R")
+source("stats_visualization/ANOVA_DSW.R")
+source("stats_visualization/FourCompound_Ratios.R")
+source("stats_visualization/Heatmaps.R")
+source("stats_visualization/Heatmps_with_Clustering.R")
+source("stats_visualization/kmeans_PAM.R")
+source("stats_visualization/Ratios.R")
+source("stats_visualization/Raw_Plots.R")
+source("stats_visualization/Univariate_Stats.R")
+```

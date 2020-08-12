@@ -71,7 +71,7 @@ combined.neg <- Area.neg %>%
   select(Replicate.Name, Column, Area.Value, Mz.Value, RT.Value, SN.Value, everything())
 
 combined <- rbind(combined.pos, combined.neg) %>%
-  mutate(Metabolite.Name = ifelse(str_detect(Metabolite.Name, "Ingalls_"), sapply(strsplit(Metabolite.Name, "_"), `[`, 2), Metabolite.Name)) 
+  mutate(Metabolite.Name = gsub(pattern = "Ingalls_", replacement = "", x = .$Metabolite.Name)) 
 
 currentDate <- Sys.Date()
 csvFileName <- paste("data_processed/MSDial_combined_", currentDate, ".csv", sep = "")
@@ -107,5 +107,41 @@ ggplot(data = test, aes(x = Metabolite.Name, y = Averages, fill = Five_um)) +
   geom_bar(stat = "identity", position = "dodge")
 #############################
 write.csv(combined, csvFileName, row.names = FALSE)
+
+
+# This unit test replicates all of the above code, returning a data frame that
+# should match the "combined" data frame exactly once it's arranged in the
+# same way. Runs from reading in raw data to reorganization to collation.
+
+unit_test_df <- "data_raw" %>%
+  dir(pattern = "HILIC.*\\.csv", full.names = TRUE) %>%
+  sapply(read.csv, simplify = FALSE) %>%
+  sapply(SetHeader, simplify = FALSE) %>%
+  sapply(pivot_longer, cols=starts_with("X"), names_to="Replicate.Name",
+         simplify = FALSE) %>%
+  imap(.f = function(x, y){
+    names(x)[names(x)=="value"] <- paste0(str_extract(pattern = "Area|Mz|RT|SN", y), ".Value")
+    x$Column <- switch(str_extract(pattern = "POS|NEG", y), POS="HILICPos", NEG="HILICNeg")
+    x
+  }) %>%
+  split(grepl("POS", file_paths)) %>%
+  map(reduce, left_join) %>%
+  do.call(what = rbind) %>%
+  select(c("Replicate.Name", "Column", "Area.Value", "Mz.Value", "RT.Value", 
+           "SN.Value", "Alignment.ID", "Metabolite.Name", "Adduct.type", 
+           "MS.MS.assigned", "Reference.RT", "Reference.m.z", "Comment", 
+           "S.N.average", "Spectrum.reference.file.name")) %>%
+  mutate(across(ends_with("Value"), as.numeric)) %>%
+  filter(!Metabolite.Name == "Unknown") %>%
+  mutate(Metabolite.Name=gsub("Ingalls_", "", x = .$Metabolite.Name)) %>%
+  mutate(Replicate.Name=gsub("^X", "", x = .$Replicate.Name)) %>%
+  arrange(desc(Column), Metabolite.Name)
+
+# Actual unit test below: if the two data frames differ, report a diff
+# between them and stop running.
+if(!identical(unit_test_df, arrange(combined, desc(Column), Metabolite.Name))){
+  cat(all.equal(unit_test_df, arrange(combined, desc(Column), Metabolite.Name)))
+  stop("Unit test failed, see diff above.")
+}
 
 rm(list = ls())
