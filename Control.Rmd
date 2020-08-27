@@ -24,7 +24,7 @@ If you are starting from scratch, it's a good idea to clean out the "data_proces
 
 ```{r Optional clean slate chunk, include=TRUE}
 if(!dir.exists("data_processed"))dir.create("data_processed")
-if(!dir.exists("figures"))dir.create("data_processed")
+if(!dir.exists("figures"))dir.create("figures")
 
 if (length(dir(path = "data_processed/")) == 0) {
   cat("\nData_processed subdirectory is empty.")
@@ -39,6 +39,9 @@ if (length(dir(path = "figures/")) == 0) {
 }
 
 ```
+
+###Test Change for Pull Request###
+##why isnt this working?###
 
 As with most targeted analyses, the first step is to run the raw csv data through our Import -> Quality Control -> BMIS, and if applicable, -> Quantify.
 
