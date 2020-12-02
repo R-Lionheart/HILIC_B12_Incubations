@@ -42,7 +42,7 @@ Wide.All.Data.Filtered <- All.Data.Filtered %>%
 
 Spread.by.Sample <- Wide.All.Data.Filtered %>%
   column_to_rownames(var = "Replicate.Name") %>%
-  select(-SampID, -Experiment) %>%
+  #select(-SampID, -Experiment) %>%
   t() %>%
   as.data.frame()
 

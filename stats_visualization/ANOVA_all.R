@@ -57,7 +57,7 @@ for (i in filenames) {
   assign(make.names(i), read.csv(filepath, stringsAsFactors = FALSE, check.names = FALSE))
 }
 
-BMISd <- BMISd_Time0_Fixed_2020.07.15
+BMISd <- BMISd_Time0_Fixed_2020.08.05
 grouped.BMISd <- BMISd %>%
   left_join(BMISD.normd) %>%
   separate(Replicate.Name, into = c("date", "runtype", "SampID", "replicate")) %>%
