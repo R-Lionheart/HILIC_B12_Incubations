@@ -1,0 +1,132 @@
+"","Metabolite.Name","Run.Type","RT.min","RT.max","RT.diff"
+"1","2-Hydroxy-4-(methylthio)butyric","std",2.323,3.134,0.811
+"2","3-Sulfopyruvic Acid","std",14.743,15.441,0.698
+"3","4-Hydroxyisoleucine","std",7.831,8.473,0.642
+"4","Acetyl-L-carnitine","std",6.584,8.073,1.489
+"5","Aconitic Acid","std",14.981,15.546,0.565
+"6","Adenine","std",4.542,4.732,0.19
+"7","Adenosine","std",4.308,4.508,0.2
+"8","Adenosine Monophosphate, 15N5","std",11.654,11.978,0.324
+"9","Adenosyl Homocysteine","std",9.977,10.286,0.308999999999999
+"10","Adenosyl Methionine","std",12.122,12.367,0.245000000000001
+"11","Alanine","std",10.749,10.992,0.243
+"12","Allopurinol","std",5.945,6.445,0.5
+"13","Amino Propanesulfonic Acid","std",11.564,12.075,0.510999999999999
+"14","Aminobutyric Acid","std",11.493,11.721,0.228
+"15","AMP","std",11.567,11.962,0.395
+"16","Arginine","std",17.952,19.613,1.661
+"17","Argininosuccinic Acid","std",13.512,13.911,0.398999999999999
+"18","Arsenobetaine","std",7.068,7.94,0.872000000000001
+"19","Asparagine","std",11.313,11.56,0.247
+"20","Aspartic acid","std",12.102,12.43,0.327999999999999
+"21","Betaine","std",7.2,7.437,0.237
+"22","Butyryl-L-carnitine","std",3.764,5.803,2.039
+"23","cAMP","std",6.656,7.471,0.815
+"24","Carnitine","std",9.552,9.788,0.236000000000001
+"25","cGMP","std",9.998,10.642,0.644
+"26","Chitobiose","std",9.515,9.772,0.257
+"27","Choline","std",10.372,13.37,2.998
+"28","Citric Acid","std",14.893,18.26,3.367
+"29","Citrulline","std",11.974,12.209,0.234999999999999
+"30","Creatine","std",10.783,11.008,0.225
+"31","Cyclic diGMP","std",14.36,14.849,0.489000000000001
+"32","Cys-Gly oxidized","std",11.878,12.35,0.472
+"33","Cystathionine","std",13.016,13.348,0.332000000000001
+"34","Cysteic Acid","std",12.507,12.944,0.437000000000001
+"35","Cystine","std",12.502,12.876,0.373999999999999
+"36","Cytidine","std",7.946,8.196,0.25
+"37","Cytosine","std",6.765,7.001,0.236000000000001
+"38","Deoxyadenosine","std",3.4,3.556,0.156
+"39","DHAP","std",12.756,13.126,0.369999999999999
+"40","DHPS","std",8.281,9.765,1.484
+"41","Dimethylsulfonioacetate (DMS-Ac)","std",7.946,8.539,0.593
+"42","DL-Alanine, D3","std",10.609,11.256,0.647
+"43","DL-Histidine, 15N","std",10.686,11.145,0.459
+"44","DL-Proline, D7","std",8.575,9.617,1.042
+"45","DL-Valine, D8","std",8.628,8.802,0.173999999999999
+"46","DMSP","std",9.583,9.835,0.252000000000001
+"47","Ectoine","std",9.275,9.523,0.247999999999999
+"48","Ethanesulfonic Acid","std",4.125,4.891,0.766
+"49","FAD","std",9.769,10.187,0.417999999999999
+"50","Fructose 6 phosphate","std",13.249,13.628,0.379
+"51","Fumaric Acid","std",13.033,13.552,0.519
+"52","Gluconic Acid","std",10.828,11.449,0.621
+"53","Glucosylglycerol","std",9.68,9.934,0.254
+"54","Glutamic acid","std",11.815,12.159,0.344000000000001
+"55","Glutamine","std",11.183,11.434,0.250999999999999
+"56","Glutathione","std",11.766,12.175,0.409000000000001
+"57","Glutathione Disulfide","std",14.506,17.646,3.14
+"58","glycerol 3 phosphate","std",12.507,12.869,0.362
+"59","Glycerophosphocholine","std",10.9,11.141,0.241
+"60","GMP","std",13.823,14.266,0.443
+"61","Gonyol","std",10.694,10.895,0.200999999999999
+"62","Guanine","std",8.101,8.37,0.268999999999998
+"63","Guanosine","std",8.849,9.147,0.298
+"64","Guanosine Monophosphate, 15N5","std",13.839,14.266,0.427
+"65","Histidine","std",10.721,11.145,0.423999999999999
+"66","Homarine","std",5.323,5.544,0.220999999999999
+"67","Homocystine","std",12.294,12.559,0.264999999999999
+"68","Hydroxyectoine","std",10.862,11.089,0.227
+"69","Hydroxylysine","std",15.741,16.797,1.056
+"70","Hypotaurine","std",10.975,11.242,0.267000000000001
+"71","Hypoxanthine","std",5.757,7.061,1.304
+"72","Imidazoleacrylic Acid","std",7.764,9.3,1.536
+"73","Inosine","std",7.384,8.058,0.673999999999999
+"74","Isethionic Acid","std",6.932,7.827,0.895
+"75","Isethionic Acid, 13C2","std",6.932,7.827,0.895
+"76","Keto-?-(methylthio)butyric acid","std",2.188,2.268,0.0799999999999996
+"77","Ketoglutaric Acid","std",12.667,13.096,0.429
+"78","L-Cysteic Acid, D3","std",12.438,13.855,1.417
+"79","L-Isoleucine, 15N","std",6.387,8.35,1.963
+"80","L-Methionine, D3","std",6.733,7.771,1.038
+"81","L-Pyroglutamic acid","std",7.075,7.891,0.816
+"82","Leucine","std",6.752,7.583,0.831
+"83","Lipoic Acid","std",2.025,2.187,0.162
+"84","Lysine","std",17.279,18.768,1.489
+"85","Malic Acid","std",13.299,13.676,0.377000000000001
+"86","Melamine","std",5.889,6.858,0.968999999999999
+"87","MESNA (Sodium 2-mercaptoethanesulfonate)","std",3.238,3.728,0.49
+"88","Methionine","std",7.53,7.806,0.276
+"89","Methionine Sulfoxide","std",9.781,10.224,0.443
+"90","Methylphosphonic Acid","std",9.518,10.937,1.419
+"91","N-acetyltaurine","std",4.666,5.674,1.008
+"92","N-methyltaurine","std",8.602,8.9,0.298
+"93","N(e)-Acetyl-Lysine","std",8.541,9.624,1.083
+"94","NAD","std",11.564,11.869,0.305
+"95","NADH","std",10.842,11.137,0.295
+"96","NADP","std",14.159,15.578,1.419
+"97","Ornithine","std",15.63,16.701,1.071
+"98","Orotic Acid","std",7.275,7.827,0.552
+"99","Oxalic Acid","std",14.848,15.695,0.847
+"100","Proline","std",8.859,9.115,0.256
+"101","Propanesulfonate","std",2.765,3.299,0.534
+"102","Propionyl-L-carnitine","std",5.597,6.536,0.938999999999999
+"103","Resorcylic Acid","std",3.849,4.463,0.614
+"104","Riboflavin Monophosphate","std",9.838,10.474,0.636000000000001
+"105","Ribose 5 phosphate","std",13.122,13.53,0.407999999999999
+"106","Salicylic Acid","std",2.074,2.219,0.145
+"107","Serine","std",11.639,11.877,0.238000000000001
+"108","Shikimic Acid","std",10.797,11.453,0.655999999999999
+"109","Stachydrine hydrochloride","std",6.443,6.693,0.25
+"110","Succinic Acid","std",12.522,12.909,0.387
+"111","Succinic Acid, D4","std",12.244,13.445,1.201
+"112","Succinic semialdehyde","std",8.183,9.766,1.583
+"113","Sulfanilic Acid","std",5.12,5.829,0.709
+"114","Sulfoacetic Acid","std",14.168,14.802,0.634
+"115","Sulfoacetic Acid, 13C2","std",14.152,14.818,0.666
+"116","Sulfolactic Acid, 13C3","std",14.028,14.397,0.369
+"117","Taurine","std",10.062,11.034,0.972000000000001
+"118","Taurine, D4","std",10.551,11.807,1.256
+"119","Thiamine monophosphate","std",11.47,11.776,0.305999999999999
+"120","Thiamine pyrophosphate","std",14.117,17.157,3.04
+"121","Threonine","std",11.055,11.29,0.234999999999999
+"122","Thymidine","std",2.67,2.781,0.111
+"123","Thymine","std",2.789,2.937,0.148
+"124","Trehalose","std",11.338,12.352,1.014
+"125","Trehalose, 13C","std",11.321,12.992,1.671
+"126","Trigonelline","std",7.748,7.971,0.223
+"127","Turicine","std",7.994,8.943,0.949
+"128","Tyrosine","std",9.196,9.64,0.444000000000001
+"129","UDP-glucosamine","std",12.62,12.963,0.343
+"130","UDP-glucose","std",13.533,13.935,0.402000000000001
+"131","Uridine","std",5.397,5.697,0.3

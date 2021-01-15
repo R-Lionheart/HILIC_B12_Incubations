@@ -1,0 +1,117 @@
+---
+title: "Control"
+author: "RLionheart"
+date: "07/02/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RCurl)
+library(rlist)
+library(tidyverse)
+
+```
+
+This Control.Rmd script outlines the order in which the MESOSCOPE B12 Incubation code snippets are to be run. 
+
+Unless otherwise stated, all inputs come from the data_raw or data_extras directories, and all outputs proceed to data_processed or figures.
+-----
+
+## OPTIONAL CHUNK ##
+If you are starting from scratch, it's a good idea to clean out the "data_processed/" and "figures/" folders so you can be sure your code is producing everything it needs for iterative analysis.
+
+```{r Optional clean slate chunk, include=TRUE}
+if(!dir.exists("data_processed"))dir.create("data_processed")
+if(!dir.exists("figures"))dir.create("data_processed")
+
+if (length(dir(path = "data_processed/")) == 0) {
+  cat("\nData_processed subdirectory is empty.")
+} else {
+  cat("Data_processed subdirectory is not empty.\n")
+}
+
+if (length(dir(path = "figures/")) == 0) {
+  cat("\nFigures subdirectory is empty.")
+} else {
+  cat("Figures subdirectory is not empty.\n")
+}
+
+```
+
+As with most targeted analyses, the first step is to run the raw csv data through our Import -> Quality Control -> BMIS, and if applicable, -> Quantify.
+
+The below chunk imports the raw MSDIAL files and combines them to one file in long format for analysis, then applies Quality Control and BMIS.
+Output can be found in data_processed/ containing the keyword MSDial_combined.
+
+*Import_files.R*
+Inputs: All .csv files in the data_raw directory. This includes all Area/Mz/RT/SN files, positive and negative, from MSDial. Also includes additional supporting data (Chlorophyll information).
+Outputs: One combined file titled MSDial_combined_TodaysDate.csv
+
+*Quality_Control.R*
+Inputs: MSDial combined file from previous step.
+Outputs: One QC'd file titled QC_Output_TodaysDate.csv
+
+*B12_BMIS_HILIC.R*
+Inputs: Sample Key, Lab Standards, QC'd output from previous step.
+Outputs: One BMIS'd file titled BMIS_Output_TodaysDate.csv
+
+```{r Import Files, include=TRUE}
+source("src/Import_files.R")
+source("src/Quality_Control.R")
+source("src/B12_BMIS_HILIC.R")
+```
+
+Next is to complete the preliminary stats processing; incorporate osmolytes and chlorophyll, create datasets split by eddy orientation and filter size, and run all data through an NMDS script to create a distance matrix. 
+
+*Process_Osmolytes.R*
+Inputs: Method Osmolytes file.
+Outputs: Osmolytes file, edited for input into the rest of the script, titled Osmolytes_edited.csv.
+
+*Split_by_EddyFilter.R*
+Inputs: BMIS file from BMIS processing step.
+Outputs: 
+- BMISd file with the original T0 naming issues fixed, titled BMISd_Time0_Fixed_TodaysDate.csv
+- Four files titled IsoLagranN_FilterSize_notstd.csv. Each file is the BMISd data, split by eddy and filter.
+
+*Chl_Uploads_Standardize.R*
+Inputs: 
+- All four IsoLagran files from previous step.
+- Chlorophyll datafile.
+Outputs:
+- Chlorophyll file, names fixed for future processing.
+- Four files, each one normalized to ChlA (5um only, no chlorophyll exists for the 0.2um filter size). Two are non-decostandardized and in long format ("notstd"), and two are decostandardized and in wide format ("std").
+
+*NMDS_figs.R*
+Inputs:
+- All four non-standardized, non-ChlA csvs split by eddy and size fraction.
+- Nonstandardized, ChlA-normalized csvs split by eddy (IL1_5um, IL2_5um).
+Outputs:
+- Six files from inputs, all shifted to wide format and standardized.
+- Six images of all NMDS figures from the output files.
+
+```{r Preliminary processing, include=TRUE}
+source("src/Process_Osmolytes.R")
+source("stats_visualization/Split_by_EddyFilter.R")
+source("stats_visualization/Chl_Uploads_Standardize.R")
+source("stats_visualization/NMDS_figs.R")
+```
+
+After the above chunks have been run, the below scripts should be possible to run in any order, depending on your analysis interest.
+
+The below files are not perfect and still need work, but feel free to explore any of the analytical pathways!
+
+```{r Followup scripts}
+source("stats_visualization/ANOSIM_IndicSpecies.R")
+source("stats_visualization/ANOVA_all.R") #(mostly useless. needs work.)
+source("stats_visualization/ANOVA_B12.R")
+source("stats_visualization/ANOVA_DSW.R")
+source("stats_visualization/FourCompound_Ratios.R")
+source("stats_visualization/Heatmaps.R")
+source("stats_visualization/Heatmps_with_Clustering.R")
+source("stats_visualization/kmeans_PAM.R")
+source("stats_visualization/Ratios.R")
+source("stats_visualization/Raw_Plots.R")
+source("stats_visualization/Univariate_Stats.R")
+```

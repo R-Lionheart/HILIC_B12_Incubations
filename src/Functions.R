@@ -25,6 +25,22 @@ ChangeClasses <- function(df, start.column) {
   return(df)
 }
 
+ChangeXClasses <- function(df) {
+  # Identifies columns starting with X and changes their class to numeric.
+  #
+  # Args
+  #   df: MSDial dataframe reorganized to drop all empty rows at the top.
+  #
+  # Returns
+  #   df: MSDial dataframed with modified sample column classes.
+  #
+  col.test <- grepl("^X", names(df))
+  for (i in which(col.test == TRUE)) {
+    df[, i] <- as.numeric(as.character(df[, i]))
+  }
+  return(df)
+}
+
 FixBMISNames <- function(df) {
   # Shortcut for separating Replicate.Name into manageable columns.
   #
@@ -177,6 +193,26 @@ SetHeader <- function(df) {
   
   return(df)
 }
+
+StandardizeMetabolites <- function(df) {
+  # Remove any "Ingalls_" prefixes that may be present in a dataframe.
+  # Remove "X" prefixes in syntactically correct Replicate Names.
+  #
+  # Args
+  #   df: MSDial dataframe.
+  #
+  # Returns
+  #   df.standardized: Dataframe with above modifications.
+  #
+  df.standardized <- df %>%
+    mutate(Metabolite.Name = ifelse(str_detect(Metabolite.Name, "Ingalls_"), 
+                                    sapply(strsplit(Metabolite.Name, "_"), `[`, 2), Metabolite.Name)) 
+  
+  #df.standardized$Replicate.Name <- gsub("^.{0,1}", "", df.standardized$Replicate.Name)
+  
+  return(df.standardized)
+}
+
 
 TrimWhitespace <- function (x) gsub("^\\s+|\\s+$", "", x)
 
