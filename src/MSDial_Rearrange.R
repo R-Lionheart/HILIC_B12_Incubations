@@ -33,6 +33,8 @@ if (TRUE %in% grepl("positive|negative", names(.GlobalEnv), ignore.case = TRUE))
   Mz.positive   <- RearrangeDatasets(Mz.positive, parameter = "Mz.Value")
   RT.positive   <- RearrangeDatasets(RT.positive, parameter = "RT.Value")
   SN.positive   <- RearrangeDatasets(SN.positive, parameter = "SN.Value")
+  Area.HomarineTrig.positive <- RearrangeDatasets(Area.HomarineTrig.positive, parameter = "Area.Value") %>%
+    select(-contains("Manuall"))
   
   # HILIC Negative
   Area.negative <- RearrangeDatasets(Area.negative, parameter = "Area.Value")
@@ -43,6 +45,7 @@ if (TRUE %in% grepl("positive|negative", names(.GlobalEnv), ignore.case = TRUE))
   
   # Combine to one dataset
   combined.pos <- Area.positive %>%
+    rbind(Area.HomarineTrig.positive) %>%
     left_join(Mz.positive) %>%
     left_join(SN.positive) %>%
     left_join(RT.positive) %>%

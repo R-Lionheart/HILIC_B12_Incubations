@@ -140,6 +140,8 @@ Area.positive <- Area_HILIC.POS_B12.Inc
 Mz.positive   <- Mz_HILIC.POS_B12.Inc
 RT.positive   <- RT_HILIC.POS_B12.Inc
 SN.positive   <- SN_HILIC.POS_B12.Inc
+Area.HomarineTrig.positive <- Area_HILIC.POS_B12.Incubations_Homarine_Trigonelline_UpdatedPeakAreas %>%
+  select(-contains("NA"))
 
 Area.negative <- Area_HILIC.NEG_B12.Inc
 Mz.negative   <- Mz_HILIC.NEG_B12.Inc

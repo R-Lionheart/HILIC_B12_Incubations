@@ -27,10 +27,8 @@ Complete.Dataset <- read.csv("data_processed/MSDial_QE_QC_Output_HILIC.csv",
                                  "171023_Smp_IT05um_1" = "171023_Smp_IL2IT05um_1",
                                  "171023_Smp_IT05um_2" = "171023_Smp_IL2IT05um_2",
                                  "171023_Smp_IT05um_3" = "171023_Smp_IL2IT05um_3")) %>%
-  mutate(Area.with.QC = ifelse(str_detect(all.Flags, "Blank.Flag"), 
-                              NA, Area.with.QC)) %>%
-  mutate(Area.with.QC = ifelse(str_detect(all.Flags, "Blank.Flag"), 
-                               NA, Area.with.QC)) %>%
+  group_by(Metabolite.Name) %>%
+  mutate(Area.with.QC = ifelse(is.na(Blank.Flag), Area.with.QC, NA)) %>%
   select(Replicate.Name, Metabolite.Name, Area.with.QC) %>%
   mutate(Size.Fraction = ifelse(str_detect(Replicate.Name, "5um"), "Large.Filter", "Small.Filter"),
          Eddy = ifelse(str_detect(Replicate.Name, "IL1"), "Cyclonic", "Anticyclonic")) %>%
